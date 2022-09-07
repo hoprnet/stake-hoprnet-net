@@ -20,7 +20,7 @@ dotenv.config({ path: './.env.local' });
 //   `peerId` varchar(200) UNIQUE, 
 //    PRIMARY KEY (id)
 //   ) 
-//
+
 //   CREATE TABLE `pings` (
 //     `id` INT UNIQUE AUTO_INCREMENT, 
 //     `peerId` INT, 
@@ -29,13 +29,13 @@ dotenv.config({ path: './.env.local' });
 //      PRIMARY KEY (id),
 //      FOREIGN KEY (peerId) REFERENCES `node-registry`(id)
 //   ) 
-//
+
 // CREATE TABLE `last-seen` (
 //   `peerId` INT UNIQUE, 
 //   `lastSeen` BIGINT, 
 //    FOREIGN KEY (peerId) REFERENCES `node-registry`(id)
 // ) 
-//
+
 // CREATE TABLE `runtimes` (
 //   `id` INT UNIQUE AUTO_INCREMENT, 
 //   `runtime` BIGINT,
