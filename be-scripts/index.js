@@ -2,17 +2,24 @@ import { nodeGetPeers, nodePing } from "./hopr-sdk.js";
 import { selectPeerIds, insertPeerId, insertLastSeen, insertPing, insertRuntime } from "./mysql.js";
 
 
-const playground_url = 'red_elbe_elara.playground.hoprnet.org:3001'
-const playground_key = '5ef7fF7FaAF6FCe4ed#E3DC2'
+// const playground_url = 'red_elbe_elara.playground.hoprnet.org:3001'
+// const playground_key = '5ef7fF7FaAF6FCe4ed#E3DC2'
 
-const nodes = ['null', 'zero', 'one', 'two', 'three', 'four'].map(elem=>{ return {
-    'api_url': `https://${elem}_${playground_url}`,
-    'api_key': playground_key
-}});
+// const nodes = ['null', 'zero', 'one', 'two', 'three', 'four'].map(elem=>{ return {
+//     'api_url': `https://${elem}_${playground_url}`,
+//     'api_key': playground_key
+// }});
+
+const nodes = [
+    {api_url: `http://116.202.86.163:3001`, api_key: '^MYtoken4testing^' },
+    {api_url: `http://95.216.69.52:3001`, api_key: '^MYtoken4testing^' },
+    {api_url: `http://95.217.33.35:3001`, api_key: '^MYtoken4testing^' },
+    {api_url: `http://136.243.109.98:3001`, api_key: '^MYtoken4testing^' },
+    {api_url: `http://65.21.193.86:3001`, api_key: '^MYtoken4testing^' },
+];
 
 var peers = [];
 var counter = 0;
-
 
 main();
 
