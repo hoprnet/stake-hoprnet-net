@@ -1,5 +1,8 @@
 import fetch  from 'node-fetch'
 import { Headers }  from 'node-fetch'
+import {
+  PublicKey,
+} from '@hoprnet/hopr-utils'
 
 function generateHeaders (apiToken, isPost = false) {
     const headers = new Headers();
@@ -82,8 +85,9 @@ export async function nodeGetPeers (apiEndpoint, apiToken) {
 };
 
 export async function getPeersFromSubGraph (){
+  console.log(`HOPR SDK: getPeersFromSubGraph`);
   let status;
-  const response = fetch("https://api.thegraph.com/subgraphs/name/hoprnet/hopr-channels", {
+  const response = await fetch("https://api.thegraph.com/subgraphs/name/hoprnet/hopr-channels", {
       "headers": {
           "accept": "*/*",
           "accept-language": "en-US,en;q=0.9,el;q=0.8",
@@ -108,5 +112,15 @@ export async function getPeersFromSubGraph (){
     console.error(`Error [HOPR SDK]: getPeersFromSubGraph status ${status}`);
     if(status !== 404) console.error(err);
   });
-  return response;
+
+  const accounts = response.data.accounts;
+  let peers = [];
+
+  for (let i = 0; i < accounts.length; i++ ) {
+    const publicKey = PublicKey.fromString(accounts[i].publicKey);
+    const peerId = `${publicKey.toPeerId().toString()}`
+    peers.push(peerId)
+  }
+
+  return peers;
 }

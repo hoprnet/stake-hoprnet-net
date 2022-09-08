@@ -50,8 +50,11 @@ async function getPeersFromNetwork (){
             await addPeer(response.announced[j].peerId, response.announced[j].lastSeen);
         }
     }
-    // let array = await getPeersFromSubGraph();
-    // console.log(array);
+
+    let peersFromSubGraph = await getPeersFromSubGraph();
+    for (let j = 0; j < peersFromSubGraph.length; j++){
+        await addPeer(peersFromSubGraph[j]);
+    }
 
     // TODO: combine all peers on BE, then add 'insertLastSeen'
 }
@@ -61,7 +64,7 @@ async function addPeer(peerId, lastSeen){
         peers.push(peerId);
         await insertPeerId(peerId);
     }
-    await insertLastSeen(peerId, lastSeen);
+    if (lastSeen) await insertLastSeen(peerId, lastSeen);
 } 
 
 async function pingAndSaveResults(){
@@ -78,12 +81,12 @@ async function pingAndSaveResults(){
     }
 }
 
-
 async function saveRuntime(counter, startedAt){
     if(counter > 0) {
         const runtime = Date.now() - startedAt;
         await insertRuntime(runtime);
     }
 }
+
 
 
