@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "@emotion/styled";
 import Section from './index.jsx'
 import Typography from "../Typography/index.jsx";
@@ -32,20 +32,20 @@ const Animation = styled.div`
 `
 
 function EncourageSection(props) {
-    const [htmlId] = useId();
+    const htmlId = 'encourage-section-animation';
 
-    let animationLoaded = false;
+    const animationLoaded = useRef(false);
 
     useEffect(() => {
         // check to prevent double animation load on page remount
-        if (!animationLoaded) {
+        if (!animationLoaded.current) {
             lottie.loadAnimation({
                 container: document.querySelector(`#${htmlId}`),
                 animationData: props.animationData,
         });
         }
         //eslint-disable-next-line react-hooks/exhaustive-deps
-        animationLoaded = true;
+        animationLoaded.current = true;
     }, []);
 
 
@@ -67,7 +67,6 @@ function EncourageSection(props) {
                     </Typography>
                 </Right>
             </Container>
-
         </Section>
     );
 }

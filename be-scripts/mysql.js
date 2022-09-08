@@ -119,12 +119,21 @@ export async function insertLastSeen (peerId, lastSeen) {
 
 export async function insertPing (peerId, latency) {
   console.log('MySQL: insertPing', peerId, latency);
-  await queryDB(escape`
-    INSERT INTO pings (peerId, latency) VALUES (
-      (SELECT id FROM \`node-registry\` WHERE peerId = ${peerId}), 
-      ${latency}
-    )
-  `)
+  try {
+    await queryDB(escape`
+      INSERT INTO pings (peerId, latency) VALUES (
+        (SELECT id FROM \`node-registry\` WHERE peerId = ${peerId}), 
+        ${latency}
+      )
+    `)
+  } catch (e) {
+    console.error('ERROR [MySQL] insertPing:', e);
+    // for (let i = 0; i < 5; i++){
+    //   console.log(`MySQL: Trying function insertPing again (${i})`);
+    //   await new Promise(r => setTimeout(r, 1000));
+    //   await insertPing(peerId, latency);
+    // }
+  }
 }
 
 export async function insertRuntime (runtime) {

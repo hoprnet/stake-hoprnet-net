@@ -1,5 +1,5 @@
-export function shorten0xAddress (address) {
-    return address.substr(0,6)+'...'+address.substr(-4);
+export function shorten0xAddress (address, lastChars = -4) {
+    return address.substr(0,6)+'...'+address.substr(lastChars);
 }
 
 export function detectCurrentProvider () {

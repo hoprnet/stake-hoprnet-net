@@ -1,7 +1,7 @@
-import * as React from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import styled from "@emotion/styled";
 
-import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -11,17 +11,30 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
-import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
-import DeleteIcon from '@mui/icons-material/Delete';
-import FilterListIcon from '@mui/icons-material/FilterList';
+import TextField from '@mui/material/TextField';
 import { visuallyHidden } from '@mui/utils';
+
+import { shorten0xAddress } from '../../utils/functions'
+import _debounce from 'lodash/debounce';
+
+
+
+const STableCell = styled(TableCell)`
+  font-family: 'Source Code Pro', monospace;
+  padding: 8px;
+  &.MuiTableCell-head {
+    font-weight: 600;
+  }
+`
+
+const SearchPeerId = styled(TextField)`
+  font-family: 'Source Code Pro', monospace;
+  width: 100%;
+  margin-bottom: 8px;
+  background: white;
+`
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -87,7 +100,7 @@ const headCells = [
 ];
 
 function EnhancedTableHead(props) {
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
+  const { order, orderBy, rowCount, onRequestSort } =
     props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -97,10 +110,11 @@ function EnhancedTableHead(props) {
     <TableHead>
       <TableRow>
         {headCells.map((headCell) => (
-          <TableCell
+          <STableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
             sortDirection={orderBy === headCell.id ? order : false}
+            className='THead-Cell'
           >
             <TableSortLabel
               active={orderBy === headCell.id}
@@ -114,7 +128,7 @@ function EnhancedTableHead(props) {
                 </Box>
               ) : null}
             </TableSortLabel>
-          </TableCell>
+          </STableCell>
         ))}
       </TableRow>
     </TableHead>
@@ -122,110 +136,30 @@ function EnhancedTableHead(props) {
 }
 
 EnhancedTableHead.propTypes = {
-  numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
   order: PropTypes.oneOf(['asc', 'desc']).isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
 };
 
-const EnhancedTableToolbar = (props) => {
-  const { numSelected } = props;
-
-  return (
-    <Toolbar
-      sx={{
-        pl: { sm: 2 },
-        pr: { xs: 1, sm: 1 },
-        ...(numSelected > 0 && {
-          bgcolor: (theme) =>
-            alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
-        }),
-      }}
-    >
-      {/* {numSelected > 0 ? (
-        <Typography
-          sx={{ flex: '1 1 100%' }}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
-        >
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography
-          sx={{ flex: '1 1 100%' }}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-        >
-          Nutrition
-        </Typography>
-      )}
-
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
-      )} */}
-    </Toolbar>
-  );
-};
-
-EnhancedTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-};
-
 export default function EnhancedTable(props) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
-  const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(25);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [search, set_search] = useState('');
+  const [filteredData, set_filteredData] = useState([]);
+
+  useEffect(() => {
+    console.log('useEffect', search, props.data)
+    filterData(search);
+  }, [props.data]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
-  };
-
-  const handleSelectAllClick = (event) => {
-    if (event.target.checked) {
-      const newSelected = props.data.map((n) => n.name);
-      setSelected(newSelected);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-
-    setSelected(newSelected);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -241,11 +175,9 @@ export default function EnhancedTable(props) {
     setDense(event.target.checked);
   };
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
-
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - props.data.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredData.length) : 0;
 
 
   const formatDate = (epoch) => {
@@ -255,14 +187,37 @@ export default function EnhancedTable(props) {
     const day = d.getDay() < 10 ? `0${d.getDay()}` : d.getDay();
     const hours = d.getUTCHours() < 10 ? `0${d.getUTCHours()}` : d.getUTCHours();
     const minutes = d.getUTCMinutes() < 10 ? `0${d.getUTCMinutes()}` : d.getUTCMinutes();
-    const formatted = `${year}-${month}-${day} ${hours}:${minutes}`
+    const formatted = <>{`${year}-${month}-${day}`}<br/>{`${hours}:${minutes}`}</>
     return formatted;
+  }
+
+  function handleSearchChange (event) {
+      set_search(event.target.value);
+      debounceFn(event.target.value);
+  //    filterData(event.target.value)
+  };
+
+  const debounceFn = useCallback(_debounce(filterData, 150), [props.data]);
+
+  function filterData(searchPhrase) {
+    if (!searchPhrase | searchPhrase === '' ) {
+      set_filteredData(props.data);
+      return;
+    }
+    const filtered = props.data.filter(elem => elem.peerId.toLowerCase().includes(searchPhrase.toLowerCase()));
+    set_filteredData(filtered);
+    return;
   }
 
   return (
     <Box sx={{ width: '100%' }}>
+      <SearchPeerId 
+        label="Search Peer Id" 
+        variant="outlined" 
+        value={search}
+        onChange={handleSearchChange}
+      />
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -270,58 +225,70 @@ export default function EnhancedTable(props) {
             size={dense ? 'small' : 'medium'}
           >
             <EnhancedTableHead
-              numSelected={selected.length}
               order={order}
               orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={props.data.length}
+              rowCount={filteredData.length}
             />
             <TableBody>
-              {stableSort(props.data, getComparator(order, orderBy))
+              {stableSort(filteredData, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+                  const labelId = `enhanced-table-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.name)}
-                      role="checkbox"
                       tabIndex={-1}
-                      key={row.name}
+                      key={row.peerId}
                     >
-                      <TableCell
+                      <STableCell
                         component="th"
                         id={labelId}
                         scope="row"
                       >
-                        {row.peerId}
-                      </TableCell>
-                      <TableCell align="right">{formatDate(row.lastSeen)}</TableCell>
-                      <TableCell align="right">{row.count}</TableCell>
-                      <TableCell align="right">{row.latencyAverage ? row.latencyAverage : '-'} ms</TableCell>
-                      <TableCell align="right">{row.availability*100}%</TableCell>
+                        <Tooltip 
+                          title={row.peerId}
+                        >
+                          <span>
+                            {shorten0xAddress(row.peerId, -6)}
+                          </span>
+                        </Tooltip>
+                      </STableCell>
+                      <STableCell align="right">{formatDate(row.lastSeen)}</STableCell>
+                      <STableCell align="right">{row.count}</STableCell>
+                      <STableCell align="right">{row.latencyAverage ? row.latencyAverage.toFixed(2) : '-'} ms</STableCell>
+                      <STableCell align="right">{row.availability*100}%</STableCell>
                     </TableRow>
                   );
                 })}
-              {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: (dense ? 33 : 53) * emptyRows,
-                  }}
-                >
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
+              {
+                props.data.length > 0 && filteredData.length=== 0 && (
+                  <TableRow
+                  >
+                    <STableCell colSpan={5}>
+                      <div style={{textAlign: 'center'}}>No results</div>
+                    </STableCell>
+                  </TableRow>
+                )
+              }
+              {
+                props.data.length === 0 && (
+                  <TableRow
+                  >
+                    <STableCell colSpan={5}>
+                      <div style={{textAlign: 'center'}}>Loading...</div>
+                    </STableCell>
+                  </TableRow>
+                )
+              }
             </TableBody>
           </Table>
         </TableContainer>
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={props.data.length}
+          count={filteredData.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

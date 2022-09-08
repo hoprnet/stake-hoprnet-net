@@ -47,6 +47,7 @@ async function getPeersFromNetwork (){
             await addPeer(response.announced[j].peerId, response.announced[j].lastSeen);
         }
     }
+    // TODO: combine all peers on BE, then add 'insertLastSeen'
 }
 
 async function addPeer(peerId, lastSeen){
