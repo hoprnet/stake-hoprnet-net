@@ -5,7 +5,7 @@ import Section from './index.jsx'
 import Typography from '../Typography/index.jsx'
 import Button from '../Button/index.jsx'
 
-import derpAnimation from '../../assets/derp-animation.json'
+import animation from '../../assets/network-registry-animation.json';
 import lottie from "lottie-web";
 
 const SSection = styled(Section)`
@@ -16,27 +16,21 @@ const SSection = styled(Section)`
 const ImageContainer = styled.div`
   max-width: 780px;
   width: 100%;
+  min-height: 100px;
   position: relative;
+  display: flex;
+  justify-content: center;
 `
 
 const Animation = styled.div`
-  max-width: 400px;
-  max-height: 400px;
-  width: 50%;
-  position: absolute;
-  bottom: 0;
-  right: 0;
+    width: 100%;
+    max-width: 760px;
+    position: absolute;
+    top: -21px;
 `
 
 const Subtext = styled(Typography)`
   max-width: 640px;
-`
-
-const HoprBall = styled.div`
-  background-color: #FFFFA0;
-  width: 100%;
-  max-height: 390px;
-  height: 100%;
 `
 
 function Section1(props) {
@@ -47,7 +41,7 @@ function Section1(props) {
         if (!animationLoaded.current) {
             lottie.loadAnimation({
                 container: document.querySelector(`#derp-animation`),
-                animationData: derpAnimation,
+                animationData: animation,
             });
         }
         //eslint-disable-next-line react-hooks/exhaustive-deps
