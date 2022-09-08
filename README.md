@@ -1,6 +1,10 @@
 ## Network Registry
 
-First, run the development server:
+A network registry back-end and front-end repository for Hopr Network.
+
+## Development
+
+To run the development server:
 
 ```bash
 npm run dev

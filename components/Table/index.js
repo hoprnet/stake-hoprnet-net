@@ -40,7 +40,7 @@ const STableContainer = styled(TableContainer)`
 
 const STableCell = styled(TableCell)`
   font-family: 'Source Code Pro', monospace;
-  padding: 8px;
+  padding: 8px 16px;
   &.MuiTableCell-head {
     font-weight: 600;
   }

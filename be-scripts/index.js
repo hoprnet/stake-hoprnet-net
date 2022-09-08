@@ -10,13 +10,16 @@ import { selectPeerIds, insertPeerId, insertLastSeen, insertPing, insertRuntime 
 //     'api_key': playground_key
 // }});
 
-const nodes = [
-    {api_url: `http://116.202.86.163:3001`, api_key: '^MYtoken4testing^' },
-    {api_url: `http://95.216.69.52:3001`, api_key: '^MYtoken4testing^' },
-    {api_url: `http://95.217.33.35:3001`, api_key: '^MYtoken4testing^' },
-    {api_url: `http://136.243.109.98:3001`, api_key: '^MYtoken4testing^' },
-    {api_url: `http://65.21.193.86:3001`, api_key: '^MYtoken4testing^' },
-];
+const all_keys = Object.keys(process.env);
+const api_keys = all_keys.filter(key => key.includes('api_url_'));
+
+const nodes = api_keys.map(key => {
+    let number = key.replace('api_url_', '');
+    if(all_keys.findIndex(key2 => key2 === 'api_url_' + number) && 
+       all_keys.findIndex(key2 => key2 === 'api_key_' + number) ){
+        return {api_url: process.env['api_url_' + number], api_key: process.env['api_key_' + number] }
+    }
+})
 
 var peers = [];
 var counter = 0;
