@@ -4,7 +4,7 @@ import NextHead from 'next/head'
 const Head = () => {
   return (
     <NextHead>
-      <title>HOPR | Node Registry</title>
+      <title>HOPR | Network Registry</title>
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <link rel="canonical" href="https://hoprnet.org/" />
       <meta name="theme-color" content="#ffffa0" />

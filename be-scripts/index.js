@@ -1,4 +1,4 @@
-import { nodeGetPeers, nodePing } from "./hopr-sdk.js";
+import { nodeGetPeers, nodePing, getPeersFromSubGraph } from "./hopr-sdk.js";
 import { selectPeerIds, insertPeerId, insertLastSeen, insertPing, insertRuntime } from "./mysql.js";
 
 
@@ -47,6 +47,9 @@ async function getPeersFromNetwork (){
             await addPeer(response.announced[j].peerId, response.announced[j].lastSeen);
         }
     }
+    // let array = await getPeersFromSubGraph();
+    // console.log(array);
+
     // TODO: combine all peers on BE, then add 'insertLastSeen'
 }
 

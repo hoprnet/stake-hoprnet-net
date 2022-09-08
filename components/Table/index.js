@@ -21,6 +21,23 @@ import _debounce from 'lodash/debounce';
 
 
 
+const STableContainer = styled(TableContainer)`
+  .MuiTableCell-mobileRow {
+    display: none;
+  }
+  @media only screen and (max-width: 820px) {
+    thead {
+      display: none;
+    }
+    .MuiTableCell-root:not(.MuiTableCell-mobileRow){
+      display: none;
+    }
+    .MuiTableCell-mobileRow {
+      display: table-cell;
+    }
+  }
+`
+
 const STableCell = styled(TableCell)`
   font-family: 'Source Code Pro', monospace;
   padding: 8px;
@@ -35,6 +52,42 @@ const SearchPeerId = styled(TextField)`
   margin-bottom: 8px;
   background: white;
 `
+
+const STablePagination= styled(TablePagination)`
+  * {
+    font-family: 'Source Code Pro', monospace!important;
+  }
+  .MuiToolbar-root {
+    justify-content: flex-end;
+  }
+  @media only screen and (max-width: 470px) {
+    .MuiToolbar-root > * {
+      display: none;
+    }
+    .MuiToolbar-root > div:last-child{
+      display: block;
+      margin-left: 0;
+    }
+  }
+`
+
+const SMobileTable= styled.table`
+    font-size: 13px;
+  td:first-child {
+    font-weight: 600;
+    padding-right: 8px;
+  }
+`
+
+const MobileTable = (props) => {
+  return (
+    <SMobileTable>
+      <tbody>
+        {props.children}
+      </tbody>
+    </SMobileTable>
+  )
+}
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -114,7 +167,6 @@ function EnhancedTableHead(props) {
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
             sortDirection={orderBy === headCell.id ? order : false}
-            className='THead-Cell'
           >
             <TableSortLabel
               active={orderBy === headCell.id}
@@ -130,6 +182,9 @@ function EnhancedTableHead(props) {
             </TableSortLabel>
           </STableCell>
         ))}
+        <STableCell
+          className='MuiTableCell-mobileRow'
+        />
       </TableRow>
     </TableHead>
   );
@@ -152,7 +207,6 @@ export default function EnhancedTable(props) {
   const [filteredData, set_filteredData] = useState([]);
 
   useEffect(() => {
-    console.log('useEffect', search, props.data)
     filterData(search);
   }, [props.data]);
 
@@ -180,14 +234,14 @@ export default function EnhancedTable(props) {
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredData.length) : 0;
 
 
-  const formatDate = (epoch) => {
+  const formatDate = (epoch, twoRows = true) => {
     const d = new Date(epoch);
     const year = d.getFullYear();
     const month = d.getMonth() < 10 ? `0${d.getMonth()}` : d.getMonth();
     const day = d.getDay() < 10 ? `0${d.getDay()}` : d.getDay();
     const hours = d.getUTCHours() < 10 ? `0${d.getUTCHours()}` : d.getUTCHours();
     const minutes = d.getUTCMinutes() < 10 ? `0${d.getUTCMinutes()}` : d.getUTCMinutes();
-    const formatted = <>{`${year}-${month}-${day}`}<br/>{`${hours}:${minutes}`}</>
+    const formatted = <>{`${year}-${month}-${day}`}{twoRows ? <br/> : ' '}{`${hours}:${minutes}`}</>
     return formatted;
   }
 
@@ -218,9 +272,8 @@ export default function EnhancedTable(props) {
         onChange={handleSearchChange}
       />
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <TableContainer>
+        <STableContainer>
           <Table
-            sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
             size={dense ? 'small' : 'medium'}
           >
@@ -259,6 +312,40 @@ export default function EnhancedTable(props) {
                       <STableCell align="right">{row.count}</STableCell>
                       <STableCell align="right">{row.latencyAverage ? row.latencyAverage.toFixed(2) : '-'} ms</STableCell>
                       <STableCell align="right">{row.availability*100}%</STableCell>
+                      <STableCell 
+                        className='MuiTableCell-mobileRow'
+                      >
+                        <MobileTable>
+                          <tr>
+                            <td>Address:</td>
+                            <td>
+                              <Tooltip 
+                                title={row.peerId}
+                              >
+                                <span>
+                                 {shorten0xAddress(row.peerId, -6)}
+                                </span>
+                              </Tooltip>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Last Seen:</td>
+                            <td>{formatDate(row.lastSeen, false)}</td>
+                          </tr>
+                          <tr>
+                          <td>Ping count:</td>
+                            <td>{row.count}</td>
+                          </tr>
+                          <tr>
+                            <td>Latency average:</td>
+                            <td>{row.latencyAverage ? row.latencyAverage.toFixed(2) : '-'} ms</td>
+                          </tr>
+                          <tr>
+                            <td>Availability:</td>
+                            <td>{row.availability*100}%</td>
+                          </tr>
+                        </MobileTable>
+                      </STableCell>
                     </TableRow>
                   );
                 })}
@@ -284,8 +371,8 @@ export default function EnhancedTable(props) {
               }
             </TableBody>
           </Table>
-        </TableContainer>
-        <TablePagination
+        </STableContainer>
+        <STablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
           count={filteredData.length}

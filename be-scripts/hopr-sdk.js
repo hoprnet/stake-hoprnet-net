@@ -80,3 +80,33 @@ export async function nodeGetPeers (apiEndpoint, apiToken) {
     });
   return response;
 };
+
+export async function getPeersFromSubGraph (){
+  let status;
+  const response = fetch("https://api.thegraph.com/subgraphs/name/hoprnet/hopr-channels", {
+      "headers": {
+          "accept": "*/*",
+          "accept-language": "en-US,en;q=0.9,el;q=0.8",
+          "content-type": "application/json",
+          "sec-ch-ua": "\"Chromium\";v=\"104\", \" Not A;Brand\";v=\"99\", \"Google Chrome\";v=\"104\"",
+          "sec-ch-ua-mobile": "?0",
+          "sec-ch-ua-platform": "\"macOS\"",
+          "sec-fetch-dest": "empty",
+          "sec-fetch-mode": "cors",
+          "sec-fetch-site": "same-site"
+      },
+      "referrer": "https://thegraph.com/",
+      "referrerPolicy": "strict-origin-when-cross-origin",
+      "body": "{\"query\":\"{\\n  accounts {\\n    id\\n    publicKey\\n    multiaddr\\n  }\\n}\",\"variables\":null}",
+      "method": "POST",
+      "mode": "cors",
+      "credentials": "omit"
+  }).then((res) => {
+    status = res.status;
+    return res.json();
+  }).catch((err) => {
+    console.error(`Error [HOPR SDK]: getPeersFromSubGraph status ${status}`);
+    if(status !== 404) console.error(err);
+  });
+  return response;
+}
