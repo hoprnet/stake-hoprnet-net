@@ -3,22 +3,15 @@ import escape from 'sql-template-strings';
 import * as dotenv from 'dotenv'
 dotenv.config({ path: './.env.local' });
 
-// *** SIMPLE VERSION *** //
-// CREATE TABLE `node-registry-simple` (
-//   `id` BIGINT UNIQUE AUTO_INCREMENT, 
-//   `peerId` varchar(100), 
-//   `ping` INT, 
-//    `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-//    PRIMARY KEY (id)
-//   ) 
-//
 
-
-// *** RELATIVE VERSION *** //
+// *** RELATIVE DB *** //
 // CREATE TABLE `node-registry` (
 //   `id` INT UNIQUE AUTO_INCREMENT, 
-//   `peerId` varchar(200) UNIQUE, 
-//    PRIMARY KEY (id)
+//   `peerId` varchar(200), 
+//   `environmentId` INT, 
+//    PRIMARY KEY (id),
+//    FOREIGN KEY (environmentId) REFERENCES `environments`(id),
+//    UNIQUE KEY `unique_index` (`peerId`,`environmentId`)
 //   ) 
 
 //   CREATE TABLE `pings` (
@@ -39,8 +32,16 @@ dotenv.config({ path: './.env.local' });
 // CREATE TABLE `runtimes` (
 //   `id` INT UNIQUE AUTO_INCREMENT, 
 //   `runtime` BIGINT,
-//   `finishedAt`  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+//   `numberOfWorkingNodes` INT,
+//   `positivePings` INT,
+//   `finishedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 // ) 
+
+// CREATE TABLE `environments` (
+//   `id` INT UNIQUE AUTO_INCREMENT, 
+//   `environment` varchar(200) UNIQUE, 
+// PRIMARY KEY (id) 
+// );
 
 
 const db = mysql({
@@ -52,8 +53,8 @@ const db = mysql({
   }
 })
 
-const queryDB = async (query) => {
-  let results = await db.query(query);
+const queryDB = async (query, data) => {
+  let results = await db.query(query, data);
   await db.end();
   return results
 }
@@ -95,14 +96,23 @@ export async function insertPeerId (peerId) {
     console.log('MySQL: insertPeerId', peerId);
     await queryDB(escape`
       INSERT INTO \`node-registry\` (peerId) VALUES (${peerId})
-      ON DUPLICATE KEY UPDATE id=id;
     `)
+}
+
+export async function insertPeerIds (peerIds) {
+  console.log('MySQL: insertPeerIds', peerIds.length);
+  let transaction = db.transaction();
+  for (let i = 0; i < peerIds.length; i++) {
+    transaction.query(escape`INSERT INTO \`node-registry\` (peerId, environmentId) VALUES (${peerIds[i].peerId}, (SELECT \`id\` FROM \`environments\` WHERE environment = ${peerIds[i].environment}));`)
+  }
+  await transaction.commit()
+  await db.end();
 }
 
 export async function selectPeerIds () {
   console.log('MySQL: selectPeerIds');
   let query = await queryDB(escape`
-    SELECT peerId FROM  \`node-registry\` 
+    SELECT peerId, (SELECT environment FROM environments WHERE id = environmentId) AS environment  FROM  \`node-registry\` 
   `);
   return query;
 }
@@ -136,9 +146,30 @@ export async function insertPing (peerId, latency) {
   }
 }
 
-export async function insertRuntime (runtime) {
+export async function insertPings (pings) {
+  console.log('MySQL: insertPings', pings.length);
+
+  let transaction = db.transaction();
+  for (let i = 0; i < pings.length; i++) {
+    let latency = pings[i].latency;
+    let peerId = pings[i].peerId;
+    let environment = pings[i].environment;
+    transaction.query(escape`INSERT INTO pings (peerId, latency) VALUES ( (SELECT id FROM \`node-registry\` WHERE peerId = ${peerId} AND environmentId = (SELECT id FROM \`environments\` WHERE environment = ${environment})), ${latency} );`)
+  }
+  await transaction.commit()
+  await db.end();
+}
+
+export async function insertRuntime (runtime, numberOfWorkingNodes, positivePings) {
   console.log('MySQL: insertRuntime', runtime);
   await queryDB(escape`
-    INSERT INTO runtimes (runtime) VALUES (${runtime})
+    INSERT INTO runtimes (runtime, numberOfWorkingNodes, positivePings) VALUES (${runtime}, ${numberOfWorkingNodes}, ${positivePings})
   `)
 }
+
+export async function insertEnvironments (environments) {
+  console.log('MySQL: insertEnvironments', environments);
+  let query = `INSERT INTO \`environments\` (environment) VALUES ${environments.map(() => '(?)')} ON DUPLICATE KEY UPDATE id=id;`
+  await queryDB(query, environments);
+}
+

@@ -22,12 +22,26 @@ export async function getPeerId (apiEndpoint, apiToken) {
     status = res.status;
     return res.json();
   }).catch((err) => {
-    console.error(`Error [HOPR SDK]: getPeerId status ${status}`);
+    console.log(`Error [HOPR SDK]: getPeerId status ${status}`);
     if(status !== 404) console.error(err);
   });
   address = response?.hoprAddress;
   console.log('getPeerId', address)
   return address;
+};
+
+export async function nodeGetInfo (apiEndpoint, apiToken) {
+  let status;
+  const response = await fetch(`${apiEndpoint}/api/v2/node/info`, {
+    headers: generateHeaders(apiToken)
+  }).then((res) => {
+    status = res.status;
+    return res.json();
+  }).catch((err) => {
+    console.log(`Error [HOPR SDK]: nodeGetInfo status ${status}`);
+    if(status !== 404) console.error(err);
+  });
+  return response;
 };
 
 export async function sendMessage (apiEndpoint, apiToken, recipientPeerId, message) {
@@ -43,12 +57,13 @@ export async function sendMessage (apiEndpoint, apiToken, recipientPeerId, messa
     status = res.status;
   })
   .catch((err) => {
-    console.error(`Error [HOPR SDK]: sendMessage status ${status}`);
+    console.log(`Error [HOPR SDK]: sendMessage status ${status}`);
     if(status !== 404) console.error(err);
   });
 };
 
 export async function nodePing (apiEndpoint, apiToken, peerId) {
+  let startTime = Date.now();
   console.log(`HOPR SDK: nodePing`, apiEndpoint, apiToken, peerId);
   let status;
   const response = await fetch(`${apiEndpoint}/api/v2/node/ping`, {
@@ -62,9 +77,10 @@ export async function nodePing (apiEndpoint, apiToken, peerId) {
     return res.json();
   })
   .catch((err) => {
-    console.error(`Error [HOPR SDK]: nodePing status ${status}`);
+    console.log(`Error [HOPR SDK]: nodePing status ${status}`);
     if(status !== 404) console.error(err);
   });
+  console.log(`HOPR SDK: nodePing runtime: ${Date.now()-startTime}ms`);
   return response;
 };
 
@@ -78,7 +94,7 @@ export async function nodeGetPeers (apiEndpoint, apiToken) {
       return res.json();
     })
     .catch((err) => {
-      console.error(`Error [HOPR SDK]: nodeGetPeers status ${status}`);
+      console.log(`Error [HOPR SDK]: nodeGetPeers status ${status}`);
       if(status !== 404) console.error(err);
     });
   return response;
@@ -109,7 +125,7 @@ export async function getPeersFromSubGraph (){
     status = res.status;
     return res.json();
   }).catch((err) => {
-    console.error(`Error [HOPR SDK]: getPeersFromSubGraph status ${status}`);
+    console.log(`Error [HOPR SDK]: getPeersFromSubGraph status ${status}`);
     if(status !== 404) console.error(err);
   });
 
