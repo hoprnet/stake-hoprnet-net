@@ -12,8 +12,13 @@ import {
     insertPing, 
     insertPings,
     insertRuntime,
-    insertEnvironments
+    insertEnvironments,
+    insertElementEvent,
+    checkElementEventInLast24h
 } from "./mysql.js";
+import {
+    reportToElement
+} from './element.js'
 
 
 // const playground_url = 'red_elbe_elara.playground.hoprnet.org:3001'
@@ -34,6 +39,8 @@ var nodes = api_keys.map(key => {
         return {api_url: process.env['api_url_' + number], api_key: process.env['api_key_' + number] }
     }
 })
+
+const nodesProvided = nodes.length;
 
 const startedAt = Date.now();
 var peers = [];
@@ -71,7 +78,7 @@ async function checkNodes(){
         }
     }
 
-    api_url_to_remove.push('http://116.202.86.163:3001')
+    api_url_to_remove.push('http://116.202.86.163:3001') // testing code
 
     //Make sure api_url_to_remove are unreachable
     for (let i = 0; i < api_url_to_remove.length; i++) {
@@ -87,7 +94,17 @@ async function checkNodes(){
     nodes = nodes.filter(node => {
         if(!api_url_to_remove.includes(node.api_url)) return node;
     })
+
+    // Let on Element know that Nodes are down (if we didn't let know in the last 24h)
+    if (api_url_to_remove.length > 0) {
+        let alreadyInserted = await checkElementEventInLast24h('nodeOut', api_url_to_remove.length);
+        if (!alreadyInserted){
+            insertElementEvent('nodeOut', api_url_to_remove.length);
+            reportToElement(`[Network Registry] ${api_url_to_remove.length} node out of ${nodesProvided} appears to be offline.`);    
+        }
+     }
 }
+
 
 async function saveEnvironments(){
     let environments = [];
@@ -128,134 +145,22 @@ async function addPeerLocally(peerId, environment){
 } 
 
 async function pingAndSaveResults(){
-    // let numberOfPings = peers.length * nodes.length;
-    // for (let i = 0; i < peers.length; i++) {
-    //     for (let n = 0; n < nodes.length; n++) {
-    //         let pingNumber = (i * nodes.length) + n+1;
-    //         let percentage = Math.round(pingNumber / numberOfPings * 100)    
-    //         console.log(`[${percentage}%] Ping ${pingNumber} out of ${numberOfPings} `)
-    //         let ping = await nodePing(nodes[n].api_url, nodes[n].api_key, peers[i].peerId);
-    //         if (ping?.hasOwnProperty('latency')) {
-    //             console.log(`${peers[i].peerId} latency: ${ping.latency}`)
-    //             insertPingLocally(peers[i].peerId, nodes[n].environment, ping.latency)
-    //             counter++;
-    //             break;
-    //         }
-    //     }
-    // }
-
-    // pings = [
-    //     {
-    //       peerId: "16Uiu2HAkuuEMzMcYHYRaPabbLS4zRr6mYTQvUSu18X8Sfny5QGFy",
-    //       environment: "paleochora",
-    //       latency: 131,
-    //     },
-    //     {
-    //       peerId: "16Uiu2HAkvyDBGKr7yvCrxjVLSJtcdjZxWLCct6d1Lm6HBt9XiSmu",
-    //       environment: "paleochora",
-    //       latency: 94,
-    //     },
-    //     {
-    //       peerId: "16Uiu2HAkxL3DsnMybGsqPg6pJsqkdtBXTg6f5SWs9kQ2gfrQ6ftn",
-    //       environment: "paleochora",
-    //       latency: 276,
-    //     },
-    //     {
-    //       peerId: "16Uiu2HAky56e6ofJ6dayRZqDa7QSvWtoRVfn34pCnjXqdP62Spzs",
-    //       environment: "paleochora",
-    //       latency: 202,
-    //     },
-    //     {
-    //       peerId: "16Uiu2HAm11bGJSNJ61g2UnEDh7gRPkw13ZMNkT5qdRfyViSVTDWt",
-    //       environment: "paleochora",
-    //       latency: 86,
-    //     },
-    //     {
-    //       peerId: "16Uiu2HAm3BNqTmwtkFhUdvdD1hg4bYD4HaLP9JDqyKpb93q4wrsh",
-    //       environment: "paleochora",
-    //       latency: 164,
-    //     },
-    //     {
-    //       peerId: "16Uiu2HAm3dq3EBLzPGWS5D1e7jweQ8fwyMvTb3riq6xDcQbCBtwd",
-    //       environment: "paleochora",
-    //       latency: 168,
-    //     },
-    //     {
-    //       peerId: "16Uiu2HAm774i9ERXgWqAHRqgK5waH6HdZfmAFa5FkyfkZPb6ZrUu",
-    //       environment: "paleochora",
-    //       latency: 244,
-    //     },
-    //     {
-    //       peerId: "16Uiu2HAm9P8fvWN5TB49yQapp2NyRY9TsKKMtjb8dzpgCobt7cDe",
-    //       environment: "paleochora",
-    //       latency: 202,
-    //     },
-    //     {
-    //       peerId: "16Uiu2HAmBCwReYMGdT6Pt9pPVGBY7waME3HMuY1CsER5gbPN4NTo",
-    //       environment: "paleochora",
-    //       latency: 1185,
-    //     },
-    //     {
-    //       peerId: "16Uiu2HAmDaSvG8xbvN3A8VZt94a4KvUCBRpBjdnrKnRkkkaBw2WW",
-    //       environment: "paleochora",
-    //       latency: 282,
-    //     },
-    //     {
-    //       peerId: "16Uiu2HAmDBEQyPQbSvdUuAgm48evrjkVpbhibFCRCLxHXFtgixop",
-    //       environment: "paleochora",
-    //       latency: 261,
-    //     },
-    //     {
-    //       peerId: "16Uiu2HAmDyN7ApEZYPiEayEbys3Dhq65J5CmcWYHcGRCz4FcwZe3",
-    //       environment: "paleochora",
-    //       latency: 171,
-    //     },
-    //     {
-    //       peerId: "16Uiu2HAmGzYzFAjgSFCfJJwSXxBugDe1odAf7Vf4UscLA8P4GNKw",
-    //       environment: "paleochora",
-    //       latency: 163,
-    //     },
-    //     {
-    //       peerId: "16Uiu2HAmHy32g1ESNT9Gnai4q6XrbSmAgn87jnCVvHg6yGpgCW3R",
-    //       environment: "paleochora",
-    //       latency: 202,
-    //     },
-    //     {
-    //       peerId: "16Uiu2HAmLk2YSxtfC7FzxQmuK1KD9SuTdXB5euqtPADufjKSYXtH",
-    //       environment: "paleochora",
-    //       latency: 193,
-    //     },
-    //     {
-    //       peerId: "16Uiu2HAmLwWnuYcTLizvwim8o7tiBqyiDdmj9taatAKE4Bt83yFp",
-    //       environment: "paleochora",
-    //       latency: 314,
-    //     },
-    //     {
-    //       peerId: "16Uiu2HAmMgwjUg7LuJ2c1usswYYTKpyZQpksjc1knxPZhd4NgRhD",
-    //       environment: "paleochora",
-    //       latency: 41,
-    //     },
-    //     {
-    //       peerId: "16Uiu2HAmRUxdDV2gJEyViudUiW3W3AtkkYdnFrNt5hfEvzpE4LEp",
-    //       environment: "paleochora",
-    //       latency: 213,
-    //     },
-    //     {
-    //       peerId: "16Uiu2HAmTQJLAcmkcDidMRrzcGCfVEatLmsEm3CtwgdpdRx9qd7Q",
-    //       environment: "paleochora",
-    //       latency: 114,
-    //     },
-    //     {
-    //       peerId: "16Uiu2HAmTzCVr8vhnETbYkxge578vLoJZJxz4UySLdKznRBSuLNg",
-    //       environment: "paleochora",
-    //       latency: 173,
-    //     },
-    //     {
-    //       peerId: "16Uiu2HAmVria8S3hA3JYcnBbQSz9zNThBkvMANNQQ7418ZT1nGNh",
-    //       environment: "paleochora",
-    //       latency: 162,
-    //     }
-    //   ]
+    let numberOfPings = peers.length * nodes.length;
+    for (let i = 0; i < peers.length; i++) {
+        for (let n = 0; n < nodes.length; n++) {
+            if(nodes[n].environment !== peers[i].environment) continue;
+            let pingNumber = (i * nodes.length) + n+1;
+            let percentage = Math.round(pingNumber / numberOfPings * 100)    
+            console.log(`[${percentage}%] Ping ${pingNumber} out of ${numberOfPings} `)
+            let ping = await nodePing(nodes[n].api_url, nodes[n].api_key, peers[i].peerId);
+            if (ping?.hasOwnProperty('latency')) {
+                console.log(`${peers[i].peerId} latency: ${ping.latency}`)
+                insertPingLocally(peers[i].peerId, nodes[n].environment, ping.latency)
+                counter++;
+                break;
+            }
+        }
+    }
 
     if (pings.length > 0) await insertPings(pings); 
 }

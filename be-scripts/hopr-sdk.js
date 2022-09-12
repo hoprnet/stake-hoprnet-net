@@ -1,4 +1,4 @@
-import fetch  from 'node-fetch'
+import fetch, { AbortError }  from 'node-fetch'
 import { Headers }  from 'node-fetch'
 import {
   PublicKey,
@@ -63,24 +63,40 @@ export async function sendMessage (apiEndpoint, apiToken, recipientPeerId, messa
 };
 
 export async function nodePing (apiEndpoint, apiToken, peerId) {
-  let startTime = Date.now();
   console.log(`HOPR SDK: nodePing`, apiEndpoint, apiToken, peerId);
-  let status;
-  const response = await fetch(`${apiEndpoint}/api/v2/node/ping`, {
-    method: "POST",
-    headers: generateHeaders(apiToken, true),
-    body: JSON.stringify({
-      peerId
+
+  const timeoutMs = 10000
+  // Aborting fetch longer than XXXX ms
+  const AbortController = globalThis.AbortController || await import('abort-controller')
+  const controller = new AbortController();
+  const timeout = setTimeout(() => {
+    controller.abort();
+    console.log('request was aborteddddd');
+  }, timeoutMs);
+
+  let response, status;
+  try {
+    response = await fetch(`${apiEndpoint}/api/v2/node/ping`, {
+      method: "POST",
+      headers: generateHeaders(apiToken, true),
+      signal: controller.signal,
+      body: JSON.stringify({
+        peerId
+      })
     })
-  }).then((res) => {
-    status = res.status;
-    return res.json();
-  })
-  .catch((err) => {
-    console.log(`Error [HOPR SDK]: nodePing status ${status}`);
-    if(status !== 404) console.error(err);
-  });
-  console.log(`HOPR SDK: nodePing runtime: ${Date.now()-startTime}ms`);
+    status = response.status;
+    response = await response.json();
+  } catch (err) {
+    if (err instanceof AbortError) {
+      console.log(`[HOPR SDK]: nodePing aborted after ${timeoutMs/1000}s`);
+    } else {
+      console.log(`Error [HOPR SDK]: nodePing status ${status}`);
+      if(status !== 404) console.error(err);
+    }
+  } finally {
+    clearTimeout(timeout);
+  }
+
   return response;
 };
 

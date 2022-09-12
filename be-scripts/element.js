@@ -1,0 +1,27 @@
+
+import fetch  from 'node-fetch'
+
+export async function reportToElement(message){
+    console.log('[Element] reportToElement:', message)
+    const roomId = '!sNNBSDBeCzREdTnHIg:hoprnet.io'; // Testing API 
+    const devopsRoomId = '!jjpdIfESQEvuRFrUIK:hoprnet.io';
+    const url = new URL(process.env.element_home_url).origin;
+    try {
+        const resp = await fetch(`${url}/_matrix/client/r0/rooms/${devopsRoomId}/send/m.room.message`,{
+            method: 'POST', 
+            headers: {
+                'Authorization': `Bearer ${process.env.element_access_token}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                'body': message,
+  //              'format': 'org.matrix.custom.html',
+                'msgtype': 'm.text'
+                }),   
+            })
+        .then((response) => response.text());
+    } catch (e) {
+        console.log('Error while reporting to Element.')
+    }
+}

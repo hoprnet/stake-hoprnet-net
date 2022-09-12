@@ -43,6 +43,14 @@ dotenv.config({ path: './.env.local' });
 // PRIMARY KEY (id) 
 // );
 
+// CREATE TABLE `element` (
+//   `id` INT UNIQUE AUTO_INCREMENT, 
+//   `msgType` varchar(200),
+//   `data` varchar(200),
+//   `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+// PRIMARY KEY (id) 
+// );
+
 
 const db = mysql({
   config: {
@@ -57,39 +65,6 @@ const queryDB = async (query, data) => {
   let results = await db.query(query, data);
   await db.end();
   return results
-}
-
-const queryDBTransaction = async (query1, query2, query3, query4) => {
-  try {
-    let results;
-    if (query4) {
-      results = await db.transaction()
-      .query(query1)
-      .query(query2)
-      .query(query3)
-      .query(query4)
-      .commit() // execute the queries
-    } else if (query3) {
-      results = await db.transaction()
-      .query(query1)
-      .query(query2)
-      .query(query3)
-      .commit() // execute the queries
-    } else {
-      results = await db.transaction()
-      .query(query1)
-      .query(query2)
-      .commit() // execute the queries
-    }
- //   let results = await db.transaction()
- //   console.log(arguments)
-  //  arguments.map(query => {db.query(query)});
-  //  db.commit();
-    await db.end();
-    return results;
-  } catch (error) {
-    throw error
-  }
 }
 
 export async function insertPeerId (peerId) {
@@ -167,9 +142,33 @@ export async function insertRuntime (runtime, numberOfWorkingNodes, positivePing
   `)
 }
 
+// export async function insertEnvironments (environments) {
+//   console.log('MySQL: insertEnvironments', environments);
+//   let query = `INSERT INTO \`environments\` (environment) VALUES ${environments.map(() => '(?)')} ON DUPLICATE KEY UPDATE id=id;`
+//   await queryDB(query, environments);
+// }
+
 export async function insertEnvironments (environments) {
   console.log('MySQL: insertEnvironments', environments);
-  let query = `INSERT INTO \`environments\` (environment) VALUES ${environments.map(() => '(?)')} ON DUPLICATE KEY UPDATE id=id;`
-  await queryDB(query, environments);
+  try {
+    let query = `INSERT INTO \`environments\` (environment) VALUES ${environments.map(() => '(?)')}`
+    await queryDB(query, environments);
+  } catch (e) {
+    // ENV probably already in the table
+  }
 }
+
+export async function insertElementEvent (msgType, data) {
+  console.log('MySQL: insertElementEvent', msgType, data);
+  let query = escape`INSERT INTO \`element\` (msgType, data) VALUES (${msgType}, ${data})`
+  await queryDB(query);
+}
+
+export async function checkElementEventInLast24h (msgType, data) {
+  console.log('MySQL: checkElementEventInLast24h', msgType, data);
+  let query = escape`SELECT * FROM \`element\` WHERE msgType=${msgType} AND data = ${data} AND timestamp >= (NOW() - INTERVAL 24 HOUR)`
+  query = await queryDB(query);
+  return query.length > 0;
+}  
+
 
