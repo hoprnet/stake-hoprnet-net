@@ -281,6 +281,7 @@ export default function EnhancedTable(props) {
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredData.length) : 0;
 
   const formatDate = (epoch, twoRows = true) => {
+    if(!epoch) return <>-<br/>&nbsp;</>
     const d = new Date(epoch);
     const year = d.getFullYear();
     const month = d.getMonth() < 10 ? `0${d.getMonth()}` : d.getMonth();

@@ -33,7 +33,7 @@ export async function getNodes (environmentId) {
   let query = await queryDB(escape`
       SELECT 
         nr.peerId AS peerId, 
-        ls.lastSeen AS lastSeen,
+        MAX(pings.timestamp) AS lastSeen,
         count(pings.peerId) AS count,
         AVG(pings.latency) AS latencyAverage,
         (    count(pings.peerId) / 
