@@ -76,8 +76,8 @@ const STablePagination= styled(TablePagination)`
 `
 
 const SMobileTable= styled.table`
-    font-size: 13px;
-  td:first-child {
+  font-size: 13px;
+  td:first-of-type {
     font-weight: 600;
     padding-right: 8px;
   }
@@ -187,7 +187,7 @@ function EnvironmentSelect(props) {
         id="environment-select"
         value={props.value}
         label="Environment"
-        onChange={props.handleChange}
+        onChange={props.onChange}
       >
         {props?.items?.map(item => 
           <MenuItem 
@@ -322,6 +322,8 @@ export default function EnhancedTable(props) {
         />
         <EnvironmentSelect
           items={props.environments}
+          onChange={(event)=> {props.setEnvironment(event.target.value)}}
+          value={props.environment}
         />
       </SearchRow>
       <Paper sx={{ width: '100%', mb: 2 }}>

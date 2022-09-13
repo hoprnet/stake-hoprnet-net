@@ -28,7 +28,7 @@ export async function getEnvironments () {
 
 
 
-export async function getNodes () {
+export async function getNodes (environmentId) {
   console.log('MySQL: getNodes');
   let query = await queryDB(escape`
       SELECT 
@@ -42,6 +42,7 @@ export async function getNodes () {
       FROM \`node-registry\` AS nr
       LEFT JOIN \`last-seen\` AS ls ON nr.id = ls.peerId  
       LEFT JOIN pings ON nr.id = pings.peerId
+      WHERE nr.environmentId = ${environmentId}
       GROUP BY nr.peerId  
       ORDER BY count DESC, peerId ASC
   `);
