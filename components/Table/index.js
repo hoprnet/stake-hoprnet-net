@@ -192,7 +192,7 @@ function EnvironmentSelect(props) {
         {props?.items?.map(item => 
           <MenuItem 
             value={item.id}
-            key={`environment-item-${id}`}
+            key={`environment-item-${item.id}`}
           > 
             {item.environment}
           </MenuItem>
