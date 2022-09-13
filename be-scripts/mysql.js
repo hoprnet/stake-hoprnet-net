@@ -9,6 +9,7 @@ dotenv.config({ path: './.env.local' });
 //   `id` INT UNIQUE AUTO_INCREMENT, 
 //   `peerId` varchar(200), 
 //   `environmentId` INT, 
+//    addedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 //    PRIMARY KEY (id),
 //    FOREIGN KEY (environmentId) REFERENCES `environments`(id),
 //    UNIQUE KEY `unique_index` (`peerId`,`environmentId`)
