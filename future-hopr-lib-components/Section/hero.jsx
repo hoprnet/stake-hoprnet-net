@@ -67,7 +67,7 @@ function Section1(props) {
             </ImageContainer>
 
             <Typography type="h2">
-                Network Registry
+                {props.title}
             </Typography>
 {/* 
             <Subtext center>

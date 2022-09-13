@@ -16,38 +16,17 @@ const queryDB = async (query) => {
   return results
 }
 
-const queryDBTransaction = async (query1, query2, query3, query4) => {
-  try {
-    let results;
-    if (query4) {
-      results = await db.transaction()
-      .query(query1)
-      .query(query2)
-      .query(query3)
-      .query(query4)
-      .commit() // execute the queries
-    } else if (query3) {
-      results = await db.transaction()
-      .query(query1)
-      .query(query2)
-      .query(query3)
-      .commit() // execute the queries
-    } else {
-      results = await db.transaction()
-      .query(query1)
-      .query(query2)
-      .commit() // execute the queries
-    }
- //   let results = await db.transaction()
- //   console.log(arguments)
-  //  arguments.map(query => {db.query(query)});
-  //  db.commit();
-    await db.end();
-    return results;
-  } catch (error) {
-    throw error
-  }
+
+export async function getEnvironments () {
+  console.log('MySQL: getEnvironments');
+  let query = await queryDB(escape`
+      SELECT *
+      FROM \`environments\` 
+  `);
+  return query;
 }
+
+
 
 export async function getNodes () {
   console.log('MySQL: getNodes');

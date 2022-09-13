@@ -78,7 +78,7 @@ async function checkNodes(){
         }
     }
 
-    api_url_to_remove.push('http://116.202.86.163:3001') // testing code
+ //   api_url_to_remove.push('http://116.202.86.163:3001') // testing code
 
     //Make sure api_url_to_remove are unreachable
     for (let i = 0; i < api_url_to_remove.length; i++) {

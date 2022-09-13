@@ -15,6 +15,10 @@ import Paper from '@mui/material/Paper';
 import Tooltip from '@mui/material/Tooltip';
 import TextField from '@mui/material/TextField';
 import { visuallyHidden } from '@mui/utils';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 import { shorten0xAddress } from '../../utils/functions'
 import _debounce from 'lodash/debounce';
@@ -76,6 +80,26 @@ const SMobileTable= styled.table`
   td:first-child {
     font-weight: 600;
     padding-right: 8px;
+  }
+`
+
+const SearchRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  @media only screen and (max-width: 820px) {
+    flex-direction: column;
+    margin-bottom: 16px;
+  }
+`
+
+const SFormControl = styled(FormControl)`
+  width: 260px;
+  .MuiInputBase-root {
+    background: white;
+  }
+  @media only screen and (max-width: 820px) {
+    width: 100%;
   }
 `
 
@@ -152,6 +176,32 @@ const headCells = [
   },
 ];
 
+
+function EnvironmentSelect(props) {
+
+  return (
+    <SFormControl>
+      <InputLabel id="environment-select-label">Environment</InputLabel>
+      <Select
+        labelId="environment-select-label"
+        id="environment-select"
+        value={props.value}
+        label="Environment"
+        onChange={props.handleChange}
+      >
+        {props?.items?.map(item => 
+          <MenuItem 
+            value={item.id}
+            key={`environment-item-${id}`}
+          > 
+            {item.environment}
+          </MenuItem>
+        )}
+      </Select>
+    </SFormControl>
+  )
+}
+
 function EnhancedTableHead(props) {
   const { order, orderBy, rowCount, onRequestSort } =
     props;
@@ -208,6 +258,7 @@ export default function EnhancedTable(props) {
 
   useEffect(() => {
     filterData(search);
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.data]);
 
   const handleRequestSort = (event, property) => {
@@ -225,14 +276,9 @@ export default function EnhancedTable(props) {
     setPage(0);
   };
 
-  const handleChangeDense = (event) => {
-    setDense(event.target.checked);
-  };
-
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredData.length) : 0;
-
 
   const formatDate = (epoch, twoRows = true) => {
     const d = new Date(epoch);
@@ -248,10 +294,12 @@ export default function EnhancedTable(props) {
   function handleSearchChange (event) {
       set_search(event.target.value);
       debounceFn(event.target.value);
-  //    filterData(event.target.value)
   };
 
-  const debounceFn = useCallback(_debounce(filterData, 150), [props.data]);
+  //eslint-disable-next-line react-hooks/exhaustive-deps
+  const debounceFn = useCallback(
+    _debounce(filterData, 150), 
+    [props.data]);
 
   function filterData(searchPhrase) {
     if (!searchPhrase | searchPhrase === '' ) {
@@ -265,12 +313,17 @@ export default function EnhancedTable(props) {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <SearchPeerId 
-        label="Search Peer Id" 
-        variant="outlined" 
-        value={search}
-        onChange={handleSearchChange}
-      />
+      <SearchRow>
+        <SearchPeerId 
+          label="Search Peer Id" 
+          variant="outlined" 
+          value={search}
+          onChange={handleSearchChange}
+        />
+        <EnvironmentSelect
+          items={props.environments}
+        />
+      </SearchRow>
       <Paper sx={{ width: '100%', mb: 2 }}>
         <STableContainer>
           <Table
