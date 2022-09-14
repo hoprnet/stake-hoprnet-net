@@ -4,12 +4,16 @@ A network registry back-end and front-end repository for Hopr Network.
 
 ## Development
 
-To run the development server:
+To run the Back-End:
+
+```
+node ./be-scripts/index.js
+```
+
+To run the Front-End development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
@@ -85,9 +89,28 @@ If a new peerId is detected, it is begin added to the databse.
 
 ### `prepareData()`
 The nodes and peerId are being grouped by their environments.
+
 ```
 var nodes = {
     'monte_rosa': [{peerId: xxx, ...}, ...],
     'paleochora': [{peerId: xxx, ...}, ...]
 }
 ```
+
+
+### `pingAndSaveResults()`
+This function loops over all the nodes to ping and saves the results.
+
+1st degree loop: loop over the environments (e.g.  'monte_rosa', 'paleochora')
+
+2nd degree loop: loop over the peers in each environment 
+
+3rd degree loop: loop over the nodes used to ping (in the same environment as the peerId). 
+ - If a ping comes back positive, the loop finishes and we go to the next peerId.
+ - If the ping comes back negative, the loop continues until either we get a positive ping, or the avalible nodes run out.
+
+ Each ping has a timeout of 10s. 
+ After the 2nd degree loop is finished, it means that we checked all the peerId on the environment and we save to the database: 
+  - pings 
+  - the runtime
+
