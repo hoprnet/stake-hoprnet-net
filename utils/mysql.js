@@ -37,7 +37,7 @@ export async function getNodes (environmentId) {
         count(pings.peerId) AS count,
         AVG(pings.latency) AS latencyAverage,
         (    count(pings.peerId) / 
-        (    SELECT count(*) FROM runtimes WHERE finishedAt > nr.addedAt   )   )    
+        (    SELECT count(*) FROM runtimes WHERE ( finishedAt ) > nr.addedAt AND environmentId = ${environmentId} ) )    
         AS availability
       FROM \`node-registry\` AS nr
       LEFT JOIN \`last-seen\` AS ls ON nr.id = ls.peerId  
@@ -48,6 +48,6 @@ export async function getNodes (environmentId) {
   `);
   return query;
 }
-
+//         (    SELECT count(*) FROM runtimes WHERE ( finishedAt - INTERVAL runtime HOUR ) > nr.addedAt AND nr.environmentId = ${environmentId} ) )   
 //runtimes add envs
 

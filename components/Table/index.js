@@ -114,10 +114,20 @@ const MobileTable = (props) => {
 }
 
 function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
+  let a2 = a[orderBy];
+  let b2 = b[orderBy];
+
+  switch(orderBy){
+    case 'latencyAverage':
+      if (a2 === null) a2 = Number.MAX_SAFE_INTEGER;
+      if (b2 === null) b2 = Number.MAX_SAFE_INTEGER;
+      break;
+  }
+
+  if (b2 < a2) {
     return -1;
   }
-  if (b[orderBy] > a[orderBy]) {
+  if (b2 > a2) {
     return 1;
   }
   return 0;
@@ -157,7 +167,7 @@ const headCells = [
     label: 'Last Seen',
   },
   {
-    id: 'pings',
+    id: 'count',
     numeric: true,
     disablePadding: false,
     label: 'Ping Count',
@@ -249,7 +259,7 @@ EnhancedTableHead.propTypes = {
 
 export default function EnhancedTable(props) {
   const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('calories');
+  const [orderBy, setOrderBy] = React.useState('');
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -367,7 +377,7 @@ export default function EnhancedTable(props) {
                       <STableCell align="right">{formatDate(row.lastSeen)}</STableCell>
                       <STableCell align="right">{row.count}</STableCell>
                       <STableCell align="right">{row.latencyAverage ? row.latencyAverage.toFixed(2) : '-'} ms</STableCell>
-                      <STableCell align="right">{row.availability*100}%</STableCell>
+                      <STableCell align="right">{Math.round(row.availability*100)}%</STableCell>
                       <STableCell 
                         className='MuiTableCell-mobileRow'
                       >
