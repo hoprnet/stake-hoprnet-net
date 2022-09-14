@@ -35,7 +35,9 @@ dotenv.config({ path: './.env.local' });
 //   `runtime` BIGINT,
 //   `numberOfWorkingNodes` INT,
 //   `positivePings` INT,
-//   `finishedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+//   `environmentId` INT, 
+//   `finishedAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//    FOREIGN KEY (environmentId) REFERENCES `environments`(id)
 // ) 
 
 // CREATE TABLE `environments` (
@@ -79,7 +81,12 @@ export async function insertPeerIds (peerIds) {
   console.log('MySQL: insertPeerIds', peerIds.length);
   let transaction = db.transaction();
   for (let i = 0; i < peerIds.length; i++) {
-    transaction.query(escape`INSERT INTO \`node-registry\` (peerId, environmentId) VALUES (${peerIds[i].peerId}, (SELECT \`id\` FROM \`environments\` WHERE environment = ${peerIds[i].environment}));`)
+    transaction.query(escape`
+      INSERT INTO \`node-registry\` (peerId, environmentId) 
+      VALUES 
+        (${peerIds[i].peerId}, 
+        (SELECT \`id\` FROM \`environments\` WHERE environment = ${peerIds[i].environment}));
+    `)
   }
   await transaction.commit()
   await db.end();
@@ -136,10 +143,16 @@ export async function insertPings (pings) {
   await db.end();
 }
 
-export async function insertRuntime (runtime, numberOfWorkingNodes, positivePings) {
+export async function insertRuntime (runtime, numberOfWorkingNodes, positivePings, environment) {
   console.log('MySQL: insertRuntime', runtime);
   await queryDB(escape`
-    INSERT INTO runtimes (runtime, numberOfWorkingNodes, positivePings) VALUES (${runtime}, ${numberOfWorkingNodes}, ${positivePings})
+    INSERT INTO runtimes (runtime, numberOfWorkingNodes, positivePings, environmentId) 
+    VALUES (
+      ${runtime}, 
+      ${numberOfWorkingNodes}, 
+      ${positivePings},
+      (SELECT id FROM \`environments\` WHERE environment = ${environment})
+    )
   `)
 }
 

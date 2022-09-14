@@ -41,13 +41,16 @@ var nodes = api_keys.map(key => {
 })
 
 const nodesProvided = nodes.length;
-
-const startedAt = Date.now();
+var nodeEnvironments = [];
+var pings = [];
 var peers = [];
+
+var peersOnEnvpeers = [];
 var newPeers = [];
 var lastSeen = [];
 var pings = [];
 var counter = 0;
+var numberOfPings;
 
 main();
 
@@ -55,14 +58,12 @@ async function main (){
     //TODO: maybe add a check if the tables are created in the DB?
 
     await getPeersFromDB();
-    
     await checkNodes();
     await saveEnvironments();
-
     await getPeersFromNetwork();
+    prepareData();
     await pingAndSaveResults();
 
-    await saveRuntime(counter, startedAt);
     process.exit()
 } 
 
@@ -100,19 +101,40 @@ async function checkNodes(){
         let alreadyInserted = await checkElementEventInLast24h('nodeOut', api_url_to_remove.length);
         if (!alreadyInserted){
             insertElementEvent('nodeOut', api_url_to_remove.length);
-            reportToElement(`[Network Registry] ${api_url_to_remove.length} node out of ${nodesProvided} appears to be offline.`);    
+   //         reportToElement(`[Network Registry] ${api_url_to_remove.length} node out of ${nodesProvided} appears to be offline.`);    
         }
      }
 }
 
+function prepareData() {
+    numberOfPings = peers.length * nodes.length;
+    nodes = groupItems(nodes);
+    peers = groupItems(peers);
+}
+
+function groupItems(input) {
+    let output = {}
+    for(let i = 0; i < input.length; i++) {
+        if(!Object.keys(output).includes(input[i].environment)) {
+            output[input[i].environment] = [input[i]];
+        } else {
+            output[input[i].environment].push(input[i])
+        }
+    }
+    return output;
+}
+
 
 async function saveEnvironments(){
-    let environments = [];
+    let allEnvironments = [];
     for (let i = 0; i < nodes.length; i++) {
-        if ( !environments.includes(nodes[i].environment) ) environments.push(nodes[i].environment);
+        if ( !nodeEnvironments.includes(nodes[i].environment) ) {
+            nodeEnvironments.push(nodes[i].environment);
+            allEnvironments.push(nodes[i].environment);
+        }
     }
-    if ( !environments.includes(process.env.thegraph_environment) ) environments.push(process.env.thegraph_environment);
-    await insertEnvironments(environments);
+    if ( !nodeEnvironments.includes(process.env.thegraph_environment) ) allEnvironments.push(process.env.thegraph_environment);
+    await insertEnvironments(allEnvironments);
 }
 
 async function getPeersFromDB(){
@@ -145,33 +167,42 @@ async function addPeerLocally(peerId, environment){
 } 
 
 async function pingAndSaveResults(){
-    let numberOfPings = peers.length * nodes.length;
-    for (let i = 0; i < peers.length; i++) {
-        for (let n = 0; n < nodes.length; n++) {
-            if(nodes[n].environment !== peers[i].environment) continue;
-            let pingNumber = (i * nodes.length) + n+1;
-            let percentage = Math.round(pingNumber / numberOfPings * 100)    
-            console.log(`[${percentage}%] Ping ${pingNumber} out of ${numberOfPings} `)
-            let ping = await nodePing(nodes[n].api_url, nodes[n].api_key, peers[i].peerId);
-            if (ping?.hasOwnProperty('latency')) {
-                console.log(`${peers[i].peerId} latency: ${ping.latency}`)
-                insertPingLocally(peers[i].peerId, nodes[n].environment, ping.latency)
-                counter++;
-                break;
+    for (let e = 0; e < nodeEnvironments.length; e++) {
+        const startedAt = Date.now();
+        let workingEnv = nodeEnvironments[e];
+        let nodesOnEnv = nodes[nodeEnvironments[e]];
+        let peersOnEnv = peers[nodeEnvironments[e]];
+
+        for (let p = 0; p < peersOnEnv.length; p++) {
+            for (let n = 0; n < nodesOnEnv.length; n++) {
+                if(nodesOnEnv[n].environment !== peersOnEnv[p].environment) continue;
+                let pingNumber = (p * nodesOnEnv.length) + n+1;
+                let percentage = Math.round(pingNumber / numberOfPings * 100);
+                console.log(`[${percentage}%] Ping ${pingNumber} out of ${numberOfPings} `)
+                let ping = await nodePing(nodesOnEnv[n].api_url, nodesOnEnv[n].api_key, peersOnEnv[p].peerId);
+                if (ping?.hasOwnProperty('latency')) {
+                    console.log(`${peersOnEnv[p].peerId} latency: ${ping.latency}`)
+                    insertPingLocally(peersOnEnv[p].peerId, nodesOnEnv[n].environment, ping.latency)
+                    counter++;
+                    break;
+                }
             }
         }
-    }
 
-    if (pings.length > 0) await insertPings(pings); 
+        if (pings.length > 0) {
+            await insertPings(pings);
+            await saveRuntime(counter, startedAt, workingEnv);
+        }
+    }
 }
 
 function insertPingLocally(peerId, environment, latency){
     pings.push({peerId, environment, latency});
 } 
 
-async function saveRuntime(counter, startedAt){
+async function saveRuntime(counter, startedAt, environment){
     const runtime = Date.now() - startedAt;
-    await insertRuntime(runtime, nodes.length, counter);
+    await insertRuntime(runtime, nodes[environment].length, counter, environment);
 }
 
 

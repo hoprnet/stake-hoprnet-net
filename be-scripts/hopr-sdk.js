@@ -31,6 +31,7 @@ export async function getPeerId (apiEndpoint, apiToken) {
 };
 
 export async function nodeGetInfo (apiEndpoint, apiToken) {
+  console.log(`HOPR SDK: nodeGetInfo`, apiEndpoint, apiToken);
   let status;
   const response = await fetch(`${apiEndpoint}/api/v2/node/info`, {
     headers: generateHeaders(apiToken)
@@ -71,7 +72,6 @@ export async function nodePing (apiEndpoint, apiToken, peerId) {
   const controller = new AbortController();
   const timeout = setTimeout(() => {
     controller.abort();
-    console.log('request was aborteddddd');
   }, timeoutMs);
 
   let response, status;
