@@ -287,8 +287,7 @@ export default function EnhancedTable(props) {
   };
 
   // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredData.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredData.length) : 0;
 
   const formatDate = (epoch, twoRows = true) => {
     if(!epoch) return <>-<br/>&nbsp;</>
@@ -360,6 +359,9 @@ export default function EnhancedTable(props) {
                       hover
                       tabIndex={-1}
                       key={row.peerId}
+                      style={{
+                        height: (dense ? 33 : 58)
+                      }}
                     >
                       <STableCell
                         component="th"
@@ -435,6 +437,15 @@ export default function EnhancedTable(props) {
                   </TableRow>
                 )
               }
+              {emptyRows > 0 && (
+                <TableRow
+                  style={{
+                    height: (dense ? 33 : 58) * emptyRows,
+                  }}
+                >
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </STableContainer>
