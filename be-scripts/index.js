@@ -101,7 +101,7 @@ async function checkNodes(){
         let alreadyInserted = await checkElementEventInLast24h('nodeOut', api_url_to_remove.length);
         if (!alreadyInserted){
             insertElementEvent('nodeOut', api_url_to_remove.length);
-   //         reportToElement(`[Network Registry] ${api_url_to_remove.length} node out of ${nodesProvided} appears to be offline.`);    
+            reportToElement(`[Network Registry] ${api_url_to_remove.length} node out of ${nodesProvided} appears to be offline.`);    
         }
      }
 }
