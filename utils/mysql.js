@@ -67,7 +67,7 @@ export async function getNodes (environmentId) {
       LEFT JOIN pings ON nr.id = pings.peerId
       WHERE nr.environmentId = ${environmentId}
       GROUP BY nr.peerId  
-      ORDER BY count DESC, peerId ASC
+      ORDER BY availability DESC, peerId ASC
   `);
   return query;
 }

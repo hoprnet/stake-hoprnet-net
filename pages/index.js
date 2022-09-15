@@ -15,8 +15,8 @@ export default function Home() {
       />
       <Section2/>
       <EncourageSection
-        title='BE PART OF THE HOPR ECOSYSTEM'
-        text='HOPR is building the transport layer privacy needed to make web3 work. Work with us to build dApps that change data privacy for good.'
+        title='TRY OUT THE HOPR PROTOCOL IN UNDER 5 SECONDS'
+        text='HOPR is building the transport layer privacy needed to make web3 work. Get started with the playground version of the HOPR protocol and several dApps in less than 5 seconds and without any installation.'
         animationData={typingBotAnimation}
       />
     </>
