@@ -26,6 +26,29 @@ export async function getEnvironments () {
   return query;
 }
 
+export async function getEnvironmentsAndLastRun () {
+  console.log('MySQL: getEnvironmentsAndLastRun');
+  let transaction = db.transaction();
+  transaction.query(escape`
+    SELECT *
+    FROM \`environments\` 
+  `);
+  transaction.query(escape`
+    SELECT 
+      numberOfWorkingNodes, 
+      positivePings, 
+      environmentId, 
+      MAX(finishedAt) as lastRun
+    FROM 
+      runtimes 
+    GROUP BY 
+      environmentId;
+  `);
+  const query = await transaction.commit()
+  await db.end();
+  return query;
+}
+
 
 
 export async function getNodes (environmentId) {

@@ -55,6 +55,9 @@ const SearchPeerId = styled(TextField)`
   width: 100%;
   margin-bottom: 8px;
   background: white;
+  * {
+    font-family: 'Source Code Pro', monospace;!important
+  }
 `
 
 const STablePagination= styled(TablePagination)`
@@ -101,6 +104,12 @@ const SFormControl = styled(FormControl)`
   @media only screen and (max-width: 820px) {
     width: 100%;
   }
+`
+
+const LastRun = styled.div`
+  font-size: 12px;
+  margin-top: -13px;
+  margin-left: 1px;
 `
 
 const MobileTable = (props) => {
@@ -197,6 +206,9 @@ function EnvironmentSelect(props) {
         id="environment-select"
         value={props.value}
         label="Environment"
+        MenuProps={{
+          className: "source-font"
+        }}
         onChange={props.onChange}
       >
         {props?.items?.map(item => 
@@ -459,6 +471,9 @@ export default function EnhancedTable(props) {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
+      <LastRun>
+        <strong>Last run:</strong> {formatDate(props.lastRun, false)}
+      </LastRun>
     </Box>
   );
 }

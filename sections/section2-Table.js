@@ -5,6 +5,7 @@ import Table from '../components/Table'
 export default function Section2() {
   const [registry, set_registry] = useState([]);
   const [environment, set_environment] = useState(36);
+  const [lastRuns, set_lastRuns] = useState([]);
   const [environments, set_environments] = useState([
       {
           "id": 36,
@@ -17,7 +18,7 @@ export default function Section2() {
   ]);
   
   useEffect(() => {
-    getEnvironments();
+    getData();
     getNodes();
   }, []);
 
@@ -25,12 +26,13 @@ export default function Section2() {
     getNodes();
   }, [environment]);
 
-  async function getEnvironments(){
-    const response = await fetch('./api/getEnvironments', {
+  async function getData(){
+    const response = await fetch('./api/getData', {
       method: 'GET',
     });
     const json = await response.json();
-    set_environments(json);
+    set_environments(json.envioronments);
+    set_lastRuns(json.lastRuns);
   };
 
   async function getNodes(){
@@ -40,6 +42,15 @@ export default function Section2() {
     const json =  await response.json();
     set_registry(json);
   };
+
+
+  function getLastRun (){
+    try {
+      return lastRuns.filter(run=>run.environmentId == environment)[0].lastRun;
+    } catch (e) {
+      return '-'
+    }
+  }
 
   return (
     <Section
@@ -51,6 +62,7 @@ export default function Section2() {
         environments={environments}
         environment={environment}
         setEnvironment={set_environment}
+        lastRun={getLastRun()}
       />
     </Section>
   )
