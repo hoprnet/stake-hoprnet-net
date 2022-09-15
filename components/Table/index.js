@@ -305,8 +305,8 @@ export default function EnhancedTable(props) {
     if(!epoch) return <>-<br/>&nbsp;</>
     const d = new Date(epoch);
     const year = d.getFullYear();
-    const month = d.getMonth() < 10 ? `0${d.getMonth()}` : d.getMonth();
-    const day = d.getDay() < 10 ? `0${d.getDay()}` : d.getDay();
+    const month = d.getMonth()+1 < 10 ? `0${d.getMonth()+1}` : d.getMonth()+1;
+    const day = d.getDate() < 10 ? `0${d.getDate()}` : d.getDate();
     const hours = d.getUTCHours() < 10 ? `0${d.getUTCHours()}` : d.getUTCHours();
     const minutes = d.getUTCMinutes() < 10 ? `0${d.getUTCMinutes()}` : d.getUTCMinutes();
     const formatted = <>{`${year}-${month}-${day}`}{twoRows ? <br/> : ' '}{`${hours}:${minutes}`}</>

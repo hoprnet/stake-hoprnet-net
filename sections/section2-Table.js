@@ -48,7 +48,7 @@ export default function Section2() {
     try {
       return lastRuns.filter(run=>run.environmentId == environment)[0].lastRun;
     } catch (e) {
-      return '-'
+      return null
     }
   }
 
