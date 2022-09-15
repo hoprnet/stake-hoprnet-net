@@ -19,6 +19,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import ProgressBar from './progressbar'
 
 import { shorten0xAddress } from '../../utils/functions'
 import _debounce from 'lodash/debounce';
@@ -45,8 +46,20 @@ const STableContainer = styled(TableContainer)`
 const STableCell = styled(TableCell)`
   font-family: 'Source Code Pro', monospace;
   padding: 8px 16px;
+  white-space: nowrap;
   &.MuiTableCell-head {
     font-weight: 600;
+  }
+  .peerId-text {
+    display: inline-flex;
+    .overflow-text {
+      display: inline-block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .full-text {
+      display: inline-block;
+    }
   }
 `
 
@@ -174,24 +187,28 @@ const headCells = [
     numeric: true,
     disablePadding: false,
     label: 'Last Seen',
+    width: 160,
   },
   {
     id: 'count',
     numeric: true,
     disablePadding: false,
     label: 'Ping Count',
+    width: 160,
   },
   {
     id: 'latencyAverage',
     numeric: true,
     disablePadding: false,
     label: 'Latency average',
+    width: 190,
   },
   {
     id: 'availability',
     numeric: true,
     disablePadding: false,
     label: 'Availability',
+    width: 190,
   },
 ];
 
@@ -239,6 +256,7 @@ function EnhancedTableHead(props) {
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
             sortDirection={orderBy === headCell.id ? order : false}
+            width={headCell.width}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
@@ -383,15 +401,27 @@ export default function EnhancedTable(props) {
                         <Tooltip 
                           title={row.peerId}
                         >
-                          <span>
-                            {shorten0xAddress(row.peerId, -6)}
-                          </span>
+                          {/* <div className="peerId-text">
+                            <span className="overflow-text">
+                              {row.peerId.substr(0,row.peerId.length-6)}
+                            </span>
+                            <span className="full-text">
+                              {row.peerId.substr(-6)}
+                            </span>
+                          </div> */}
+                          <>
+                           {shorten0xAddress(row.peerId, -8)}
+                          </>
                         </Tooltip>
                       </STableCell>
                       <STableCell align="right">{formatDate(row.lastSeen)}</STableCell>
                       <STableCell align="right">{row.count}</STableCell>
                       <STableCell align="right">{row.latencyAverage ? row.latencyAverage.toFixed(2) : '-'} ms</STableCell>
-                      <STableCell align="right">{Math.round(row.availability*100)}%</STableCell>
+                      <STableCell align="right">
+                        <ProgressBar
+                          value={row.availability}
+                        />
+                      </STableCell>
                       <STableCell 
                         className='MuiTableCell-mobileRow'
                       >
@@ -422,7 +452,7 @@ export default function EnhancedTable(props) {
                           </tr>
                           <tr>
                             <td>Availability:</td>
-                            <td>{row.availability*100}%</td>
+                            <td>{Math.round(row.availability*1000)/10}%</td>
                           </tr>
                         </MobileTable>
                       </STableCell>

@@ -119,7 +119,7 @@ export async function nodeGetPeers (apiEndpoint, apiToken) {
 export async function getPeersFromSubGraph (){
   console.log(`[HOPR SDK] getPeersFromSubGraph:`);
   let status;
-  const response = await fetch("https://api.thegraph.com/subgraphs/name/hoprnet/hopr-channels", {
+  const response = await fetch(process.env.thegraph_url, {
       "headers": {
           "accept": "*/*",
           "accept-language": "en-US,en;q=0.9,el;q=0.8",
