@@ -22,7 +22,9 @@ const Left = styled.div`
 const Right = styled.div`
   flex: 6;
   display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
 `
 
 const Animation = styled.div`
@@ -65,6 +67,7 @@ function EncourageSection(props) {
                     <Typography center>
                         {props.text}
                     </Typography>
+                    {props.children}
                 </Right>
             </Container>
         </Section>
