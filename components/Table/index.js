@@ -409,9 +409,9 @@ export default function EnhancedTable(props) {
                               {row.peerId.substr(-6)}
                             </span>
                           </div> */}
-                          <>
+                          <span>
                            {shorten0xAddress(row.peerId, -8)}
-                          </>
+                          </span>
                         </Tooltip>
                       </STableCell>
                       <STableCell align="right">{formatDate(row.lastSeen)}</STableCell>
@@ -433,7 +433,7 @@ export default function EnhancedTable(props) {
                                 title={row.peerId}
                               >
                                 <span>
-                                 {shorten0xAddress(row.peerId, -6)}
+                                  {shorten0xAddress(row.peerId, -6)}
                                 </span>
                               </Tooltip>
                             </td>
