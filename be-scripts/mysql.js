@@ -64,9 +64,6 @@ const db = mysql({
   }
 })
 
-
-console.log(process.env.MYSQL_DATABASE_NAME)
-
 const queryDB = async (query, data) => {
   let results = await db.query(query, data);
   await db.end();
