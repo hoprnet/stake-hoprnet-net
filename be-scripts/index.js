@@ -20,6 +20,8 @@ import {
     reportToElement
 } from './element.js'
 
+import * as dotenv from 'dotenv'
+dotenv.config({ path: '.env' });
 
 // const playground_url = 'red_elbe_elara.playground.hoprnet.org:3001'
 // const playground_key = '5ef7fF7FaAF6FCe4ed#E3DC2'

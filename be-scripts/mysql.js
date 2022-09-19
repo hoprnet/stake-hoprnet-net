@@ -1,7 +1,7 @@
 import mysql from 'serverless-mysql';
 import escape from 'sql-template-strings';
 import * as dotenv from 'dotenv'
-dotenv.config({ path: './.env.local' });
+dotenv.config({ path: '.env' });
 
 
 // *** RELATIVE DB *** //
@@ -63,6 +63,9 @@ const db = mysql({
     password : process.env.MYSQL_PASSWORD
   }
 })
+
+
+console.log(process.env.MYSQL_DATABASE_NAME)
 
 const queryDB = async (query, data) => {
   let results = await db.query(query, data);

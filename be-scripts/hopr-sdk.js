@@ -3,6 +3,8 @@ import { Headers }  from 'node-fetch'
 import {
   PublicKey,
 } from '@hoprnet/hopr-utils'
+import * as dotenv from 'dotenv'
+dotenv.config({ path: '.env' });
 
 function generateHeaders (apiToken, isPost = false) {
     const headers = new Headers();
@@ -117,7 +119,7 @@ export async function nodeGetPeers (apiEndpoint, apiToken) {
 };
 
 export async function getPeersFromSubGraph (){
-  console.log(`[HOPR SDK] getPeersFromSubGraph:`);
+  console.log(`[HOPR SDK] getPeersFromSubGraph`);
   let status;
   const response = await fetch(process.env.thegraph_url, {
       "headers": {

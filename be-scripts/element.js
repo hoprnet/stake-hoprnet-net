@@ -1,5 +1,8 @@
 
-import fetch  from 'node-fetch'
+import fetch  from 'node-fetch';
+import * as dotenv from 'dotenv'
+dotenv.config({ path: '.env' });
+
 
 export async function reportToElement(message){
     console.log('[Element] reportToElement:', message)
