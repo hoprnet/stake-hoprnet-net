@@ -5,9 +5,10 @@ import {
 import { 
     pingBotAll
 } from "./sub-scripts/ping-bot_all.js";
+
 import {
     pingBotPRN
-} from "./sub-scripts/ping-bot_public-replay-nodes.js"
+} from "./sub-scripts/ping-bot_public-relay-nodes.js"
 
 import * as dotenv from 'dotenv'
 dotenv.config({ path: '.env' });
