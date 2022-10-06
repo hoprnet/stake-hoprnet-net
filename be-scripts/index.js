@@ -37,7 +37,7 @@ main();
 async function main (){
     //TODO: maybe add a check if the tables are created in the DB?
     nodes = await checkNodes(nodes);
-    await pingBotPRN(nodes);
+//    await pingBotPRN(nodes);
     await pingBotAll(nodes);
 
     process.exit()

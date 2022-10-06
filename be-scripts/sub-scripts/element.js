@@ -29,7 +29,6 @@ export async function reportToElement(message){
         .then((response) => {
             response.text();
         });
-        console.log(resp);
     } catch (e) {
         console.log('Error while reporting to Element.')
     }

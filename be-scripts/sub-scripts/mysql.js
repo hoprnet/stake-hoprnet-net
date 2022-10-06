@@ -9,6 +9,7 @@ dotenv.config({ path: '.env' });
 //   `id` INT UNIQUE AUTO_INCREMENT, 
 //   `peerId` varchar(200), 
 //   `environmentId` INT, 
+//   `registered` BOOL DEFAULT 0, 
 //    addedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 //    PRIMARY KEY (id),
 //    FOREIGN KEY (environmentId) REFERENCES `environments`(id),
@@ -185,4 +186,9 @@ export async function checkElementEventInLast24h (msgType, data) {
   return query.length > 0;
 }  
 
+export async function updateRegistered (registered, environment) {
+  console.log('MySQL: updateRegistered', registered.length, environment);
+  let query = `UPDATE \`node-registry\` SET registered = IF(peerId IN(${registered.map(() => '?')}), 1, 0) WHERE environmentId = (SELECT id FROM \`environments\` WHERE environment = ?) ;`
+  await queryDB(query, [...registered, environment]);
+}
 

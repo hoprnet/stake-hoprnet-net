@@ -14,7 +14,8 @@ import {
     insertRuntime,
     insertEnvironments,
     insertElementEvent,
-    checkElementEventInLast24h
+    checkElementEventInLast24h,
+    updateRegistered
 } from "./mysql.js";
 import {
     groupItemsByEnvironments
@@ -84,6 +85,7 @@ async function getPeersFromNetwork (){
     }
 
     if (newPeers.length > 0) await insertPeerIds(newPeers);
+    if (peersFromSubGraph.length > 0) await updateRegistered(peersFromSubGraph, process.env.thegraph_environment);
 }
 
 async function addPeerLocally(peerId, environment){
