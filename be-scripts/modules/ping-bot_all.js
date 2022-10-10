@@ -2,7 +2,8 @@ import {
     nodeGetInfo,
     nodeGetPeers, 
     nodePing, 
-    getPeersFromSubGraph 
+    getPeersFromSubGraph,
+    getRegisteredPeersFromSubGraph 
 } from "./hopr-sdk.js";
 import { 
     selectPeerIds, 
@@ -29,6 +30,7 @@ var nodesProvided = 0;
 var nodeEnvironments = [];
 var pings = [];
 var peers = [];
+var peersToPing = [];
 
 var newPeers = [];
 var pings = [];
@@ -48,9 +50,9 @@ export async function pingBotAll (input){
 } 
 
 function prepareData() {
-    numberOfPings = peers.length * nodes.length;
+    numberOfPings = peersToPing.length * nodes.length;
     nodes = groupItemsByEnvironments(nodes);
-    peers = groupItemsByEnvironments(peers);
+    peersToPing = groupItemsByEnvironments(peersToPing);
 }
 
 async function saveEnvironments(){
@@ -85,7 +87,13 @@ async function getPeersFromNetwork (){
     }
 
     if (newPeers.length > 0) await insertPeerIds(newPeers);
-    if (peersFromSubGraph.length > 0) await updateRegistered(peersFromSubGraph, process.env.thegraph_environment);
+    if (peersFromSubGraph.length > 0) {
+        await updateRegistered(peersFromSubGraph, process.env.thegraph_environment);
+        peersToPing = peersFromSubGraph.map(peerId => {return {
+            peerId,
+            environment: process.env.thegraph_environment,
+        }});
+    }
 }
 
 async function addPeerLocally(peerId, environment){
@@ -100,7 +108,7 @@ async function pingAndSaveResults(){
         const startedAt = Date.now();
         let workingEnv = nodeEnvironments[e];
         let nodesOnEnv = nodes[nodeEnvironments[e]];
-        let peersOnEnv = peers[nodeEnvironments[e]];
+        let peersOnEnv = peersToPing[nodeEnvironments[e]];
 
         for (let p = 0; p < peersOnEnv.length; p++) {
             for (let n = 0; n < nodesOnEnv.length; n++) {

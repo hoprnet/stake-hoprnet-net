@@ -10,6 +10,7 @@ dotenv.config({ path: '.env' });
 //   `peerId` varchar(200), 
 //   `environmentId` INT, 
 //   `registered` BOOL DEFAULT 0, 
+//   `communityId` INT DEFAULT NULL, 
 //    addedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 //    PRIMARY KEY (id),
 //    FOREIGN KEY (environmentId) REFERENCES `environments`(id),
@@ -192,3 +193,8 @@ export async function updateRegistered (registered, environment) {
   await queryDB(query, [...registered, environment]);
 }
 
+export async function updateCommunityMembers (registered, environment) {
+  console.log('MySQL: updateCommunityMembers', registered.length, environment);
+  let query = `UPDATE \`node-registry\` SET communityId = IF(peerId IN(${registered.map(() => '?')}), 1, NULL) WHERE environmentId = (SELECT id FROM \`environments\` WHERE environment = ?) ;`
+  await queryDB(query, [...registered, environment]);
+}

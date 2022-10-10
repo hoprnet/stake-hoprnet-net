@@ -34,8 +34,6 @@ export async function pingBotPRN (inputNodes){
 
     prepareData();
     await pingAndSendResults();
-
-    process.exit()
 } 
 
 function prepareData() {

@@ -1,14 +1,18 @@
 import { 
     checkNodes
-} from "./sub-scripts/pre-checkNodes.js";
+} from "./modules/pre-checkNodes.js";
 
 import { 
     pingBotAll
-} from "./sub-scripts/ping-bot_all.js";
+} from "./modules/ping-bot_all.js";
 
 import {
     pingBotPRN
-} from "./sub-scripts/ping-bot_public-relay-nodes.js"
+} from "./modules/ping-bot_public-relay-nodes.js"
+
+import {
+    communityOperations
+} from "./modules/pre-communityOperations.js"
 
 import * as dotenv from 'dotenv'
 dotenv.config({ path: '.env' });
@@ -36,9 +40,15 @@ main();
 
 async function main (){
     //TODO: maybe add a check if the tables are created in the DB?
+    //TODO: I know the naming sucks, once the project will grow, 
+    //      I will make proper names, as now its difficult to guess how it will grow
+
     nodes = await checkNodes(nodes);
-//    await pingBotPRN(nodes);
-    await pingBotAll(nodes);
+    await communityOperations();
+    await pingBotPRN(nodes);
+    await pingBotAll(nodes); //now: ping only registered nodes (from the graph)
 
     process.exit()
 } 
+
+
