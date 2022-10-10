@@ -8,6 +8,7 @@ const Bar = styled.div`
     width: 100%;
     height: 26px;
     border-radius: 2px;
+    width: 120px;
 `
 
 const Value = styled.div`
@@ -48,9 +49,9 @@ function ProgressBar(props) {
 
     return (
         <Bar>
-            <Value>{percentage()}</Value>
-            <Progress
-                className={color()}
+            <Value className="value">{percentage()}</Value>
+            <Progress 
+                className={`progress ${color()}`}
                 percentage={percentage()}
             />
         </Bar>

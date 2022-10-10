@@ -81,7 +81,7 @@ async function getPeersFromNetwork (){
         }
     }
 
-    let peersFromSubGraph = await getPeersFromSubGraph();
+    let peersFromSubGraph = await getRegisteredPeersFromSubGraph();
     for (let j = 0; j < peersFromSubGraph.length; j++){
       addPeerLocally(peersFromSubGraph[j], process.env.thegraph_environment); 
     }

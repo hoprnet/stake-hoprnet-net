@@ -24,6 +24,10 @@ import ProgressBar from './progressbar'
 import { shorten0xAddress } from '../../utils/functions'
 import _debounce from 'lodash/debounce';
 
+//Icons
+import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
+import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
+
 
 
 const STableContainer = styled(TableContainer)`
@@ -125,6 +129,15 @@ const LastRun = styled.div`
   margin-left: 1px;
 `
 
+const SCheckCircleRoundedIcon = styled(CheckCircleRoundedIcon)`
+  color: darkgreen;
+`
+
+const SCancelRoundedIcon = styled(CancelRoundedIcon)`
+  color: rgb(244,64,6);
+`
+
+
 const MobileTable = (props) => {
   return (
     <SMobileTable>
@@ -183,6 +196,13 @@ const headCells = [
     label: 'Peer Id',
   },
   {
+    id: 'registered',
+    numeric: true,
+    disablePadding: false,
+    label: 'Registered',
+    width: 144,
+  },
+  {
     id: 'lastSeen',
     numeric: true,
     disablePadding: false,
@@ -200,14 +220,21 @@ const headCells = [
     id: 'latencyAverage',
     numeric: true,
     disablePadding: false,
-    label: 'Latency average',
+    label: 'Latency avg.',
+    width: 190,
+  },
+  {
+    id: 'availability24h',
+    numeric: true,
+    disablePadding: false,
+    label: '24h Avail.',
     width: 190,
   },
   {
     id: 'availability',
     numeric: true,
     disablePadding: false,
-    label: 'Availability',
+    label: 'Avail.',
     width: 190,
   },
 ];
@@ -414,9 +441,22 @@ export default function EnhancedTable(props) {
                           </span>
                         </Tooltip>
                       </STableCell>
+                      <STableCell align="right">
+                        {
+                          row.registered === 1 ?
+                            <SCheckCircleRoundedIcon/>
+                            :
+                            <SCancelRoundedIcon/>
+                        }
+                        </STableCell>
                       <STableCell align="right">{formatDate(row.lastSeen)}</STableCell>
                       <STableCell align="right">{row.count}</STableCell>
                       <STableCell align="right">{row.latencyAverage ? row.latencyAverage.toFixed(2) : '-'} ms</STableCell>
+                      <STableCell align="right">
+                        <ProgressBar
+                          value={row.availability24h}
+                        />
+                      </STableCell>
                       <STableCell align="right">
                         <ProgressBar
                           value={row.availability}
@@ -439,6 +479,17 @@ export default function EnhancedTable(props) {
                             </td>
                           </tr>
                           <tr>
+                            <td>Registered:</td>
+                            <td>
+                              {
+                                row.registered === 1 ?
+                                  'Yes'
+                                  :
+                                  'No'
+                              }
+                            </td>
+                          </tr>
+                          <tr>
                             <td>Last Seen:</td>
                             <td>{formatDate(row.lastSeen, false)}</td>
                           </tr>
@@ -449,6 +500,10 @@ export default function EnhancedTable(props) {
                           <tr>
                             <td>Latency average:</td>
                             <td>{row.latencyAverage ? row.latencyAverage.toFixed(2) : '-'} ms</td>
+                          </tr>
+                          <tr>
+                            <td>Availability 24h:</td>
+                            <td>{Math.round(row.availability24h*1000)/10}%</td>
                           </tr>
                           <tr>
                             <td>Availability:</td>
@@ -494,12 +549,15 @@ export default function EnhancedTable(props) {
         <STablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
+          className="sTablePagination"
           count={filteredData.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        >
+          A
+        </STablePagination>
       </Paper>
       <LastRun>
         <strong>Last run:</strong> {formatDate(props.lastRun, false)}

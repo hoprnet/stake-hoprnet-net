@@ -59,10 +59,17 @@ export async function getNodes (environmentId) {
         MAX(pings.timestamp) AS lastSeen,
         count(pings.peerId) AS count,
         AVG(pings.latency) AS latencyAverage,
+        registered,
         (    count(pings.peerId) / 
         (    SELECT count(*) FROM runtimes WHERE ( finishedAt ) > nr.addedAt AND environmentId = ${environmentId} ) )    
-        AS availability
+        AS availability,
+        (   last24h.pings / 
+        (   SELECT count(*) FROM runtimes WHERE ( finishedAt ) > (NOW() - INTERVAL 24 HOUR) AND environmentId = 36 ) )    
+        AS availability24h
       FROM \`node-registry\` AS nr
+      LEFT JOIN (
+        SELECT count(*) as pings, peerId FROM pings WHERE pings.timestamp >= (NOW() - INTERVAL 24 HOUR) GROUP BY pings.peerId
+      ) AS last24h ON nr.id = last24h.peerId
       LEFT JOIN \`last-seen\` AS ls ON nr.id = ls.peerId  
       LEFT JOIN pings ON nr.id = pings.peerId
       WHERE nr.environmentId = ${environmentId}
