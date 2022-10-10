@@ -19,6 +19,8 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
 import ProgressBar from './progressbar'
 
 import { shorten0xAddress } from '../../utils/functions'
@@ -137,6 +139,17 @@ const SCancelRoundedIcon = styled(CancelRoundedIcon)`
   color: rgb(244,64,6);
 `
 
+const SFormControlLabel = styled(FormControlLabel)`
+  margin-left: 0px;
+  z-index: 2;
+  .MuiTypography-root {
+    font-size: 0.875rem;
+  }
+  @media only screen and (min-width: 821px) {
+    position: absolute;
+    margin-top: 6px;
+  }
+`
 
 const MobileTable = (props) => {
   return (
@@ -322,11 +335,21 @@ export default function EnhancedTable(props) {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [search, set_search] = useState('');
   const [filteredData, set_filteredData] = useState([]);
+  const [leaderboard, set_leaderboard] = useState(false);
 
   useEffect(() => {
     filterData(search);
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.data]);
+
+  useEffect(() => {
+    console.log('leaderboard', leaderboard)
+    set_search('')
+    filterData('');
+    if(!leaderboard) return;
+    setOrderBy('count');
+    setOrder('desc');
+  }, [leaderboard]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -366,14 +389,20 @@ export default function EnhancedTable(props) {
   //eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceFn = useCallback(
     _debounce(filterData, 150), 
-    [props.data]);
+    [props.data, leaderboard]);
 
   function filterData(searchPhrase) {
+    console.log('filterData', leaderboard)
+    // Leaderboard filter
+    var data = props.data;
+    if(leaderboard) data = data.filter(elem => elem.communityId === 1);
+
+    // SearchPhrase filter
     if (!searchPhrase | searchPhrase === '' ) {
-      set_filteredData(props.data);
+      set_filteredData(data);
       return;
     }
-    const filtered = props.data.filter(elem => elem.peerId.toLowerCase().includes(searchPhrase.toLowerCase()));
+    const filtered = data.filter(elem => elem.peerId.toLowerCase().includes(searchPhrase.toLowerCase()));
     set_filteredData(filtered);
     return;
   }
@@ -518,7 +547,7 @@ export default function EnhancedTable(props) {
                 props.data.length > 0 && filteredData.length=== 0 && (
                   <TableRow
                   >
-                    <STableCell colSpan={5}>
+                    <STableCell colSpan={7}>
                       <div style={{textAlign: 'center'}}>No results</div>
                     </STableCell>
                   </TableRow>
@@ -528,7 +557,7 @@ export default function EnhancedTable(props) {
                 props.data.length === 0 && (
                   <TableRow
                   >
-                    <STableCell colSpan={5}>
+                    <STableCell colSpan={7}>
                       <div style={{textAlign: 'center'}}>Loading...</div>
                     </STableCell>
                   </TableRow>
@@ -546,6 +575,15 @@ export default function EnhancedTable(props) {
             </TableBody>
           </Table>
         </STableContainer>
+        <SFormControlLabel 
+          control={
+            <Switch 
+              onChange={event=>{set_leaderboard(event.target.checked)}}
+              checked={leaderboard}
+            />
+          } 
+          label="Community Leaderboard" 
+        />
         <STablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
@@ -555,9 +593,7 @@ export default function EnhancedTable(props) {
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-        >
-          A
-        </STablePagination>
+        />
       </Paper>
       <LastRun>
         <strong>Last run:</strong> {formatDate(props.lastRun, false)}

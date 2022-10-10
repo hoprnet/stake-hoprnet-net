@@ -60,6 +60,7 @@ export async function getNodes (environmentId) {
         count(pings.peerId) AS count,
         AVG(pings.latency) AS latencyAverage,
         registered,
+        communityId,
         (    count(pings.peerId) / 
         (    SELECT count(*) FROM runtimes WHERE ( finishedAt ) > nr.addedAt AND environmentId = ${environmentId} ) )    
         AS availability,
