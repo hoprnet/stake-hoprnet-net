@@ -221,6 +221,7 @@ const headCells = [
     disablePadding: false,
     label: 'Last Seen',
     width: 160,
+    tooltip: "When the pingbot last saw this node (UTC)"
   },
   {
     id: 'count',
@@ -228,6 +229,7 @@ const headCells = [
     disablePadding: false,
     label: 'Ping Count',
     width: 160,
+    tooltip: "The number of pings received by this node"
   },
   {
     id: 'latencyAverage',
@@ -235,6 +237,7 @@ const headCells = [
     disablePadding: false,
     label: 'Latency avg.',
     width: 190,
+    tooltip: "The average latency of the pings received"
   },
   {
     id: 'availability24h',
@@ -242,6 +245,7 @@ const headCells = [
     disablePadding: false,
     label: '24h Avail.',
     width: 190,
+    tooltip: "The percentage of pings received by this node in the last 24 hours"
   },
   {
     id: 'availability',
@@ -249,6 +253,7 @@ const headCells = [
     disablePadding: false,
     label: 'Avail.',
     width: 190,
+    tooltip: "The percentage of pings received by this node"
   },
 ];
 
@@ -272,6 +277,7 @@ function EnvironmentSelect(props) {
           <MenuItem 
             value={item.id}
             key={`environment-item-${item.id}`}
+            disabled={item.environment === 'paleochora'}
           > 
             {item.environment}
           </MenuItem>
@@ -297,7 +303,25 @@ function EnhancedTableHead(props) {
             align={headCell.numeric ? 'right' : 'left'}
             sortDirection={orderBy === headCell.id ? order : false}
             width={headCell.width}
-          >
+          > {
+            headCell.tooltip ? 
+            <Tooltip 
+              title={headCell.tooltip}
+            >
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : 'asc'}
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ? (
+                  <Box component="span" sx={visuallyHidden}>
+                    {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                  </Box>
+                ) : null}
+              </TableSortLabel>
+            </Tooltip>
+          :
             <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
@@ -310,6 +334,7 @@ function EnhancedTableHead(props) {
                 </Box>
               ) : null}
             </TableSortLabel>
+          }
           </STableCell>
         ))}
         <STableCell
@@ -335,7 +360,7 @@ export default function EnhancedTable(props) {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [search, set_search] = useState('');
   const [filteredData, set_filteredData] = useState([]);
-  const [leaderboard, set_leaderboard] = useState(false);
+  const [leaderboard, set_leaderboard] = useState(true);
 
   useEffect(() => {
     filterData(search);
@@ -371,14 +396,20 @@ export default function EnhancedTable(props) {
 
   const formatDate = (epoch, twoRows = true) => {
     if(!epoch) return <>-<br/>&nbsp;</>
-    const d = new Date(epoch);
-    const year = d.getFullYear();
-    const month = d.getMonth()+1 < 10 ? `0${d.getMonth()+1}` : d.getMonth()+1;
-    const day = d.getDate() < 10 ? `0${d.getDate()}` : d.getDate();
-    const hours = d.getUTCHours() < 10 ? `0${d.getUTCHours()}` : d.getUTCHours();
-    const minutes = d.getUTCMinutes() < 10 ? `0${d.getUTCMinutes()}` : d.getUTCMinutes();
-    const formatted = <>{`${year}-${month}-${day}`}{twoRows ? <br/> : ' '}{`${hours}:${minutes}`}</>
-    return formatted;
+    const differenceMs = Date.now() - new Date(epoch).getTime();
+    if (differenceMs < 24*60*60*1000) {
+      if (differenceMs < 60*60*1000) return  `${Math.round(differenceMs/(60*1000))} min ago`
+      else return `${Math.round(differenceMs/(60*60*1000))} hours ago`
+    } else {
+      const d = new Date(epoch);
+      const year = d.getFullYear();
+      const month = d.getMonth()+1 < 10 ? `0${d.getMonth()+1}` : d.getMonth()+1;
+      const day = d.getDate() < 10 ? `0${d.getDate()}` : d.getDate();
+      const hours = d.getUTCHours() < 10 ? `0${d.getUTCHours()}` : d.getUTCHours();
+      const minutes = d.getUTCMinutes() < 10 ? `0${d.getUTCMinutes()}` : d.getUTCMinutes();
+      const formatted = <>{`${year}-${month}-${day}`}{twoRows ? <br/> : ' '}{`${hours}:${minutes}`}</>
+      return formatted;
+    }
   }
 
   function handleSearchChange (event) {
@@ -575,15 +606,19 @@ export default function EnhancedTable(props) {
             </TableBody>
           </Table>
         </STableContainer>
-        <SFormControlLabel 
-          control={
-            <Switch 
-              onChange={event=>{set_leaderboard(event.target.checked)}}
-              checked={leaderboard}
-            />
-          } 
-          label="Community Leaderboard" 
-        />
+        <Tooltip 
+          title="Turn this on to view the leaderboard for just community members"
+        >
+          <SFormControlLabel 
+            control={
+              <Switch 
+                onChange={event=>{set_leaderboard(event.target.checked)}}
+                checked={leaderboard}
+              />
+            } 
+            label="Community Leaderboard" 
+          />
+        </Tooltip>
         <STablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
