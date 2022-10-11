@@ -1,6 +1,6 @@
 {
   "name": "hopr-node-dashboard",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -22,6 +22,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-id-generator": "^3.0.2",
+    "react-timeago": "^7.1.0",
     "serverless-mysql": "^1.5.4",
     "sql-template-strings": "^2.2.2"
   },

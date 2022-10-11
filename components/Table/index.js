@@ -25,6 +25,7 @@ import ProgressBar from './progressbar'
 
 import { shorten0xAddress } from '../../utils/functions'
 import _debounce from 'lodash/debounce';
+import TimeAgo from 'react-timeago'
 
 //Icons
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
@@ -398,8 +399,7 @@ export default function EnhancedTable(props) {
     if(!epoch) return <>-<br/>&nbsp;</>
     const differenceMs = Date.now() - new Date(epoch).getTime();
     if (differenceMs < 24*60*60*1000) {
-      if (differenceMs < 60*60*1000) return  `${Math.round(differenceMs/(60*1000))} min ago`
-      else return `${Math.round(differenceMs/(60*60*1000))} hours ago`
+      return <TimeAgo date={epoch} />
     } else {
       const d = new Date(epoch);
       const year = d.getFullYear();
