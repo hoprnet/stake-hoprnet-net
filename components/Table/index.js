@@ -397,7 +397,8 @@ export default function EnhancedTable(props) {
 
   const formatDate = (epoch, twoRows = true) => {
     if(!epoch) return <>-<br/>&nbsp;</>
-    const differenceMs = Date.now() - new Date(epoch).getTime();
+    var differenceMs = Date.now() - new Date(epoch).getTime();
+    if (typeof window === 'undefined') differenceMs = differenceMs + 2*60*60*1000;
     if (differenceMs < 24*60*60*1000) {
       return <TimeAgo date={epoch} />
     } else {
