@@ -424,7 +424,8 @@ export default function EnhancedTable(props) {
     [props.data, leaderboard]);
 
   function filterData(searchPhrase) {
-    console.log('filterData', leaderboard)
+    setPage(0);
+
     // Leaderboard filter
     var data = props.data;
     if(leaderboard) data = data.filter(elem => elem.communityId === 1);
@@ -438,6 +439,11 @@ export default function EnhancedTable(props) {
     set_filteredData(filtered);
     return;
   }
+
+  useEffect(() => {
+    console.log(filteredData)
+    
+  }, [filteredData]);
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -597,11 +603,12 @@ export default function EnhancedTable(props) {
               }
               {emptyRows > 0 && (
                 <TableRow
+                  className="emptyRow"
                   style={{
                     height: (dense ? 33 : 58) * emptyRows,
                   }}
                 >
-                  <TableCell colSpan={6} />
+                  <TableCell colSpan={7} />
                 </TableRow>
               )}
             </TableBody>
