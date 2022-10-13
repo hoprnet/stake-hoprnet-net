@@ -1,6 +1,10 @@
 import { 
     nodePing, 
 } from "./hopr-sdk.js";
+import { 
+    insertElementEvent,
+    checkElementEventInLastH
+} from "./mysql.js";
 import {
     reportToElement
 } from './element.js'
@@ -75,7 +79,11 @@ async function pingAndSendResults(){
     if (prcDown.length > 0) {
         var msg = `[Public Relay Node] ${prcDown.length} node${prcDown.length === 1 ? '' : 's'} appear${prcDown.length === 1 ? 's' : ''} to be offline.`;
         prcDown.map(id => msg += `\n- ${id}`);
-        await reportToElement(msg);
+        let alreadyInserted = await checkElementEventInLastH('prcOut', msg, 6);
+        if (!alreadyInserted){
+            insertElementEvent('prcOut', msg);
+            await reportToElement(msg);    
+        }
     }
 
 }

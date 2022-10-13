@@ -44,10 +44,10 @@ export async function checkNodes(nodes){
     if (api_url_to_remove.length > 0) {
         let alreadyInserted = await checkElementEventInLast24h('nodeOut', api_url_to_remove.length);
         if (!alreadyInserted){
-                insertElementEvent('nodeOut', api_url_to_remove.length);
-                var msg = `[Network Dashboard] ${api_url_to_remove.length} node${api_url_to_remove.length === 1 ? '' : 's'} out of ${nodesProvided} appear${api_url_to_remove.length === 1 ? 's' : ''} to be offline.`;
-                api_url_to_remove.map(id => msg += `\n- ${id}`);
-                await reportToElement(msg);    
+            insertElementEvent('nodeOut', api_url_to_remove.length);
+            var msg = `[Network Dashboard] ${api_url_to_remove.length} node${api_url_to_remove.length === 1 ? '' : 's'} out of ${nodesProvided} appear${api_url_to_remove.length === 1 ? 's' : ''} to be offline.`;
+            api_url_to_remove.map(id => msg += `\n- ${id}`);
+            await reportToElement(msg);    
         }
     }
 

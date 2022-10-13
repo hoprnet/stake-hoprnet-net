@@ -14,8 +14,6 @@ import {
     insertPings,
     insertRuntime,
     insertEnvironments,
-    insertElementEvent,
-    checkElementEventInLast24h,
     updateRegistered
 } from "./mysql.js";
 import {

@@ -180,9 +180,16 @@ export async function insertElementEvent (msgType, data) {
   await queryDB(query);
 }
 
-export async function checkElementEventInLast24h (msgType, data) {
+export async function checkElementEventInLast24h (msgType, data, interval) {
   console.log('MySQL: checkElementEventInLast24h', msgType, data);
   let query = escape`SELECT * FROM \`element\` WHERE msgType=${msgType} AND data = ${data} AND timestamp >= (NOW() - INTERVAL 24 HOUR)`
+  query = await queryDB(query);
+  return query.length > 0;
+}  
+
+export async function checkElementEventInLastH (msgType, data, interval) {
+  console.log('MySQL: checkElementEventInLastH', msgType, data);
+  let query = escape`SELECT * FROM \`element\` WHERE msgType=${msgType} AND data = ${data} AND timestamp >= (NOW() - INTERVAL ${interval} HOUR)`
   query = await queryDB(query);
   return query.length > 0;
 }  
