@@ -20,9 +20,6 @@ import {
 import * as dotenv from 'dotenv'
 dotenv.config({ path: '.env' });
 
-const all_keys = Object.keys(process.env);
-const prn_keys = all_keys.filter(key => key.includes('prn_') && !key.includes('environment'));
-
 var publicRelayNodes = [];
 var nodes = [];
 var nodesProvided;
@@ -40,7 +37,7 @@ var lastDown = [];
 
 // Segregated
 var stillUp = [];
-var stillDown = [];
+var stillDown = [];1
 var newlyUp = [];
 var newlyDown = [];
 
@@ -72,10 +69,7 @@ function prepareData() {
     for (let e = 0; e < prnEnvironmentsKeys.length; e++) {
         prnEnvironmentsLength += publicRelayNodes[prnEnvironmentsKeys[e]].length;
     }
-
     numberOfPings = prnEnvironmentsLength * nodes.length;
-
-
 
     nodes = groupItemsByEnvironments(nodes);
 //    publicRelayNodes = groupItemsByEnvironments(publicRelayNodes);
@@ -148,14 +142,14 @@ async function informOnElement(){
     let msg;
     if (prnDown.length > 0) {
         msg = `[Public Relay Node]\n${prnDown.length} node${prnDown.length === 1 ? '' : 's'} appear${prnDown.length === 1 ? 's' : ''} to be offline.`;
-        prnDown.map(id => msg += `\n- ${id}`);
+        prnDown.map(peerId => msg += `\n- ${peerId}`);
         if(newlyUp.length > 0) {
             msg += `\n\n${newlyUp.length} node${newlyUp.length === 1 ? ' is' : 's are'} back online:`;
-            newlyUp.map(id => msg += `\n- ${id}`);
+            newlyUp.map(peerId => msg += `\n- ${peerId}`);
         }
     } else if(newlyUp.length > 0) {
         msg = `[Public Relay Node] ${newlyUp.length} node${newlyUp.length === 1 ? ' is' : 's are'} back online:`;
-        newlyUp.map(id => msg += `\n- ${id}`);
+        newlyUp.map(peerId => msg += `\n- ${peerId}`);
     }
 
 
