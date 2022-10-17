@@ -56,6 +56,15 @@ dotenv.config({ path: '.env' });
 // PRIMARY KEY (id) 
 // );
 
+// CREATE TABLE `prn-status` (
+//   `id` INT UNIQUE AUTO_INCREMENT, 
+//   `status` varchar(200),
+//   `peerId` varchar(200),
+//   `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   PRIMARY KEY (id) 
+// );
+
+
 
 const db = mysql({
   config: {
@@ -180,6 +189,18 @@ export async function insertElementEvent (msgType, data) {
   await queryDB(query);
 }
 
+export async function insertElementEvents (msgType, data) {
+  console.log('MySQL: insertElementEvents', msgType, data);
+  let query = escape`INSERT INTO \`element\` (msgType, data) VALUES ${data.map(() => '(?,?)')}`
+  let dataReady = [];
+  for (let i = 0; i < data.length; i++){
+    dataReady.push(msgType);
+    dataReady.push(data[i]);
+  }
+  await queryDB(query, dataReady);
+}
+
+
 export async function checkElementEventInLast24h (msgType, data, interval) {
   console.log('MySQL: checkElementEventInLast24h', msgType, data);
   let query = escape`SELECT * FROM \`element\` WHERE msgType=${msgType} AND data = ${data} AND timestamp >= (NOW() - INTERVAL 24 HOUR)`
@@ -205,3 +226,21 @@ export async function updateCommunityMembers (registered, environment) {
   let query = `UPDATE \`node-registry\` SET communityId = IF(peerId IN(${registered.map(() => '?')}), 1, NULL) WHERE environmentId = (SELECT id FROM \`environments\` WHERE environment = ?) ;`
   await queryDB(query, [...registered, environment]);
 }
+
+export async function getPRNStatus () {
+  console.log('MySQL: getPRCStatus');
+  let query = `SELECT * FROM \`prn-status\` where timestamp in (SELECT max(timestamp) FROM \`prn-status\` GROUP BY peerId);`
+  return await queryDB(query);
+}
+
+export async function insertPRNStatus (payload) {
+  console.log('MySQL: insertPRCStatus', payload);
+  let query = `INSERT INTO \`prn-status\` (status, peerId) VALUES ${payload.map(() => '(?,?)')}`
+  let payloadReady = [];
+  for (let i = 0; i < payload.length; i++){
+    payloadReady.push(payload[i].status);
+    payloadReady.push(payload[i].peerId);
+  }
+  await queryDB(query, payloadReady);
+}
+

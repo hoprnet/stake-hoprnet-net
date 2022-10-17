@@ -12,6 +12,7 @@
   "dependencies": {
     "@hoprnet/hopr-utils": "^1.90.19",
     "dotenv": "^16.0.2",
+    "js-yaml": "^4.1.0",
     "node-fetch": "^3.2.10",
     "serverless-mysql": "^1.5.4",
     "sql-template-strings": "^2.2.2"
