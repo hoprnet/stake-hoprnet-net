@@ -80,19 +80,19 @@ async function testPRNs(){
     for (let e = 0; e < nodeEnvironments.length; e++) {
         let workingEnv = nodeEnvironments[e];
         let nodesOnEnv = nodes[nodeEnvironments[e]];
-        let peersOnEnv = publicRelayNodes[nodeEnvironments[e]];
+        let prnOnEnv = publicRelayNodes[nodeEnvironments[e]];
 
-        for (let p = 0; p < peersOnEnv.length; p++) {
+        for (let p = 0; p < prnOnEnv.length; p++) {
             let online = false;
-            const peerId = peersOnEnv[p].peer_id;
+            const peerId = prnOnEnv[p].peer_id;
 
             for (let n = 0; n < nodesOnEnv.length; n++) {
                 let pingNumber = (p * nodesOnEnv.length) + n+1;
                 let percentage = Math.round(pingNumber / numberOfPings * 100);
-                console.log(`[${percentage}%] Ping PRN ${pingNumber} out of ${numberOfPings} `)
+                console.log(`[${percentage}%] Ping PRN ${pingNumber} out of ${numberOfPings} `);
                 let ping = await nodePing(nodesOnEnv[n].api_url, nodesOnEnv[n].api_key, peerId);
                 if (ping?.hasOwnProperty('latency')) {
-                    console.log(`${peerId} latency: ${ping.latency}`)
+                    console.log(`${peerId} latency: ${ping.latency}`);
                     counter++;
                     online = true;
                     break;
@@ -115,13 +115,11 @@ async function segregateData() {
 
     for(let i = 0; i < prnDown.length; i++) {
         if(lastDown.includes(prnDown[i])) stillDown.push(prnDown[i])
-    //    else if(lastUp.includes(prnDown[i])) newlyDown.push(prnDown[i])
         else newlyDown.push(prnDown[i])
     }
 
     for(let i = 0; i < prnUp.length; i++) {
         if(lastDown.includes(prnUp[i])) newlyUp.push(prnUp[i])
-    //    else if(lastUp.includes(prnUp[i])) stillUp.push(prnUp[i])
         else stillUp.push(prnUp[i])
     }
 
@@ -140,9 +138,9 @@ async function informOnElement(){
 
     // Prepare message
     let msg;
-    if (prnDown.length > 0) {
-        msg = `[Public Relay Node]\n${prnDown.length} node${prnDown.length === 1 ? '' : 's'} appear${prnDown.length === 1 ? 's' : ''} to be offline.`;
-        prnDown.map(peerId => msg += `\n- ${peerId}`);
+    if (newlyDown.length > 0) {
+        msg = `[Public Relay Node]\n${newlyDown.length} node${newlyDown.length === 1 ? '' : 's'} appear${newlyDown.length === 1 ? 's' : ''} to be offline.`;
+        newlyDown.map(peerId => msg += `\n- ${peerId}`);
         if(newlyUp.length > 0) {
             msg += `\n\n${newlyUp.length} node${newlyUp.length === 1 ? ' is' : 's are'} back online:`;
             newlyUp.map(peerId => msg += `\n- ${peerId}`);
@@ -152,16 +150,8 @@ async function informOnElement(){
         newlyUp.map(peerId => msg += `\n- ${peerId}`);
     }
 
-
     // Send message if needed
-    if (prnDown.length > 0 && newlyUp.length === 0) {
-        const alreadyInformed = await checkElementEventInLastH('prnOut', JSON.stringify(prnDown), 6);
-        if (!alreadyInformed){
-            insertElementEvent('prnOut', JSON.stringify(prnDown));
-            await reportToElement(msg);
-        } 
-    } else if(newlyUp.length > 0) {
-        insertElementEvent('prnOut', JSON.stringify(prnDown));
+    if (newlyDown.length > 0 | newlyUp.length === 0) {
         await reportToElement(msg);
     }
 
