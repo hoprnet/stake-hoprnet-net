@@ -208,6 +208,7 @@ const headCells = [
     numeric: false,
     disablePadding: true,
     label: 'Peer Id',
+    tooltip: "The PeerId of the node"
   },
   {
     id: 'registered',
@@ -215,6 +216,7 @@ const headCells = [
     disablePadding: false,
     label: 'Registered',
     width: 144,
+    tooltip: "Nodes registered on the network"
   },
   {
     id: 'lastSeen',
@@ -228,7 +230,7 @@ const headCells = [
     id: 'count',
     numeric: true,
     disablePadding: false,
-    label: 'Ping Count',
+    label: 'Ping #',
     width: 160,
     tooltip: "The number of pings received by this node"
   },
