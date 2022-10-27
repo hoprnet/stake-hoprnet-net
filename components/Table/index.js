@@ -232,7 +232,7 @@ const headCells = [
     disablePadding: false,
     label: 'Ping #',
     width: 160,
-    tooltip: "The number of pings received by this node"
+    tooltip: "The number of successful pings/pongs by this node"
   },
   {
     id: 'latencyAverage',
