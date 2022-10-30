@@ -53,16 +53,17 @@ export async function getEnvironmentsAndLastRun () {
 
 export async function getNodes (environmentId) {
   console.log('MySQL: getNodes');
+  const countPingsSince = 1667080800;
   let query = await queryDB(escape`
       SELECT 
         nr.peerId AS peerId, 
         MAX(pings.timestamp) AS lastSeen,
-        count(pings.peerId) AS count,
         AVG(pings.latency) AS latencyAverage,
+        since1667080800.count AS count,
         registered,
         communityId,
         (    count(pings.peerId) / 
-        (    SELECT count(*) FROM runtimes WHERE ( finishedAt ) > nr.addedAt AND environmentId = ${environmentId} ) )    
+        (    SELECT count(*) FROM runtimes WHERE ( finishedAt ) > nr.addedAt AND environmentId = ${environmentId} AND finishedAt > from_unixtime(${countPingsSince}) ) )    
         AS availability,
         (   last24h.pings / 
         (   SELECT count(*) FROM runtimes WHERE ( finishedAt ) > (NOW() - INTERVAL 24 HOUR) AND environmentId = 36 ) )    
@@ -71,6 +72,9 @@ export async function getNodes (environmentId) {
       LEFT JOIN (
         SELECT count(*) as pings, peerId FROM pings WHERE pings.timestamp >= (NOW() - INTERVAL 24 HOUR) GROUP BY pings.peerId
       ) AS last24h ON nr.id = last24h.peerId
+      LEFT JOIN (
+        SELECT count(*) as count, peerId FROM pings WHERE pings.timestamp > from_unixtime(${countPingsSince}) GROUP BY pings.peerId
+      ) AS since1667080800 ON nr.id = since1667080800.peerId
       LEFT JOIN \`last-seen\` AS ls ON nr.id = ls.peerId  
       LEFT JOIN pings ON nr.id = pings.peerId
       WHERE nr.environmentId = ${environmentId}
@@ -81,4 +85,3 @@ export async function getNodes (environmentId) {
 }
 //         (    SELECT count(*) FROM runtimes WHERE ( finishedAt - INTERVAL runtime HOUR ) > nr.addedAt AND nr.environmentId = ${environmentId} ) )   
 //runtimes add envs
-
