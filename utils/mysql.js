@@ -62,7 +62,7 @@ export async function getNodes (environmentId) {
         since1667080800.count AS count,
         registered,
         communityId,
-        (    count(pings.peerId) / 
+        (    since1667080800.count / 
         (    SELECT count(*) FROM runtimes WHERE ( finishedAt ) > nr.addedAt AND environmentId = ${environmentId} AND finishedAt > from_unixtime(${countPingsSince}) ) )    
         AS availability,
         (   last24h.pings / 
