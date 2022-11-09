@@ -229,7 +229,7 @@ export async function updateCommunityMembers (registered, environment) {
 
 export async function getPRNStatus () {
   console.log('MySQL: getPRCStatus');
-  let query = `SELECT * FROM \`prn-status\` where timestamp in (SELECT max(timestamp) FROM \`prn-status\` GROUP BY peerId);`
+  let query = `SELECT m1.* FROM \`prn-status\` m1 LEFT JOIN \`prn-status\` m2 ON (m1.peerId = m2.peerId AND m1.timestamp < m2.timestamp) WHERE m2.timestamp IS NULL;`
   return await queryDB(query);
 }
 

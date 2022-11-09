@@ -137,21 +137,32 @@ async function informOnElement(){
 //    console.log({ stillUp, stillDown, newlyUp, newlyDown });
 
     // Prepare message
-    let msg;
+    let msg = `[Public Relay Node]    //message is triggered only if sth change\n`;
     if (newlyDown.length > 0) {
-        msg = `[Public Relay Node]\n${newlyDown.length} node${newlyDown.length === 1 ? '' : 's'} appear${newlyDown.length === 1 ? 's' : ''} to be offline.`;
+        msg += `${newlyDown.length} node${newlyDown.length === 1 ? '' : 's'} appear${newlyDown.length === 1 ? 's' : ''} to be offline.`;
         newlyDown.map(peerId => msg += `\n- ${peerId}`);
         if(newlyUp.length > 0) {
             msg += `\n\n${newlyUp.length} node${newlyUp.length === 1 ? ' is' : 's are'} back online:`;
             newlyUp.map(peerId => msg += `\n- ${peerId}`);
         }
     } else if(newlyUp.length > 0) {
-        msg = `[Public Relay Node] ${newlyUp.length} node${newlyUp.length === 1 ? ' is' : 's are'} back online:`;
+        msg += `\n${newlyUp.length} node${newlyUp.length === 1 ? ' is' : 's are'} back online:`;
         newlyUp.map(peerId => msg += `\n- ${peerId}`);
     }
 
+    if(stillUp.length > 0 || stillDown.length > 0) msg += `\n----------`;
+
+    if(stillUp.length > 0) {
+        msg += `\n\n${stillUp.length} node${stillUp.length === 1 ? ' is' : 's are'} still online:`;
+        stillUp.map(peerId => msg += `\n- ${peerId}`);
+    }
+    if(stillDown.length > 0) {
+        msg += `\n\n${stillDown.length} node${stillDown.length === 1 ? ' is' : 's are'} still offline:`;
+        stillDown.map(peerId => msg += `\n- ${peerId}`);
+    }
+
     // Send message if needed
-    if (newlyDown.length > 0 | newlyUp.length === 0) {
+    if (newlyDown.length > 0 || newlyUp.length > 0) {
         await reportToElement(msg);
     }
 
