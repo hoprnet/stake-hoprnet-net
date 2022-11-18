@@ -356,14 +356,14 @@ EnhancedTableHead.propTypes = {
 };
 
 export default function EnhancedTable(props) {
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('');
+  const [order, setOrder] = React.useState('desc');
+  const [orderBy, setOrderBy] = React.useState('availability24h');
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(100);
   const [search, set_search] = useState('');
   const [filteredData, set_filteredData] = useState([]);
-  const [leaderboard, set_leaderboard] = useState(true);
+  const [leaderboard, set_leaderboard] = useState(false);
 
   useEffect(() => {
     filterData(search);
@@ -630,7 +630,7 @@ export default function EnhancedTable(props) {
           />
         </Tooltip>
         <STablePagination
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[10, 50, 100]}
           component="div"
           className="sTablePagination"
           count={filteredData.length}

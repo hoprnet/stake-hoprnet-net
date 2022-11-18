@@ -37,7 +37,8 @@ const Progress = styled.div`
 function ProgressBar(props) {
 
     function percentage() {
-        if(!props.value) '0%'
+        if(!props.value) return '0%'
+        if(props.value>1) return '100%'
         return `${Math.round(props.value*1000)/10}%`;
     }
 
