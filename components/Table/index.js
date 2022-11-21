@@ -360,10 +360,19 @@ export default function EnhancedTable(props) {
   const [orderBy, setOrderBy] = React.useState('availability24h');
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(100);
+  const [rowsPerPage, set_rowsPerPage] = React.useState(100);
   const [search, set_search] = useState('');
   const [filteredData, set_filteredData] = useState([]);
   const [leaderboard, set_leaderboard] = useState(false);
+
+  useEffect(() => {
+    if (localStorage["tableSettings"]) {
+      const tableSettings = JSON.parse(localStorage["tableSettings"]);
+      console.log(tableSettings, 'tableSettings')
+      set_leaderboard(tableSettings.leaderboard);
+      set_rowsPerPage(tableSettings.rowsPerPage);
+    }
+  }, []);
 
   useEffect(() => {
     filterData(search);
@@ -390,9 +399,22 @@ export default function EnhancedTable(props) {
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
+    set_rowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+    localStorage.setItem("tableSettings", JSON.stringify({
+      leaderboard,
+      rowsPerPage: event.target.value
+    }));
   };
+
+  const handleChangeLeaderboard = (event) => {
+    set_leaderboard(event.target.checked);
+    localStorage.setItem("tableSettings", JSON.stringify({
+      leaderboard: event.target.checked,
+      rowsPerPage
+    }));
+  };
+
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredData.length) : 0;
@@ -622,7 +644,7 @@ export default function EnhancedTable(props) {
           <SFormControlLabel 
             control={
               <Switch 
-                onChange={event=>{set_leaderboard(event.target.checked)}}
+                onChange={handleChangeLeaderboard}
                 checked={leaderboard}
               />
             } 
