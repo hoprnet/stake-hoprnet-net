@@ -31,13 +31,15 @@ import TimeAgo from 'react-timeago'
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
 
-
+const STableHead = styled(TableHead)`
+  border-top: 1px solid rgba(224, 224, 224, 1);
+`
 
 const STableContainer = styled(TableContainer)`
   .MuiTableCell-mobileRow {
     display: none;
   }
-  @media only screen and (max-width: 820px) {
+  @media only screen and (max-width: 630px) {
     thead {
       display: none;
     }
@@ -46,6 +48,28 @@ const STableContainer = styled(TableContainer)`
     }
     .MuiTableCell-mobileRow {
       display: table-cell;
+    }
+  }
+  @media only screen and (max-width: 1090px) {
+    table > thead > tr > th:nth-child(2),
+    table > tbody > tr > td:not(.mobile):nth-child(2) {
+      display: none;
+    }
+  }
+  @media only screen and (max-width: 950px) {
+    table > thead > tr > th:nth-child(5),
+    table > tbody > tr > td:nth-child(5) {
+      display: none;
+    }
+  }
+  @media only screen and (max-width: 790px) {
+    table > thead > tr > th:nth-child(7),
+    table > tbody > tr > td:nth-child(7) {
+      display: none;
+    }
+    table > thead > tr > th:nth-child(6),
+    table > tbody > tr > td:nth-child(6) {
+      width: 140px;
     }
   }
 `
@@ -298,7 +322,7 @@ function EnhancedTableHead(props) {
   };
 
   return (
-    <TableHead>
+    <STableHead>
       <TableRow>
         {headCells.map((headCell) => (
           <STableCell
@@ -344,7 +368,7 @@ function EnhancedTableHead(props) {
           className='MuiTableCell-mobileRow'
         />
       </TableRow>
-    </TableHead>
+    </STableHead>
   );
 }
 
@@ -485,6 +509,31 @@ export default function EnhancedTable(props) {
         />
       </SearchRow>
       <Paper sx={{ width: '100%', mb: 2 }}>
+      <div>
+          <Tooltip 
+            title="Turn this on to view the leaderboard for just community members"
+          >
+            <SFormControlLabel 
+              control={
+                <Switch 
+                  onChange={handleChangeLeaderboard}
+                  checked={leaderboard}
+                />
+              } 
+              label="Community Leaderboard" 
+            />
+          </Tooltip>
+          <STablePagination
+            rowsPerPageOptions={[10, 50, 100]}
+            component="div"
+            className="sTablePagination"
+            count={filteredData.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </div>
         <STableContainer>
           <Table
             aria-labelledby="tableTitle"
@@ -512,7 +561,6 @@ export default function EnhancedTable(props) {
                       }}
                     >
                       <STableCell
-                        component="th"
                         id={labelId}
                         scope="row"
                       >
@@ -559,7 +607,7 @@ export default function EnhancedTable(props) {
                         <MobileTable>
                           <tr>
                             <td>Address:</td>
-                            <td>
+                            <td className='mobile'>
                               <Tooltip 
                                 title={row.peerId}
                               >
@@ -571,7 +619,7 @@ export default function EnhancedTable(props) {
                           </tr>
                           <tr>
                             <td>Registered:</td>
-                            <td>
+                            <td className='mobile'>
                               {
                                 row.registered === 1 ?
                                   'Yes'
@@ -582,23 +630,23 @@ export default function EnhancedTable(props) {
                           </tr>
                           <tr>
                             <td>Last Seen:</td>
-                            <td>{formatDate(row.lastSeen, false)}</td>
+                            <td className='mobile'>{formatDate(row.lastSeen, false)}</td>
                           </tr>
                           <tr>
-                          <td>Ping count:</td>
-                            <td>{row.count}</td>
+                            <td>Ping count:</td>
+                            <td className='mobile'>{row.count}</td>
                           </tr>
                           <tr>
                             <td>Latency average:</td>
-                            <td>{row.latencyAverage ? row.latencyAverage.toFixed(2) : '-'} ms</td>
+                            <td className='mobile'>{row.latencyAverage ? row.latencyAverage.toFixed(2) : '-'} ms</td>
                           </tr>
                           <tr>
                             <td>Availability 24h:</td>
-                            <td>{Math.round(row.availability24h*1000)/10}%</td>
+                            <td className='mobile'>{Math.round(row.availability24h*1000)/10}%</td>
                           </tr>
                           <tr>
                             <td>Availability:</td>
-                            <td>{Math.round(row.availability*1000)/10}%</td>
+                            <td className='mobile'>{Math.round(row.availability*1000)/10}%</td>
                           </tr>
                         </MobileTable>
                       </STableCell>
@@ -625,7 +673,7 @@ export default function EnhancedTable(props) {
                   </TableRow>
                 )
               }
-              {emptyRows > 0 && (
+              {/* {emptyRows > 0 && (
                 <TableRow
                   className="emptyRow"
                   style={{
@@ -634,33 +682,10 @@ export default function EnhancedTable(props) {
                 >
                   <TableCell colSpan={7} />
                 </TableRow>
-              )}
+              )} */}
             </TableBody>
           </Table>
         </STableContainer>
-        <Tooltip 
-          title="Turn this on to view the leaderboard for just community members"
-        >
-          <SFormControlLabel 
-            control={
-              <Switch 
-                onChange={handleChangeLeaderboard}
-                checked={leaderboard}
-              />
-            } 
-            label="Community Leaderboard" 
-          />
-        </Tooltip>
-        <STablePagination
-          rowsPerPageOptions={[10, 50, 100]}
-          component="div"
-          className="sTablePagination"
-          count={filteredData.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
       </Paper>
       <LastRun>
         <strong>Last run:</strong> {formatDate(props.lastRun, false)}

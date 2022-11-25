@@ -7,8 +7,12 @@ import * as dotenv from 'dotenv'
 dotenv.config({ path: '.env' });
 
 export async function communityOperations(){
-    let communityPeerIds = await getCommunityPeerIds();
-    await updateCommunityMembers(communityPeerIds, process.env.thegraph_environment);
+    try{
+      let communityPeerIds = await getCommunityPeerIds();
+      await updateCommunityMembers(communityPeerIds, process.env.thegraph_environment);
+    } catch (e) {
+      console.log('[Error] communityOperations', e)
+    }
 }
 
 async function getCommunityPeerIds(){
@@ -37,7 +41,7 @@ async function getCommunityPeerIds(){
     const query_id_json = await query_id_graphql.json();
     const query_id = query_id_json.data.get_result_v3.result_id;
 
-    const graphql = await fetch("https://core-hsr.dune.com/v1/graphql", {
+    const graphql = await fetch("https://app-api.dune.com/v1/graphql", {
       "headers": {
         "accept": "*/*",
         "accept-language": "en-US,en;q=0.9,pl;q=0.8",
