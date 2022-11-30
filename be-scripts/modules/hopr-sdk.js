@@ -159,7 +159,6 @@ export async function getPeersFromSubGraph (){
   return peers;
 }
 
-getRegisteredPeersFromSubGraph ();
 export async function getRegisteredPeersFromSubGraph (){
   console.log(`[HOPR SDK] getRegisteredPeersFromSubGraph`);
   const LIMIT = 1000;
