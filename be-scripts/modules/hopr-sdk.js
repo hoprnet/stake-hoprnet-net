@@ -159,11 +159,16 @@ export async function getPeersFromSubGraph (){
   return peers;
 }
 
-
+getRegisteredPeersFromSubGraph ();
 export async function getRegisteredPeersFromSubGraph (){
   console.log(`[HOPR SDK] getRegisteredPeersFromSubGraph`);
+  const LIMIT = 1000;
   let status;
-  const response = await fetch(process.env.thegraph_url, {
+  let foundEnd = false;
+  let index = 0;
+  let peers = [];
+  while(!foundEnd){
+    const response = await fetch(process.env.thegraph_url, {
       "headers": {
           "accept": "*/*",
           "accept-language": "en-US,en;q=0.9,el;q=0.8",
@@ -177,30 +182,29 @@ export async function getRegisteredPeersFromSubGraph (){
       },
       "referrer": "https://thegraph.com/",
       "referrerPolicy": "strict-origin-when-cross-origin",
-      "body": "{\"query\":\"{networkRegistries{registeredPeers}}\"}",
+      "body": `{\"query\":\"{networkRegistries(orderBy: id, orderDirection: asc, first: ${LIMIT}, skip: ${index*LIMIT}){registeredPeers}}\"}`,
       "method": "POST",
       "mode": "cors",
       "credentials": "omit"
-  }).then((res) => {
-    status = res.status;
-    return res.json();
-  }).catch((err) => {
-    console.log(`Error [HOPR SDK]: getPeersFromSubGraph status ${status}`);
-    if(status !== 404) console.error(err);
-  });
-
-
-  const networkRegistries = response.data.networkRegistries;
-  let peers = [];
-
-  for (let n = 0; n < networkRegistries.length; n++ ) {
-    const registeredPeers = networkRegistries[n].registeredPeers;
-    for (let p = 0; p < registeredPeers.length; p++ ) {
-      const peerId = registeredPeers[p];
-      if (peers.findIndex(peer => peer === peerId) === -1){
-        peers.push(peerId);
+    }).then((res) => {
+      status = res.status;
+      return res.json();
+    }).catch((err) => {
+      console.log(`Error [HOPR SDK]: getPeersFromSubGraph status ${status}`);
+      if(status !== 404) console.error(err);
+    });
+    const networkRegistries = response.data.networkRegistries;
+    for (let n = 0; n < networkRegistries.length; n++ ) {
+      const registeredPeers = networkRegistries[n].registeredPeers;
+      for (let p = 0; p < registeredPeers.length; p++ ) {
+        const peerId = registeredPeers[p];
+        if (peers.findIndex(peer => peer === peerId) === -1){
+          peers.push(peerId);
+        }
       }
     }
+    index++;
+    if(networkRegistries.length === 0 || networkRegistries.length < LIMIT) foundEnd = true;
   }
 
   return peers;
