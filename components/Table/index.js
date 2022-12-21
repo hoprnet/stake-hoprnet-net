@@ -51,24 +51,24 @@ const STableContainer = styled(TableContainer)`
     }
   }
   @media only screen and (max-width: 1090px) {
-    table > thead > tr > th:nth-child(2),
-    table > tbody > tr > td:not(.mobile):nth-child(2) {
+    table > thead > tr > th:nth-of-type(2),
+    table > tbody > tr > td:not(.mobile):nth-of-type(2) {
       display: none;
     }
   }
   @media only screen and (max-width: 950px) {
-    table > thead > tr > th:nth-child(5),
-    table > tbody > tr > td:nth-child(5) {
+    table > thead > tr > th:nth-of-type(5),
+    table > tbody > tr > td:nth-of-type(5) {
       display: none;
     }
   }
   @media only screen and (max-width: 790px) {
-    table > thead > tr > th:nth-child(7),
-    table > tbody > tr > td:nth-child(7) {
+    table > thead > tr > th:nth-of-type(7),
+    table > tbody > tr > td:nth-of-type(7) {
       display: none;
     }
-    table > thead > tr > th:nth-child(6),
-    table > tbody > tr > td:nth-child(6) {
+    table > thead > tr > th:nth-of-type(6),
+    table > tbody > tr > td:nth-of-type(6) {
       width: 140px;
     }
   }
@@ -688,6 +688,7 @@ export default function EnhancedTable(props) {
         </STableContainer>
       </Paper>
       <LastRun>
+        <strong>Last ping count reset:</strong> 2022-12-21 14:00 CET<br/>
         <strong>Last run:</strong> {formatDate(props.lastRun, false)}
       </LastRun>
     </Box>

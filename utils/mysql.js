@@ -53,7 +53,7 @@ export async function getEnvironmentsAndLastRun () {
 
 export async function getNodes (environmentId) {
   console.log('MySQL: getNodes');
-  const countPingsSince = 1667080800;
+  const countPingsSince = 1671627600;
   let query = await queryDB(escape`
       SELECT 
         nr.peerId AS peerId, 
