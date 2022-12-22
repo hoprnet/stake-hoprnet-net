@@ -256,7 +256,7 @@ const headCells = [
     disablePadding: false,
     label: 'Ping #',
     width: 160,
-    tooltip: "The number of successful pings/pongs by this node"
+    tooltip: "The number of successful pings/pongs by this node since last ping count reset"
   },
   {
     id: 'latencyAverage',
@@ -280,7 +280,7 @@ const headCells = [
     disablePadding: false,
     label: 'Avail.',
     width: 190,
-    tooltip: "The percentage of pings received by this node"
+    tooltip: "The percentage of pings received by this node since last ping count reset"
   },
 ];
 
@@ -289,10 +289,10 @@ function EnvironmentSelect(props) {
 
   return (
     <SFormControl>
-      <InputLabel id="environment-select-label">Environment</InputLabel>
+      <InputLabel id="environment-select-label-1">Environment</InputLabel>
       <Select
-        labelId="environment-select-label"
-        id="environment-select"
+        labelId="environment-select-label-1"
+        id="environment-select-1"
         value={props.value}
         label="Environment"
         MenuProps={{
@@ -443,12 +443,13 @@ export default function EnhancedTable(props) {
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredData.length) : 0;
 
-  const formatDate = (epoch, twoRows = true) => {
+  const formatDate = (epoch, twoRows = true, now) => {
+    if (!now) now = props.now;
     if(!epoch) return <>-<br/>&nbsp;</>
     var differenceMs = Date.now() - new Date(epoch).getTime();
-    if (differenceMs < 0) return <TimeAgo date={new Date(epoch).getTime()-(2*60*60*1000)} />
+    if (differenceMs < 0) return <TimeAgo date={new Date(epoch).getTime()-(2*60*60*1000)} now={now} />
     if (differenceMs < 24*60*60*1000) {
-      return <TimeAgo date={epoch} />
+      return <TimeAgo date={epoch} now={now} />
     } else {
       const d = new Date(epoch);
       const year = d.getFullYear();
@@ -689,7 +690,7 @@ export default function EnhancedTable(props) {
       </Paper>
       <LastRun>
         <strong>Last ping count reset:</strong> 2022-12-21 14:00 CET<br/>
-        <strong>Last run:</strong> {formatDate(props.lastRun, false)}
+        <strong>Last run:</strong> {props.lastRun ? formatDate(props.lastRun, false, props.now) : '-'}
       </LastRun>
     </Box>
   );

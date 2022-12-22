@@ -89,10 +89,10 @@ async function testPRNs(){
             for (let n = 0; n < nodesOnEnv.length; n++) {
                 let pingNumber = (p * nodesOnEnv.length) + n+1;
                 let percentage = Math.round(pingNumber / numberOfPings * 100);
-                console.log(`[${percentage}%] Ping PRN ${pingNumber} out of ${numberOfPings} `);
+                console.log(`[${new Date().toUTCString()}] [${percentage}%] Ping PRN ${pingNumber} out of ${numberOfPings} `);
                 let ping = await nodePing(nodesOnEnv[n].api_url, nodesOnEnv[n].api_key, peerId);
                 if (ping?.hasOwnProperty('latency')) {
-                    console.log(`${peerId} latency: ${ping.latency}`);
+                    console.log(`[${new Date().toUTCString()}] ${peerId} latency: ${ping.latency}`);
                     counter++;
                     online = true;
                     break;
@@ -134,8 +134,6 @@ async function updateDB() {
 }
 
 async function informOnElement(){
-//    console.log({ stillUp, stillDown, newlyUp, newlyDown });
-
     // Prepare message
     let msg = `[Public Relay Node]    //message is triggered only if sth change\n`;
     if (newlyDown.length > 0) {

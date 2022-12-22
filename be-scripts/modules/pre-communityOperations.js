@@ -1,17 +1,28 @@
 import fetch  from 'node-fetch';
 import { 
-    updateCommunityMembers
+    updateCommunityMembers,
+    getCommunityMembersSeperate,
+    getRegisteredSeperate,
+//    updateCommunityMembersSeperate,
 } from "./mysql.js";
 
 import * as dotenv from 'dotenv'
 dotenv.config({ path: '.env' });
 
+
+let communityInDB = [];
+let registryInDB = [];
+
+//communityOperations()
 export async function communityOperations(){
     try{
       let communityPeerIds = await getCommunityPeerIds();
+  //    communityInDB = await getCommunityMembersSeperate();
+  //    registryInDB = await getRegisteredSeperate();
+  //    await updateCommunityDB(communityPeerIds);
       await updateCommunityMembers(communityPeerIds, process.env.thegraph_environment);
     } catch (e) {
-      console.log('[Error] communityOperations', e)
+      console.log(`[${new Date().toUTCString()}] [Error] communityOperations`, e)
     }
 }
 
@@ -68,4 +79,30 @@ async function getCommunityPeerIds(){
     data = data.filter( item => item !== null);
 
     return data;
+}
+
+
+async function updateCommunityDB(communityPeerIdsArr){
+  let communityUp = [];
+  let communityDown = [];
+  for(let i = 0; i < communityInDB.length; i++) {
+    if(communityInDB[i].community === 1) {
+      if(!communityPeerIdsArr.includes(communityInDB[i].peerId)){
+        communityDown.push(communityInDB[i].peerId)
+      }
+    }
+  }
+  for(let i = 0; i < communityPeerIdsArr.length; i++) {
+    let peerNowCommunity = communityPeerIdsArr[i];
+    let index = communityInDB.findIndex(elem => elem.peerId === peerNowCommunity);
+    if(index === -1){
+      communityUp.push(peerNowCommunity)
+    } else {
+      if(communityInDB[index].community === 0){
+        communityUp.push(peerNowCommunity)
+      }
+    }
+  }
+  //TODO:
+  await updateCommunityMembersSeperate(communityUp, communityDown, process.env.thegraph_environment);
 }

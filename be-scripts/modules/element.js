@@ -5,7 +5,7 @@ dotenv.config({ path: '.env' });
 //reportToElement('[Network Registry] 1 node out of 5 appears to be offline.')
 
 export async function reportToElement(message){
-    console.log('[Element] reportToElement:', message)
+    console.log(`[${new Date().toUTCString()}] [Element] reportToElement:`, message)
     const roomId = process.env.element_channel; // Testing API 
     const url = new URL(process.env.element_home_url).origin;
     const token = process.env.element_access_token;
@@ -30,6 +30,6 @@ export async function reportToElement(message){
             response.text();
         });
     } catch (e) {
-        console.log('Error while reporting to Element.')
+        console.log(`[${new Date().toUTCString()}] Error while reporting to Element.`)
     }
 }

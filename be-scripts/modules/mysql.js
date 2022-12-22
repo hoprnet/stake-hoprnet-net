@@ -65,6 +65,25 @@ dotenv.config({ path: '.env' });
 // );
 
 
+// CREATE TABLE `registry` (
+//   `id` INT UNIQUE AUTO_INCREMENT, 
+//   `peerId` INT, 
+//   `registered` boolean,
+//   `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   PRIMARY KEY (id),
+//    FOREIGN KEY (peerId) REFERENCES `node-registry`(id)
+// );
+
+// CREATE TABLE `community` (
+//   `id` INT UNIQUE AUTO_INCREMENT, 
+//   `peerId` INT, 
+//   `community` boolean,
+//   `timestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//    PRIMARY KEY (id),
+//    FOREIGN KEY (peerId) REFERENCES `node-registry`(id)
+// );
+
+
 
 const db = mysql({
   config: {
@@ -82,14 +101,14 @@ const queryDB = async (query, data) => {
 }
 
 export async function insertPeerId (peerId) {
-    console.log('MySQL: insertPeerId', peerId);
+    console.log(`[${new Date().toUTCString()}] MySQL: insertPeerId`, peerId);
     await queryDB(escape`
       INSERT INTO \`node-registry\` (peerId) VALUES (${peerId})
     `)
 }
 
 export async function insertPeerIds (peerIds) {
-  console.log('MySQL: insertPeerIds', peerIds.length);
+  console.log(`[${new Date().toUTCString()}] MySQL: insertPeerIds`, peerIds.length);
   let transaction = db.transaction();
   for (let i = 0; i < peerIds.length; i++) {
     transaction.query(escape`
@@ -104,7 +123,7 @@ export async function insertPeerIds (peerIds) {
 }
 
 export async function selectPeerIds () {
-  console.log('MySQL: selectPeerIds');
+  console.log(`[${new Date().toUTCString()}] MySQL: selectPeerIds`);
   let query = await queryDB(escape`
     SELECT peerId, (SELECT environment FROM environments WHERE id = environmentId) AS environment  FROM  \`node-registry\` 
   `);
@@ -112,7 +131,7 @@ export async function selectPeerIds () {
 }
 
 export async function insertLastSeen (peerId, lastSeen) {
-  console.log('MySQL: insertLastSeen', peerId, lastSeen);
+  console.log(`[${new Date().toUTCString()}] MySQL: insertLastSeen`, peerId, lastSeen);
   await queryDB(escape`
     INSERT INTO \`last-seen\` (peerId, lastSeen) VALUES (
       (SELECT id FROM \`node-registry\` WHERE peerId = ${peerId}), ${lastSeen})
@@ -122,7 +141,7 @@ export async function insertLastSeen (peerId, lastSeen) {
 }
 
 export async function insertPing (peerId, latency) {
-  console.log('MySQL: insertPing', peerId, latency);
+  console.log(`[${new Date().toUTCString()}] MySQL: insertPing`, peerId, latency);
   try {
     await queryDB(escape`
       INSERT INTO pings (peerId, latency) VALUES (
@@ -131,7 +150,7 @@ export async function insertPing (peerId, latency) {
       )
     `)
   } catch (e) {
-    console.error('ERROR [MySQL] insertPing:', e);
+    console.error(`[${new Date().toUTCString()}] ERROR [MySQL] insertPing:`, e);
     // for (let i = 0; i < 5; i++){
     //   console.log(`MySQL: Trying function insertPing again (${i})`);
     //   await new Promise(r => setTimeout(r, 1000));
@@ -141,7 +160,7 @@ export async function insertPing (peerId, latency) {
 }
 
 export async function insertPings (pings) {
-  console.log('MySQL: insertPings', pings.length);
+  console.log(`[${new Date().toUTCString()}] MySQL: insertPings`, pings.length);
 
   let transaction = db.transaction();
   for (let i = 0; i < pings.length; i++) {
@@ -155,7 +174,7 @@ export async function insertPings (pings) {
 }
 
 export async function insertRuntime (runtime, numberOfWorkingNodes, positivePings, environment) {
-  console.log('MySQL: insertRuntime', runtime);
+  console.log(`[${new Date().toUTCString()}] MySQL: insertRuntime`, runtime);
   await queryDB(escape`
     INSERT INTO runtimes (runtime, numberOfWorkingNodes, positivePings, environmentId) 
     VALUES (
@@ -174,7 +193,7 @@ export async function insertRuntime (runtime, numberOfWorkingNodes, positivePing
 // }
 
 export async function insertEnvironments (environments) {
-  console.log('MySQL: insertEnvironments', environments);
+  console.log(`[${new Date().toUTCString()}] MySQL: insertEnvironments`, environments);
   try {
     let query = `INSERT INTO \`environments\` (environment) VALUES ${environments.map(() => '(?)')}`
     await queryDB(query, environments);
@@ -184,13 +203,13 @@ export async function insertEnvironments (environments) {
 }
 
 export async function insertElementEvent (msgType, data) {
-  console.log('MySQL: insertElementEvent', msgType, data);
+  console.log(`[${new Date().toUTCString()}] MySQL: insertElementEvent`, msgType, data);
   let query = escape`INSERT INTO \`element\` (msgType, data) VALUES (${msgType}, ${data})`
   await queryDB(query);
 }
 
 export async function insertElementEvents (msgType, data) {
-  console.log('MySQL: insertElementEvents', msgType, data);
+  console.log(`[${new Date().toUTCString()}] MySQL: insertElementEvents`, msgType, data);
   let query = escape`INSERT INTO \`element\` (msgType, data) VALUES ${data.map(() => '(?,?)')}`
   let dataReady = [];
   for (let i = 0; i < data.length; i++){
@@ -202,39 +221,68 @@ export async function insertElementEvents (msgType, data) {
 
 
 export async function checkElementEventInLast24h (msgType, data, interval) {
-  console.log('MySQL: checkElementEventInLast24h', msgType, data);
+  console.log(`[${new Date().toUTCString()}] MySQL: checkElementEventInLast24h`, msgType, data);
   let query = escape`SELECT * FROM \`element\` WHERE msgType=${msgType} AND data = ${data} AND timestamp >= (NOW() - INTERVAL 24 HOUR)`
   query = await queryDB(query);
   return query.length > 0;
 }  
 
 export async function checkElementEventInLastH (msgType, data, interval) {
-  console.log('MySQL: checkElementEventInLastH', msgType, data);
+  console.log(`[${new Date().toUTCString()}] MySQL: checkElementEventInLastH`, msgType, data);
   let query = escape`SELECT * FROM \`element\` WHERE msgType=${msgType} AND data = ${data} AND timestamp >= (NOW() - INTERVAL ${interval} HOUR)`
   query = await queryDB(query);
   return query.length > 0;
 }  
 
 export async function updateRegistered (registered, environment) {
-  console.log('MySQL: updateRegistered', registered.length, environment);
+  console.log(`[${new Date().toUTCString()}] MySQL: updateRegistered`, registered.length, environment);
   let query = `UPDATE \`node-registry\` SET registered = IF(peerId IN(${registered.map(() => '?')}), 1, 0) WHERE environmentId = (SELECT id FROM \`environments\` WHERE environment = ?) ;`
   await queryDB(query, [...registered, environment]);
 }
 
 export async function updateCommunityMembers (registered, environment) {
-  console.log('MySQL: updateCommunityMembers', registered.length, environment);
+  console.log(`[${new Date().toUTCString()}] MySQL: updateCommunityMembers`, registered.length, environment);
   let query = `UPDATE \`node-registry\` SET communityId = IF(peerId IN(${registered.map(() => '?')}), 1, NULL) WHERE environmentId = (SELECT id FROM \`environments\` WHERE environment = ?) ;`
   await queryDB(query, [...registered, environment]);
 }
 
+export async function getCommunityMembersSeperate () {
+  console.log(`[${new Date().toUTCString()}] MySQL: getCommunityMembersSeperate`);
+  let query = `SELECT m1.*, \`node-registry\`.peerId FROM \`community\` AS m1 
+  LEFT JOIN \`community\` AS m2 ON (m1.peerId = m2.peerId AND m1.timestamp < m2.timestamp) 
+  LEFT JOIN \`node-registry\` ON (\`node-registry\`.id = m1.peerId)
+  WHERE m2.timestamp IS NULL;`
+  return await queryDB(query);
+}
+
+export async function getRegisteredSeperate () {
+  console.log(`[${new Date().toUTCString()}] MySQL: getRegisteredSeperate`);
+  let query = `SELECT m1.*, \`node-registry\`.peerId FROM \`registry\` AS m1 
+  LEFT JOIN \`registry\` AS m2 ON (m1.peerId = m2.peerId AND m1.timestamp < m2.timestamp) 
+  LEFT JOIN \`node-registry\` ON (\`node-registry\`.id = m1.peerId)
+  WHERE m2.timestamp IS NULL;`
+  return await queryDB(query);
+}
+
+export async function insertCommunityMembersSeperate () {
+  console.log(`[${new Date().toUTCString()}] MySQL: insertCommunityMembersSeperate`);
+  let query = `INSERT INTO \`community\` (community, peerId) VALUES ${payload.map(() => '(?,?)')}`
+  let payloadReady = [];
+  for (let i = 0; i < payload.length; i++){
+    payloadReady.push(payload[i].status);
+    payloadReady.push(payload[i].peerId);
+  }
+  return await queryDB(query);
+}
+
 export async function getPRNStatus () {
-  console.log('MySQL: getPRCStatus');
+  console.log(`[${new Date().toUTCString()}] MySQL: getPRCStatus`);
   let query = `SELECT m1.* FROM \`prn-status\` m1 LEFT JOIN \`prn-status\` m2 ON (m1.peerId = m2.peerId AND m1.timestamp < m2.timestamp) WHERE m2.timestamp IS NULL;`
   return await queryDB(query);
 }
 
 export async function insertPRNStatus (payload) {
-  console.log('MySQL: insertPRCStatus', payload);
+  console.log(`[${new Date().toUTCString()}] MySQL: insertPRCStatus`, payload);
   let query = `INSERT INTO \`prn-status\` (status, peerId) VALUES ${payload.map(() => '(?,?)')}`
   let payloadReady = [];
   for (let i = 0; i < payload.length; i++){

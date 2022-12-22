@@ -33,7 +33,6 @@ var peersToPing = [];
 var newPeers = [];
 var pings = [];
 var counter = 0;
-var numberOfPings;
 
 
 export async function pingBotAll (input){
@@ -48,7 +47,6 @@ export async function pingBotAll (input){
 } 
 
 function prepareData() {
-    numberOfPings = peersToPing.length * nodes.length;
     nodes = groupItemsByEnvironments(nodes);
     peersToPing = groupItemsByEnvironments(peersToPing);
 }
@@ -111,12 +109,11 @@ async function pingAndSaveResults(){
         for (let p = 0; p < peersOnEnv.length; p++) {
             for (let n = 0; n < nodesOnEnv.length; n++) {
                 if(nodesOnEnv[n].environment !== peersOnEnv[p].environment) continue;
-                let pingNumber = (p * nodesOnEnv.length) + n+1;
-                let percentage = Math.round(pingNumber / numberOfPings * 100);
-                console.log(`[${percentage}%] Ping ${pingNumber} out of ${numberOfPings}`)
+                let percentage = Math.round(p / peersOnEnv.length * 100);
+                console.log(`[${new Date().toUTCString()}] [${percentage}%] Ping ${p+1} out of ${peersOnEnv.length} (${n+1}/${nodesOnEnv.length} nodes)`)
                 let ping = await nodePing(nodesOnEnv[n].api_url, nodesOnEnv[n].api_key, peersOnEnv[p].peerId);
                 if (ping?.hasOwnProperty('latency')) {
-                    console.log(`${peersOnEnv[p].peerId} latency: ${ping.latency}`)
+                    console.log(`[${new Date().toUTCString()}] ${peersOnEnv[p].peerId} latency: ${ping.latency}`)
                     insertPingLocally(peersOnEnv[p].peerId, nodesOnEnv[n].environment, ping.latency)
                     counter++;
                     break;

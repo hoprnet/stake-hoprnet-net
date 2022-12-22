@@ -17,6 +17,7 @@ function generateHeaders (apiToken, isPost = false) {
 };
 
 export async function getPeerId (apiEndpoint, apiToken) {
+  console.log(`[${new Date().toUTCString()}] [HOPR SDK] getPeerId:`, apiEndpoint, apiToken);
   let address, status;
   const response = await fetch(`${apiEndpoint}/api/v2/account/addresses`, {
     headers: generateHeaders(apiToken)
@@ -24,16 +25,16 @@ export async function getPeerId (apiEndpoint, apiToken) {
     status = res.status;
     return res.json();
   }).catch((err) => {
-    console.log(`Error [HOPR SDK]: getPeerId status ${status}`);
+    console.log(`[${new Date().toUTCString()}] Error [HOPR SDK]: getPeerId status ${status}`);
     if(status !== 404) console.error(err);
   });
   address = response?.hoprAddress;
-  console.log('getPeerId', address)
+  console.log(`[${new Date().toUTCString()}] getPeerId`, address)
   return address;
 };
 
 export async function nodeGetInfo (apiEndpoint, apiToken) {
-  console.log(`[HOPR SDK] nodeGetInfo:`, apiEndpoint, apiToken);
+  console.log(`[${new Date().toUTCString()}] [HOPR SDK] nodeGetInfo:`, apiEndpoint, apiToken);
   let status;
   const response = await fetch(`${apiEndpoint}/api/v2/node/info`, {
     headers: generateHeaders(apiToken)
@@ -41,7 +42,7 @@ export async function nodeGetInfo (apiEndpoint, apiToken) {
     status = res.status;
     return res.json();
   }).catch((err) => {
-    console.log(`Error [HOPR SDK] nodeGetInfo status ${status}`);
+    console.log(`[${new Date().toUTCString()}] Error [HOPR SDK] nodeGetInfo status ${status}`);
     if(status !== 404) console.error(err);
   });
   return response;
@@ -60,13 +61,13 @@ export async function sendMessage (apiEndpoint, apiToken, recipientPeerId, messa
     status = res.status;
   })
   .catch((err) => {
-    console.log(`Error [HOPR SDK]: sendMessage status ${status}`);
+    console.log(`[${new Date().toUTCString()}] Error [HOPR SDK]: sendMessage status ${status}`);
     if(status !== 404) console.error(err);
   });
 };
 
 export async function nodePing (apiEndpoint, apiToken, peerId) {
-  console.log(`[HOPR SDK] nodePing:`, apiEndpoint, apiToken, peerId);
+  console.log(`[${new Date().toUTCString()}] [HOPR SDK] nodePing:`, apiEndpoint, apiToken, peerId);
 
   const timeoutMs = 10000
   // Aborting fetch longer than XXXX ms
@@ -90,9 +91,9 @@ export async function nodePing (apiEndpoint, apiToken, peerId) {
     response = await response.json();
   } catch (err) {
     if (err instanceof AbortError) {
-      console.log(`[HOPR SDK]: nodePing aborted after ${timeoutMs/1000}s`);
+      console.log(`[${new Date().toUTCString()}] [HOPR SDK]: nodePing aborted after ${timeoutMs/1000}s`);
     } else {
-      console.log(`Error [HOPR SDK]: nodePing status ${status}`);
+      console.log(`[${new Date().toUTCString()}] Error [HOPR SDK]: nodePing status ${status}`);
       if(status !== 404) console.error(err);
     }
   } finally {
@@ -103,7 +104,7 @@ export async function nodePing (apiEndpoint, apiToken, peerId) {
 };
 
 export async function nodeGetPeers (apiEndpoint, apiToken) {
-  console.log(`[HOPR SDK] nodeGetPeers:`, apiEndpoint, apiToken);
+  console.log(`[${new Date().toUTCString()}] [HOPR SDK] nodeGetPeers:`, apiEndpoint, apiToken);
   let status;
   const response = await fetch(`${apiEndpoint}/api/v2/node/peers`, {
       headers: generateHeaders(apiToken)
@@ -119,7 +120,7 @@ export async function nodeGetPeers (apiEndpoint, apiToken) {
 };
 
 export async function getPeersFromSubGraph (){
-  console.log(`[HOPR SDK] getPeersFromSubGraph`);
+  console.log(`[${new Date().toUTCString()}] [HOPR SDK] getPeersFromSubGraph`);
   let status;
   const response = await fetch(process.env.thegraph_url, {
       "headers": {
@@ -143,7 +144,7 @@ export async function getPeersFromSubGraph (){
     status = res.status;
     return res.json();
   }).catch((err) => {
-    console.log(`Error [HOPR SDK]: getPeersFromSubGraph status ${status}`);
+    console.log(`[${new Date().toUTCString()}] Error [HOPR SDK]: getPeersFromSubGraph status ${status}`);
     if(status !== 404) console.error(err);
   });
 
@@ -160,7 +161,7 @@ export async function getPeersFromSubGraph (){
 }
 
 export async function getRegisteredPeersFromSubGraph (){
-  console.log(`[HOPR SDK] getRegisteredPeersFromSubGraph`);
+  console.log(`[${new Date().toUTCString()}] [HOPR SDK] getRegisteredPeersFromSubGraph`);
   const LIMIT = 1000;
   let status;
   let foundEnd = false;
