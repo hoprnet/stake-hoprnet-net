@@ -413,7 +413,7 @@ export default function Section3(props) {
         </div>
       }
       {
-        last7daysOffline[0].data.length > 0 &&
+        last7daysOffline[0]?.data?.length > 0 &&
           <div style={{width: '100%'}}>
             <Chart
               series={last7daysOffline}
