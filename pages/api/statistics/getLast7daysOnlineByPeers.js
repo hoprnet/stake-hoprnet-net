@@ -4,8 +4,6 @@ export default async function handler(req, res) {
   console.log('API: getLast7daysOnlineByPeers', req.query.env);
   const environmentId = req.query.env;
   const mysql = await getLast7daysOnlineByPeers(environmentId);
-
-  console.log(mysql)
   let result = [
     { name: "1+ ping", data: [] },
     { name: "10%+ time online", data: [] },
@@ -33,6 +31,5 @@ export default async function handler(req, res) {
     result[9].data.push({ x: mysql[i].DAY, y: mysql[i].count90 });
     result[10].data.push({ x: mysql[i].DAY, y: mysql[i].count100 });
   }
-  console.log(result)
   res.status(200).json(result)
 }

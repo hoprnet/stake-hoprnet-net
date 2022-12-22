@@ -194,6 +194,7 @@ export default function Section3(props) {
     if (environment.current !== environment.previous) {
       updateRuntimes(environment.current, runtime.current);
       getLast30daysOnlineByHour();
+      getLast7daysOnlineByPeers();
     }
   }, [environment]);
 
@@ -411,28 +412,31 @@ export default function Section3(props) {
           <div style={{width: '100%', textAlign: 'center', marginTop: '-8px', fontSize: '13px'}}><p>last 30 days availability</p></div>
         </div>
       }
-      <div style={{width: '100%'}}>
-        <Chart
-          series={last7daysOffline}
-          type="line"
-          width="100%"
-          height="450px"
-          options={{
-            chart: {
-              fontSize: '14px',
-              fontFamily: 'Source Code Pro',
-              zoom: {
-                enabled: false,
-              }
-            },
-            colors: ["rgb(0, 143, 251)", "#7eb0d5", "#b2e061", "#bd7ebe", "rgb(118, 141, 113)", "#ffee65", "#beb9db", "#fdcce5", "#8bd3c7", "#ffb55a","rgb(0, 227, 150)"],
-            xaxis: {
-              type: 'datetime',
-            }
-          }}
-        />
-         <div style={{width: '100%', textAlign: 'center', marginTop: '-8px', fontSize: '13px'}}><p>last 7 days detailed availability</p></div>
-      </div>
+      {
+        last7daysOffline[0].data.length > 0 &&
+          <div style={{width: '100%'}}>
+            <Chart
+              series={last7daysOffline}
+              type="line"
+              width="100%"
+              height="450px"
+              options={{
+                chart: {
+                  fontSize: '14px',
+                  fontFamily: 'Source Code Pro',
+                  zoom: {
+                    enabled: false,
+                  }
+                },
+                colors: ["rgb(0, 143, 251)", "#7eb0d5", "#b2e061", "#bd7ebe", "rgb(118, 141, 113)", "#ffee65", "#beb9db", "#fdcce5", "#8bd3c7", "#ffb55a","rgb(0, 227, 150)"],
+                xaxis: {
+                  type: 'datetime',
+                }
+              }}
+            />
+            <div style={{width: '100%', textAlign: 'center', marginTop: '-8px', fontSize: '13px'}}><p>last 7 days detailed availability</p></div>
+          </div>
+      }
     </Section>
   );
 }
