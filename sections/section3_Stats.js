@@ -409,7 +409,7 @@ export default function Section3(props) {
               }
             }}
           />
-          <div style={{width: '100%', textAlign: 'center', marginTop: '-8px', fontSize: '13px'}}><p>last 30 days availability</p></div>
+          <div style={{width: '100%', textAlign: 'center', marginTop: '-8px', fontSize: '13px'}}><p>last 30 days online node count</p></div>
         </div>
       }
       {
