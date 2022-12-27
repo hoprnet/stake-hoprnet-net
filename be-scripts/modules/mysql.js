@@ -125,7 +125,12 @@ export async function insertPeerIds (peerIds) {
 export async function selectPeerIds () {
   console.log(`[${new Date().toUTCString()}] MySQL: selectPeerIds`);
   let query = await queryDB(escape`
-    SELECT peerId, (SELECT environment FROM environments WHERE id = environmentId) AS environment  FROM  \`node-registry\` 
+    SELECT 
+      \`node-registry\`.peerId as peerId, 
+      (SELECT environment FROM environments WHERE id = environmentId) AS environment,
+      (SELECT UNIX_TIMESTAMP(MAX(pings.timestamp)) * 1000 FROM pings WHERE pings.peerId = \`node-registry\`.id) AS lastSeen
+    FROM  
+      \`node-registry\` 
   `);
   return query;
 }

@@ -406,6 +406,11 @@ export default function Section3(props) {
               }},
               xaxis: {
                 type: 'datetime',
+              },
+              tooltip: {
+                x: {
+                  format: "dd MMM, HH:mm"
+                }
               }
             }}
           />

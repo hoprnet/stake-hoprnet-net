@@ -65,7 +65,7 @@ async function saveEnvironments(){
 
 async function getPeersFromDB(){
     const response = await selectPeerIds();
-    peers = response.map(peer => {return {peerId: peer.peerId, environment: peer.environment}});
+    peers = response.map(peer => {return {peerId: peer.peerId, environment: peer.environment, lastSeen: peer.lastSeen}});
 }
 
 async function getPeersFromNetwork (){
@@ -88,7 +88,9 @@ async function getPeersFromNetwork (){
         peersToPing = peersFromSubGraph.map(peerId => {return {
             peerId,
             environment: process.env.thegraph_environment,
+            lastSeen: peers.find(elem => elem.peerId === peerId && elem.environment === process.env.thegraph_environment)?.lastSeen
         }});
+
     }
 }
 
@@ -116,6 +118,14 @@ async function pingAndSaveResults(){
                     console.log(`[${new Date().toUTCString()}] ${peersOnEnv[p].peerId} latency: ${ping.latency}`)
                     insertPingLocally(peersOnEnv[p].peerId, nodesOnEnv[n].environment, ping.latency)
                     counter++;
+                    break;
+                }
+                if (((Date.now() - (30 * 24 * 60 * 60 * 1000)) > peersOnEnv[p].lastSeen) && n === 1) {
+                    console.log(`[${new Date().toUTCString()}] Skiping ${peersOnEnv[p].peerId} after 2 pings as it was last seen on ${new Date(peersOnEnv[p].lastSeen).toUTCString()}`)
+                    break;
+                }
+                if (((Date.now() - (15 * 24 * 60 * 60 * 1000)) > peersOnEnv[p].lastSeen) && n === 2) {
+                    console.log(`[${new Date().toUTCString()}] Skiping ${peersOnEnv[p].peerId} after 3 pings as it was last seen on ${new Date(peersOnEnv[p].lastSeen).toUTCString()}`)
                     break;
                 }
             }

@@ -45,7 +45,7 @@ async function main (){
 
     nodes = await checkNodes(nodes);
     await communityOperations();
-    await pingBotPRN(nodes);
+  //  await pingBotPRN(nodes);
     await pingBotAll(nodes); //now: ping only registered nodes (from the graph)
 
     process.exit()
