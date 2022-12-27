@@ -124,7 +124,8 @@ async function pingAndSaveResults(){
                     break;
                 }
                 if (((Date.now() - (30 * 24 * 60 * 60 * 1000)) > peersOnEnv[p].lastSeen) && n === 1 && !peersOnEnv[p].community ) {
-                    console.log(`[${new Date().toUTCString()}] Skiping ${peersOnEnv[p].peerId} after 2 pings as it was last seen on ${new Date(peersOnEnv[p].lastSeen).toUTCString()}`)
+                    if(peersOnEnv[p].lastSeen) console.log(`[${new Date().toUTCString()}] Skiping ${peersOnEnv[p].peerId} after 2 pings as it was last seen on ${new Date(peersOnEnv[p].lastSeen).toUTCString()}`)
+                    else console.log(`[${new Date().toUTCString()}] Skiping ${peersOnEnv[p].peerId} after 2 pings as it was never seen`)
                     break;
                 }
                 if (((Date.now() - (15 * 24 * 60 * 60 * 1000)) > peersOnEnv[p].lastSeen) && n === 2 && !peersOnEnv[p].community ) {
