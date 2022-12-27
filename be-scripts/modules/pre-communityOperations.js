@@ -21,6 +21,7 @@ export async function communityOperations(){
   //    registryInDB = await getRegisteredSeperate();
   //    await updateCommunityDB(communityPeerIds);
       await updateCommunityMembers(communityPeerIds, process.env.thegraph_environment);
+      return communityPeerIds;
     } catch (e) {
       console.log(`[${new Date().toUTCString()}] [Error] communityOperations`, e)
     }

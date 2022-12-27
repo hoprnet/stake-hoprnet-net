@@ -29,15 +29,17 @@ var nodeEnvironments = [];
 var pings = [];
 var peers = [];
 var peersToPing = [];
+var communityPeerIds = [];
 
 var newPeers = [];
 var pings = [];
 var counter = 0;
 
 
-export async function pingBotAll (input){
+export async function pingBotAll (input, communityPeerIds2){
     nodes = input;
     nodesProvided = input.length;
+    communityPeerIds = communityPeerIds2;
 
     await getPeersFromDB();
     await saveEnvironments();
@@ -88,7 +90,8 @@ async function getPeersFromNetwork (){
         peersToPing = peersFromSubGraph.map(peerId => {return {
             peerId,
             environment: process.env.thegraph_environment,
-            lastSeen: peers.find(elem => elem.peerId === peerId && elem.environment === process.env.thegraph_environment)?.lastSeen
+            lastSeen: peers.find(elem => elem.peerId === peerId && elem.environment === process.env.thegraph_environment)?.lastSeen,
+            community: communityPeerIds.includes(peerId)
         }});
 
     }
@@ -120,11 +123,11 @@ async function pingAndSaveResults(){
                     counter++;
                     break;
                 }
-                if (((Date.now() - (30 * 24 * 60 * 60 * 1000)) > peersOnEnv[p].lastSeen) && n === 1) {
+                if (((Date.now() - (30 * 24 * 60 * 60 * 1000)) > peersOnEnv[p].lastSeen) && n === 1 && !peersOnEnv[p].community ) {
                     console.log(`[${new Date().toUTCString()}] Skiping ${peersOnEnv[p].peerId} after 2 pings as it was last seen on ${new Date(peersOnEnv[p].lastSeen).toUTCString()}`)
                     break;
                 }
-                if (((Date.now() - (15 * 24 * 60 * 60 * 1000)) > peersOnEnv[p].lastSeen) && n === 2) {
+                if (((Date.now() - (15 * 24 * 60 * 60 * 1000)) > peersOnEnv[p].lastSeen) && n === 2 && !peersOnEnv[p].community ) {
                     console.log(`[${new Date().toUTCString()}] Skiping ${peersOnEnv[p].peerId} after 3 pings as it was last seen on ${new Date(peersOnEnv[p].lastSeen).toUTCString()}`)
                     break;
                 }

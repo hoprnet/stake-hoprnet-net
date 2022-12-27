@@ -8,11 +8,11 @@ import {
 
 import {
     pingBotPRN
-} from "./modules/ping-bot_public-relay-nodes.js"
+} from "./modules/ping-bot_public-relay-nodes.js";
 
 import {
     communityOperations
-} from "./modules/pre-communityOperations.js"
+} from "./modules/pre-communityOperations.js";
 
 import * as dotenv from 'dotenv'
 dotenv.config({ path: '.env' });
@@ -44,9 +44,9 @@ async function main (){
     //      I will make proper names, as now its difficult to guess how it will grow
 
     nodes = await checkNodes(nodes);
-    await communityOperations();
-  //  await pingBotPRN(nodes);
-    await pingBotAll(nodes); //now: ping only registered nodes (from the graph)
+    let communityPeerIds = await communityOperations();
+    await pingBotPRN(nodes);
+    await pingBotAll(nodes, communityPeerIds); //now: ping only registered nodes (from the graph)
 
     process.exit()
 } 
