@@ -79,7 +79,7 @@ export async function getNodes (environmentId) {
       ) AS since1667080800 ON nr.id = since1667080800.peerId
       LEFT JOIN \`last-seen\` AS ls ON nr.id = ls.peerId  
       LEFT JOIN pings ON nr.id = pings.peerId
-      WHERE nr.environmentId = ${environmentId}
+      WHERE nr.environmentId = ${environmentId} AND nr.registered = 1
       GROUP BY nr.peerId  
       ORDER BY availability DESC, peerId ASC
   `);
