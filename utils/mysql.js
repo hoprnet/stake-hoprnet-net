@@ -57,7 +57,8 @@ export async function getNodes (environmentId) {
   console.log('MySQL: getNodes');
   const countPingsSince = 1671627600;
   let query = await queryDB(escape`
-      SELECT 
+      SELECT * FROM
+      (SELECT 
         nr.peerId AS peerId, 
         UNIX_TIMESTAMP(MAX(pings.timestamp)) * 1000 AS lastSeen,
         AVG(pings.latency) AS latencyAverage,
@@ -79,8 +80,14 @@ export async function getNodes (environmentId) {
       ) AS since1667080800 ON nr.id = since1667080800.peerId
       LEFT JOIN \`last-seen\` AS ls ON nr.id = ls.peerId  
       LEFT JOIN pings ON nr.id = pings.peerId
-      WHERE nr.environmentId = ${environmentId} AND nr.registered = 1
+      WHERE 
+        nr.environmentId = ${environmentId} 
+          AND 
+        nr.registered = 1
       GROUP BY nr.peerId  
+      ORDER BY availability DESC, peerId ASC) t
+      WHERE
+      lastSeen > UNIX_TIMESTAMP((NOW() - INTERVAL 30 DAY))*1000
       ORDER BY availability DESC, peerId ASC
   `);
   return query;
