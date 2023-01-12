@@ -7,7 +7,6 @@ import createEmotionCache from '../utils/createEmotionCache';
 import lightTheme from '../styles/theme/lightTheme';
 
 //Components
-import Layout from '../future-hopr-lib-components/Layout';
 import Head from '../future-hopr-lib-components/Layout/head';
 
 const clientSideEmotionCache = createEmotionCache();
@@ -18,9 +17,7 @@ function MyApp({ Component, pageProps }) {
       <ThemeProvider theme={lightTheme}>
         <CssBaseline />
         <Head/>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
+        <Component {...pageProps} />   
       </ThemeProvider>
     </CacheProvider>
   )
