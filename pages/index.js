@@ -16,6 +16,7 @@ import EncourageSection from '../future-hopr-lib-components/Section/encourage'
 import Section2 from '../sections/section2' 
 import HeroSection from '../future-hopr-lib-components/Section/hero' 
 import LaunchPlaygroundBtn from '../future-hopr-lib-components/Button/LaunchPlayground';
+import { getSubGraphStakingData } from '../utils/subgraph'
 var interval;
 
 export default function Home() {
@@ -32,6 +33,8 @@ export default function Home() {
       window.ethereum.on("accountsChanged", accountsChanged);
       window.ethereum.on("chainChanged", chainChanged);
     }
+
+    console.log( getSubGraphStakingData());
     return () => clearInterval(interval);
   }, []);
 
@@ -199,9 +202,6 @@ const rightButtons = () =>  <>
     />
     {connectWallet()}
   </>;
-
-
-
 
   return (
     <Layout
