@@ -1,63 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import Section from '../future-hopr-lib-components/Section'
 import Table from '../components/Table'
 import styled from "@emotion/styled";
-
-
-import Link from '../future-hopr-lib-components/Typography/link'
 import { Typography } from '@mui/material';
 
-const balanceFormat = (input) => {
-  //  console.log('balanceFormat', input)
-  if (input === '-') return input
-  if (input < 1) return parseFloat(input).toFixed(4);
-  if (input < 10) return parseFloat(input).toFixed(3);
-  if (input < 100) return parseFloat(input).toFixed(2);
-  if (input < 1000) return parseFloat(input).toFixed(1);
-  return '1000+'
-};
+import Link from '../future-hopr-lib-components/Typography/link'
+import Section from '../future-hopr-lib-components/Section'
+import BalanceField from '../future-hopr-lib-components/BalanceField'
 
-
-
-const BalanceFieldContent = styled.div`
-    background: rgba(10,10,10,0.25);
-    padding: 8px;
-    border-radius: 8px;
-    width: 112px;
-    flex-shrink: 0;
-    .BalanceFieldLabel{
-      display: flex;
-      gap: 6px;
-      .BalanceFieldLabelText {
-        font-size: 14px;
-      }
-    }
-  `
-
-const BalanceField = (props) => {
-  // console.log('BalanceField', props)
-  return (
-    <BalanceFieldContent
-      className="BalanceFieldContent"
-    >
-      <div
-        className="BalanceFieldLabel"
-      >
-        <img
-          src={props.icon}
-          className="BalanceFieldLabelIcon"
-          width="18"
-          height="18"
-        />
-        <div
-          className="BalanceFieldLabelText"
-        >
-          {props.coin}: {props.value === "-" ? "______" : balanceFormat(props.value)}
-        </div>
-      </div>
-    </BalanceFieldContent>
-  )
-};
+import { seasonNumber, baseAPRPercentage } from '../staking-config'
 
 const Amounts = styled.div`
   display: flex;
@@ -73,12 +23,13 @@ const Amounts = styled.div`
   }
 `
 
-
 export default function Section2(props) {
   const {
     balance_xDAI,
     balance_xHOPR,
-    balance_wxHOPR
+    balance_wxHOPR,
+    currentRewardPool,
+    totalActualStake
   } = props;
 
   return (
@@ -113,7 +64,7 @@ export default function Section2(props) {
         </div>
         <div>
           <Typography>
-            Staking Season 6
+            Staking Season {seasonNumber}
           </Typography>
           <div
             className='BalanceContainer'
@@ -121,12 +72,12 @@ export default function Section2(props) {
             <BalanceField
               coin="Available Rewards"
               icon="../assets/coins/xdai.png"
-              value={balance_xDAI}
+              value={currentRewardPool}
             />
             <BalanceField
               coin="Total Staked"
               icon="../assets/coins/xdai.png"
-              value={balance_xHOPR}
+              value={totalActualStake}
             />
           </div>
         </div>
@@ -151,7 +102,7 @@ export default function Section2(props) {
             text="xHOPR"
             openIcon
           />{" "}
-          tokens to earn a total APR of 5.50% (2.50% base + 3.00% boosted )</p>
+          tokens to earn a total APR of 5.50% ({parseFloat(baseAPRPercentage).toFixed(2)}% base + 3.00% boosted )</p>
         <p className=" css-yvr15l">
           HOPR Staking Season 4 has finished, to recover your xHOPR stake, locked NFTs and unclaimed wxHOPR rewards, visit
           {" "}<Link
@@ -162,14 +113,14 @@ export default function Section2(props) {
         </p>
         <h4>MAKE SURE TO STAKE FROM YOUR SEASON 4 ADDRESS TO BE ELIGIBLE FOR EXTRA REWARDS</h4>
         <br />
-        <p className=" css-9tmdd2">Starting Wed Oct 26 2022, rewards can be claimed on each block. All rewards will be returned as
+        <p className=" css-9tmdd2">Starting <strong>Wed Oct 26 2022</strong>, rewards can be claimed on each block. All rewards will be returned as
           {" "}<Link
             href="https://blockscout.com/poa/xdai/address/0xD4fdec44DB9D44B8f2b6d529620f9C0C7066A2c1/transactions"
             text="wxHOPR"
             openIcon
-          /> tokens. xHOPR staked today will be locked for
+          /> tokens. xHOPR staked today will be locked for <strong>13</strong> days.
         </p>
-        <p>13 days.</p>
+        <br></br>
         <p>Increase your APR by redeeming NFTs to your account. HOPR Boost NFTs can be earned by participating in events. Season 3 and 4 NFTs can be restaked in Season 5 with the same APR boost. Season 1 and 2 NFTs and the HODLr NFT have been discontinued. New NFTs based on your previous collection will be available soon.</p>
         <p>
           You can swap xHOPR tokens via

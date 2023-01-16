@@ -35,7 +35,9 @@ const H5 = styled.h5`
   font-size: 28px;
   line-height: 25px;
   
-  text-align: center;
+  &.typography--center{
+    text-align: center;
+  }
   letter-spacing: 0.15px;
   
   color: #414141;
@@ -49,7 +51,9 @@ const H6 = styled.h6`
   font-size: 20px;
   line-height: 1.5;
   
-  text-align: center;
+  &.typography--center{
+    text-align: center;
+  }
   letter-spacing: 0.15px;
   color: #414141;
   margin: 0;
@@ -58,6 +62,35 @@ const H6 = styled.h6`
   }
   &.mb32 {
     margin-bottom: 32px;
+  }
+`
+
+const Small1 = styled.div`
+  font-family: 'Source Code Pro';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.6;
+  /* or 144% */
+
+  text-align: left;
+  
+  &.typography--center {
+    text-align: center;
+  }
+  letter-spacing: 0.25px;
+
+  color: #414141;
+  margin-bottom: 32px;
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
+  @media (max-width: 330px) {
+    font-size: 14px;
+  }
+
+  &.mb80 {
+    margin-bottom: 80px;
   }
 `
 
@@ -107,11 +140,17 @@ function Typography(props) {
         );
     } else if (props.type==="h6") {
         return (
-            <H6 className={`Typography--h5 ${props.className} ${props.white ? 'typography--white' : ''}`} >
+            <H6 className={`Typography--h5 ${props.className}  ${props.center ? 'typography--center' : ''} ${props.white ? 'typography--white' : ''}`} >
                 {props.children}
             </H6>
         );
-    }
+    } else if (props.type==="small1") {
+      return (
+          <Small1 className={`Typography--small1 ${props.className} ${props.center ? 'typography--center' : ''} ${props.white ? 'typography--white' : ''}`} >
+              {props.children}
+          </Small1>
+      );
+  }
 
     return (
         <PlainText

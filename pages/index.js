@@ -4,6 +4,7 @@ import styled from "@emotion/styled";
 import { ethers } from "ethers";
 import Web3 from "web3";
 import erc20abi from '../utils/erc20-abi.json'
+import stakingSeason5abi from '../utils/staking-season5-abi.json'
 import { shorten0xAddress, detectCurrentProvider } from '../utils/functions'
 
 import ChainButton from '../future-hopr-lib-components/Button/chain-button'
@@ -13,10 +14,15 @@ import Modal from '../future-hopr-lib-components/Modal'
 import Layout from '../future-hopr-lib-components/Layout';
 
 import EncourageSection from '../future-hopr-lib-components/Section/encourage'
-import Section2 from '../sections/section2' 
-import HeroSection from '../future-hopr-lib-components/Section/hero' 
+import Section2 from '../sections/section2'
+import Section3 from '../sections/section3_staker'
+import HeroSection from '../future-hopr-lib-components/Section/hero'
 import LaunchPlaygroundBtn from '../future-hopr-lib-components/Button/LaunchPlayground';
-import { getSubGraphStakingData } from '../utils/subgraph'
+import { getSubGraphStakingSeasonData, getSubGraphStakingUserData } from '../utils/subgraph'
+import { seasonNumber } from '../staking-config'
+import Alert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
+
 var interval;
 
 export default function Home() {
@@ -26,7 +32,12 @@ export default function Home() {
   const [balance_xDAI, set_balance_xdai] = useState('-');
   const [balance_xHOPR, set_balance_xHOPR] = useState('-');
   const [balance_wxHOPR, set_balance_wxHOPR] = useState('-');
+  const [balance_stakedxHOPR, set_balance_stakedxHOPR] = useState('-');
   const [chooseWalletModal, set_chooseWalletModal] = useState(false);
+  const [currentRewardPool, set_currentRewardPool] = useState(null);
+  const [lastSyncTimestamp, set_lastSyncTimestamp] = useState(null);
+  const [totalActualStake, set_totalActualStake] = useState(null);
+  const [totalUnclaimedRewards, set_totalUnclaimedRewards] = useState(null);
 
   useEffect(() => {
     if (window.ethereum) {
@@ -34,7 +45,7 @@ export default function Home() {
       window.ethereum.on("chainChanged", chainChanged);
     }
 
-    console.log( getSubGraphStakingData());
+    setOverallData();
     return () => clearInterval(interval);
   }, []);
 
@@ -55,12 +66,12 @@ export default function Home() {
         });
         const currentChain = await ethereum.request({ method: 'eth_chainId' });
         set_chainId(currentChain);
-        console.log('accountsChanged accounts:', res, currentChain );
+        console.log('accountsChanged accounts:', res, currentChain);
         await accountsChanged(res);
         set_chooseWalletModal(false);
       } catch (err) {
         console.error(err);
-        setErrorMessage("There was a problem connecting to MetaMask");
+        setErrorMessage(`There was a problem connecting to MetaMask.`,);
       }
     } else {
       setErrorMessage("Install MetaMask");
@@ -80,7 +91,7 @@ export default function Home() {
       const currentChain = await ethereum.request({ method: 'eth_chainId' });
       console.log('currentChain', currentChain)
       set_chainId(currentChain);
-      if(currentChain === '0x64') {
+      if (currentChain === '0x64') {
         console.log('currentChain === 0x64')
         getBalances();
 
@@ -107,7 +118,6 @@ export default function Home() {
         await currentProvider.request({ method: 'eth_requestAccounts' });
         const web3 = new Web3(currentProvider);
         const userAccount = await web3.eth.getAccounts();
-        // const chainId = await web3.eth.getChainId();
         const account = userAccount[0];
         let ethBalance = await web3.eth.getBalance(account); // Get wallet balance
         ethBalance = web3.utils.fromWei(ethBalance, 'ether'); //Convert balance to wei
@@ -115,31 +125,21 @@ export default function Home() {
 
         const GNOSIS_CHAIN_xHOPR = "0xD057604A14982FE8D88c5fC25Aac3267eA142a08";
         const GNOSIS_CHAIN_wxHOPR = "0xD4fdec44DB9D44B8f2b6d529620f9C0C7066A2c1";
+        const STAKING_SEASON_CONTRACT = "0xd80fbBFE9d057254d80eEbB49f17aCA66a238e2D";
         let contract = new web3.eth.Contract(erc20abi, GNOSIS_CHAIN_xHOPR);
         let result = await contract.methods.balanceOf(account).call();
-        let format = web3.utils.fromWei(result); 
+        let format = web3.utils.fromWei(result);
         set_balance_xHOPR(format);
 
         contract = new web3.eth.Contract(erc20abi, GNOSIS_CHAIN_wxHOPR);
         result = await contract.methods.balanceOf(account).call();
-        format = web3.utils.fromWei(result); 
+        format = web3.utils.fromWei(result);
         set_balance_wxHOPR(format);
 
-
-        let rpc = 'https://eth-rpc.gateway.pokt.network';
-        rpc = 'https://rpc.ankr.com/eth';
-
-        const web3rpc = new Web3(new Web3.providers.HttpProvider(rpc));
-        // display the current block number
-        // web3rpc.eth.getBlockNumber().then((result) => {
-        //   console.log("Current block number: " + result);
-        // });
-        
-        const ETH_Chain_HOPR = "0xf5581dfefd8fb0e4aec526be659cfab1f8c781da";
-        contract = new web3rpc.eth.Contract(erc20abi, ETH_Chain_HOPR);
-        result = await contract.methods.balanceOf(account).call(); 
-        format = web3rpc.utils.fromWei(result);
-        set_balance_HOPR(format);
+        contract = new web3.eth.Contract(stakingSeason5abi, STAKING_SEASON_CONTRACT);
+        result = await contract.methods.stakedHoprTokens(account).call();
+        format = web3.utils.fromWei(result);
+        set_balance_stakedxHOPR(format);
 
 
         if (userAccount.length === 0) {
@@ -156,46 +156,58 @@ export default function Home() {
   const chainChanged = (id) => {
     console.log('chainChanged', id)
     set_chainId(id);
-    if(id === '0x64') getBalances();
+    if (id === '0x64') getBalances();
   };
 
+  const setOverallData = async () => {
+    let data = await getSubGraphStakingSeasonData();
+    set_currentRewardPool(data.programs.currentRewardPool)
+    set_lastSyncTimestamp(data.programs.lastSyncTimestamp)
+    set_totalActualStake(data.programs.totalActualStake)
+    set_totalUnclaimedRewards(data.programs.totalUnclaimedRewards)
+  }
+
+  const handleClosehandleClose = () => {
+    setErrorMessage(null);
+  }
+
   const ConnectWalletContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 8px;
-  p {
-    margin-top: 48px;
-  }
-`
-
-const SpaceBetween = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  gap: 16px;
-  @media only screen and (max-width: 600px) {
+    display: flex;
     flex-direction: column;
-    align-items: center;
-  }
-`
+    gap: 8px;
+    margin-top: 8px;
+    p {
+      margin-top: 48px;
+    }
+  `
 
 
-const connectWallet = () => {
-  return <Button 
-            hopr
-            onClick={()=>{set_chooseWalletModal(true)}}
-          >
-            {
-              account ? 
-              shorten0xAddress(account)
-              :
-              <span style={{whiteSpace: 'nowrap'}}>Connect Wallet</span>
-            }
-          </Button>
-};
+  const SpaceBetween = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 16px;
+    @media only screen and (max-width: 600px) {
+      flex-direction: column;
+      align-items: center;
+    }
+  `
 
-const rightButtons = () =>  <>
+  const connectWallet = () => {
+    return <Button
+      hopr
+      onClick={() => { set_chooseWalletModal(true) }}
+    >
+      {
+        account ?
+          shorten0xAddress(account)
+          :
+          <span style={{ whiteSpace: 'nowrap' }}>Connect Wallet</span>
+      }
+    </Button>
+  };
+
+  const rightButtons = () => <>
     <ChainButton
       connected={!!account}
       chainId={chainId}
@@ -208,33 +220,48 @@ const rightButtons = () =>  <>
       itemsNavbarRight={rightButtons()}
     >
       <HeroSection
-        title={'HOPR Staking Season 6'}
+        title={`HOPR Staking Season ${seasonNumber}`}
       />
-        <Section2
-          balance_xDAI={balance_xDAI}
-          balance_xHOPR={balance_xHOPR}
-          balance_wxHOPR={balance_wxHOPR}
-        />
+      <Section2
+        balance_xDAI={balance_xDAI}
+        balance_xHOPR={balance_xHOPR}
+        balance_wxHOPR={balance_wxHOPR}
+        currentRewardPool={currentRewardPool}
+        lastSyncTimestamp={lastSyncTimestamp}
+        totalActualStake={totalActualStake}
+        totalUnclaimedRewards={totalUnclaimedRewards}
+      />
+      <Section3
+        balance_stakedxHOPR={balance_stakedxHOPR}
+      />
       <EncourageSection
         title='TRY OUT THE HOPR PROTOCOL IN UNDER 5 SECONDS'
         text='HOPR is building the transport layer privacy needed to make web3 work. Get started with the playground version of the HOPR protocol and several dApps in less than 5 seconds and without any installation.'
         animationData={typingBotAnimation}
       >
-        <LaunchPlaygroundBtn/>
+        <LaunchPlaygroundBtn />
       </EncourageSection>
       <Modal
-          open={chooseWalletModal}
-          onClose={()=>{set_chooseWalletModal(false)}}
-          title="CONNECT A WALLET"
-        >
-          <ConnectWalletContent>
-            <WalletButton
-              onClick={connectHandlerMetaMask}
-              wallet="metamask"
-            />
-            <p>By connecting a wallet, you agree to HOPR’s Terms of Service and acknowledge that you have read and understand the Disclaimer.</p>
-          </ConnectWalletContent>
-        </Modal>
+        open={chooseWalletModal}
+        onClose={() => { set_chooseWalletModal(false) }}
+        title="CONNECT A WALLET"
+      >
+        <ConnectWalletContent>
+          <WalletButton
+            onClick={connectHandlerMetaMask}
+            wallet="metamask"
+          />
+          <p>By connecting a wallet, you agree to HOPR’s Terms of Service and acknowledge that you have read and understand the Disclaimer.</p>
+        </ConnectWalletContent>
+      </Modal>
+      <Snackbar
+        severity="error"
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        open={errorMessage && true}
+        onClose={handleClosehandleClose}
+      >
+        <Alert severity="error">{errorMessage}</Alert>
+      </Snackbar>
     </Layout>
   )
 }
