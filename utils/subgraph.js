@@ -3,7 +3,7 @@ import { request, gql } from 'graphql-request'
 export async function getSubGraphStakingSeasonData() {
 
   const GET_THEGRAPH = gql`
-        query GetStakingData {
+        query getSubGraphStakingSeasonData {
             programs {
               totalActualStake
               totalUnclaimedRewards
@@ -35,12 +35,25 @@ export async function getSubGraphStakingSeasonData() {
 export async function getSubGraphStakingUserData(address) {
 
   const GET_THEGRAPH = gql`
-        query GetStakingData {
-            programs {
-              totalActualStake
-              totalUnclaimedRewards
-              currentRewardPool
+        query getSubGraphStakingUserData {
+            account(id: "${address}") {
+              actualStake
+              boostRate
+              appliedBoosts {
+                boostNumerator
+                boostType
+                id
+                redeemDeadline
+              }
+              ignoredBoosts {
+                boostNumerator
+                boostType
+                id
+                redeemDeadline
+              }
+              id
               lastSyncTimestamp
+              unclaimedRewards
             }
         }
     `;
@@ -54,11 +67,13 @@ export async function getSubGraphStakingUserData(address) {
     console.error(e);
   }
 
-  data.programs = {
-    currentRewardPool: data.programs[0].currentRewardPool / 10e18,
-    lastSyncTimestamp: parseInt(data.programs[0].lastSyncTimestamp),
-    totalActualStake: data.programs[0].totalActualStake / 10e18,
-    totalUnclaimedRewards: data.programs[0].totalUnclaimedRewards / 10e18,
+  data = data.account;
+  if(data.actualStake && data.unclaimedRewards) {
+    data.actualStake = data.actualStake / 10e18;
+    data.unclaimedRewards = data.unclaimedRewards / 10e18;
+    data.lastSyncTimestamp = parseInt(data.lastSyncTimestamp);
+    data.boostRate = parseInt(data.boostRate);
   }
+
   return data
 };

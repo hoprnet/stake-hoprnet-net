@@ -38,6 +38,7 @@ export default function Home() {
   const [lastSyncTimestamp, set_lastSyncTimestamp] = useState(null);
   const [totalActualStake, set_totalActualStake] = useState(null);
   const [totalUnclaimedRewards, set_totalUnclaimedRewards] = useState(null);
+  const [subgraphUserData, set_subgraphUserData] = useState(null);
 
   useEffect(() => {
     if (window.ethereum) {
@@ -100,6 +101,9 @@ export default function Home() {
           getBalances();
         }, 5000);
       }
+      let data = await getSubGraphStakingUserData(newAccount);
+      set_subgraphUserData(data);
+      console.log('set_subgraphUserData', data)
     } catch (err) {
       console.error(err);
       setErrorMessage("There was a problem connecting to MetaMask");
@@ -233,6 +237,8 @@ export default function Home() {
       />
       <Section3
         balance_stakedxHOPR={balance_stakedxHOPR}
+        unclaimedRewards={subgraphUserData?.unclaimedRewards}
+        lastSyncTimestamp={subgraphUserData?.lastSyncTimestamp}
       />
       <EncourageSection
         title='TRY OUT THE HOPR PROTOCOL IN UNDER 5 SECONDS'
