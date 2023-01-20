@@ -1,10 +1,11 @@
 import React from 'react';
 import NextHead from 'next/head'
+import { seasonNumber } from '../../staking-config';
 
 const Head = () => {
   return (
     <NextHead>
-      <title>HOPR | Network Dashboard</title>
+      <title>HOPR | Staking Season {seasonNumber}</title>
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <link rel="canonical" href="https://hoprnet.org/" />
       <meta name="theme-color" content="#ffffa0" />

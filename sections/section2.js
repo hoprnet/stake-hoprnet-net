@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import Table from '../components/Table'
 import styled from "@emotion/styled";
-import { Typography } from '@mui/material';
+
 
 import Link from '../future-hopr-lib-components/Typography/link'
 import Section from '../future-hopr-lib-components/Section'
 import BalanceField from '../future-hopr-lib-components/BalanceField'
+import Typography from '../future-hopr-lib-components/Typography';
 
 import { seasonNumber, baseAPRPercentage } from '../staking-config'
+import { countAPRPercentage } from '../utils/functions'
+
+
 
 const Amounts = styled.div`
   display: flex;
@@ -29,8 +32,13 @@ export default function Section2(props) {
     balance_xHOPR,
     balance_wxHOPR,
     currentRewardPool,
-    totalActualStake
+    totalActualStake,
+    boostRate
   } = props;
+
+
+  const boostAPRPercentage = countAPRPercentage(boostRate);
+  const totalAPRPercentage = baseAPRPercentage + boostAPRPercentage;
 
   return (
     <Section
@@ -95,6 +103,7 @@ export default function Section2(props) {
         />
       </div>
       <div className="chakra-container css-jf7n8r">
+      <br/>
         <p className=" css-9tmdd2">
           Stake
           {" "}<Link
@@ -102,7 +111,8 @@ export default function Section2(props) {
             text="xHOPR"
             openIcon
           />{" "}
-          tokens to earn a total APR of 5.50% ({parseFloat(baseAPRPercentage).toFixed(2)}% base + 3.00% boosted )</p>
+          tokens to earn a total APR of {totalAPRPercentage.toFixed(2)}% ({baseAPRPercentage.toFixed(2)}% base + {boostAPRPercentage.toFixed(2)}% boosted)</p>
+          <br/>
         <p className=" css-yvr15l">
           HOPR Staking Season 4 has finished, to recover your xHOPR stake, locked NFTs and unclaimed wxHOPR rewards, visit
           {" "}<Link
@@ -128,7 +138,7 @@ export default function Section2(props) {
             href="https://app.honeyswap.org/#/swap?inputCurrency=0xd057604a14982fe8d88c5fc25aac3267ea142a08&amp;chainId=100"
             text="HoneySwap"
             openIcon
-          />
+          />{" "}
           or
           {" "}<Link
             href="https://ascendex.com/en/cashtrade-spottrading/usdt/hopr"
@@ -139,7 +149,7 @@ export default function Section2(props) {
             href="https://buy.ramp.network/"
             text="Ramp"
             openIcon
-          />
+          />{" "}
           or
           {" "}<Link
             href="https://ascendex.com/en/cashtrade-spottrading/usdt/xdai"
@@ -156,7 +166,7 @@ export default function Section2(props) {
             href="https://twitter.com/hoprnet"
             text="Twitter"
             openIcon
-          />
+          />{" "}
           to learn about new events.
         </p>
         <p className=" css-2q8riv">

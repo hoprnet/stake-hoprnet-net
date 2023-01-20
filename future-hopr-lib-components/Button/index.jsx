@@ -4,25 +4,24 @@ import MuiButton from "@mui/material/Button";
 import PropTypes from 'prop-types';
 
 const SButton = styled(MuiButton)`
-  &.btn-hopr--v2 {
-    font-family: Source Code Pro;
-    text-align: center;
+  font-family: Source Code Pro;
+  text-align: center;
+  text-transform: none;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 18px;
+  border-radius: 20px;
+  letter-spacing: 0.25px;
+  height: unset;
+  line-height: 1.5;
+  height: 39px;
+  
+  &.btn-hopr--v2:not(.Mui-disabled) {
     color: #FFF;
     background: linear-gradient(#000050, #0000b4);
-    border-radius: 20px;
-    text-transform: none;
-    
-    font-style: normal;
-    font-weight: 500;
-    font-size: 18px;
-    line-height: 45px;
-    
-    letter-spacing: 0.25px;
     color: #FFFFFF;
-    
-    height: 38px;
   }
-  &.btn-hopr--v2:not(.btn-hopr--image-only) {
+  &.btn-hopr--standardWidth {
     width: 100%;
     max-width: 222px;
   }
@@ -42,15 +41,22 @@ const SButton = styled(MuiButton)`
     }
   }
 `
-
+//MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  btn-hopr--v2 false false  css-9a6nxv-MuiButtonBase-root-MuiButton-root
+//MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium  btn-hopr--v2 false false  css-1uenv58-MuiButtonBase-root-MuiButton-root
 export default function Button(props) {
     const {hopr, imageOnly, size70, ...rest} = props;
 
     return (
         <SButton
-            variant={props.hopr ? 'contained' : props.variant }
-            className={`${props.className} ${props.hopr && 'btn-hopr--v2'} ${props.imageOnly && 'btn-hopr--image-only'} ${props.size70 && 'btn-hopr--size70'}`}
+            variant={'contained'}
             {...rest}
+            className={[
+              props.className,
+              'btn-hopr--v2',
+              props.imageOnly && 'btn-hopr--image-only',
+              props.size70 && 'btn-hopr--size70',
+              props.standardWidth && 'btn-hopr--standardWidth',
+            ].join(' ')}
         >
             {props.children}
         </SButton>

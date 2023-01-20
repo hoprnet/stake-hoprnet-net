@@ -82,11 +82,8 @@ const Small1 = styled.div`
 
   color: #414141;
   margin-bottom: 32px;
-  @media (max-width: 768px) {
-    font-size: 16px;
-  }
   @media (max-width: 330px) {
-    font-size: 14px;
+    font-size: 10px;
   }
 
   &.mb80 {
@@ -128,25 +125,37 @@ function Typography(props) {
 
     if (props.type==="h2") {
         return (
-            <H2 className={`Typography--h2 ${props.className} ${props.center ? 'typography--center' : ''} ${props.fullWidth ? 'typography--fullWidth' : ''}`} >
+            <H2 
+              className={`Typography--h2 ${props.className} ${props.center ? 'typography--center' : ''} ${props.fullWidth ? 'typography--fullWidth' : ''}`} 
+              {...props}
+            >
                 {props.children}
             </H2>
         );
     } else if (props.type==="h5") {
         return (
-            <H5 className={`Typography--h5 ${props.className} ${props.center ? 'typography--center' : ''} ${props.fullWidth ? 'typography--fullWidth' : ''}`} >
+            <H5 
+              className={`Typography--h5 ${props.className} ${props.center ? 'typography--center' : ''} ${props.fullWidth ? 'typography--fullWidth' : ''}`} 
+              {...props}
+            >
                 {props.children}
             </H5>
         );
     } else if (props.type==="h6") {
         return (
-            <H6 className={`Typography--h5 ${props.className}  ${props.center ? 'typography--center' : ''} ${props.white ? 'typography--white' : ''}`} >
+            <H6 
+              className={`Typography--h5 ${props.className}  ${props.center ? 'typography--center' : ''} ${props.white ? 'typography--white' : ''}`} 
+              {...props}
+            >
                 {props.children}
             </H6>
         );
     } else if (props.type==="small1") {
       return (
-          <Small1 className={`Typography--small1 ${props.className} ${props.center ? 'typography--center' : ''} ${props.white ? 'typography--white' : ''}`} >
+          <Small1 
+            className={`Typography--small1 ${props.className} ${props.center ? 'typography--center' : ''} ${props.white ? 'typography--white' : ''}`} 
+            {...props}
+          >
               {props.children}
           </Small1>
       );

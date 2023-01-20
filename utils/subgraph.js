@@ -67,6 +67,15 @@ export async function getSubGraphStakingUserData(address) {
     console.error(e);
   }
 
+
+  if(!data.account) {
+    return {
+      actualStake: 0,
+      unclaimedRewards: 0,
+      boostRate: 0,
+    }
+  }
+
   data = data.account;
   if(data.actualStake && data.unclaimedRewards) {
     data.actualStake = data.actualStake / 10e18;
