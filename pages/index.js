@@ -1,27 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import typingBotAnimation from '../assets/typing-bot-animation.json';
+
 import styled from "@emotion/styled";
-import { ethers } from "ethers";
 import Web3 from "web3";
 import erc20abi from '../utils/erc20-abi.json'
 import stakingSeason5abi from '../utils/staking-season5-abi.json'
-import { shorten0xAddress, detectCurrentProvider, countAPRPercentage } from '../utils/functions'
 
+import { shorten0xAddress, detectCurrentProvider, countAPRPercentage } from '../utils/functions'
+import { getSubGraphStakingSeasonData, getSubGraphStakingUserData } from '../utils/subgraph'
+import { seasonNumber, STAKING_SEASON_CONTRACT, xHOPR_CONTRACT } from '../staking-config'
+
+import HeroSection from '../future-hopr-lib-components/Section/hero'
 import ChainButton from '../future-hopr-lib-components/Button/chain-button'
 import Button from '../future-hopr-lib-components/Button'
 import WalletButton from '../future-hopr-lib-components/Button/wallet-button'
 import Modal from '../future-hopr-lib-components/Modal'
 import Layout from '../future-hopr-lib-components/Layout';
-
 import EncourageSection from '../future-hopr-lib-components/Section/encourage'
+import LaunchPlaygroundBtn from '../future-hopr-lib-components/Button/LaunchPlayground';
+
+
 import Section2 from '../sections/section2'
 import Section3 from '../sections/section3_staker'
-import HeroSection from '../future-hopr-lib-components/Section/hero'
-import LaunchPlaygroundBtn from '../future-hopr-lib-components/Button/LaunchPlayground';
-import { getSubGraphStakingSeasonData, getSubGraphStakingUserData } from '../utils/subgraph'
-import { seasonNumber, STAKING_SEASON_CONTRACT, xHOPR_CONTRACT } from '../staking-config'
+import Section4 from '../sections/section4_nft'
+
+import typingBotAnimation from '../assets/typing-bot-animation.json';
+
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
+
 
 var interval;
 
@@ -348,6 +354,9 @@ export default function Home() {
         claimRewards={claimRewards}
         handleStake={handleStake}
         getBalances={getBalances}
+      />
+      <Section4
+      
       />
       <EncourageSection
         title='TRY OUT THE HOPR PROTOCOL IN UNDER 5 SECONDS'

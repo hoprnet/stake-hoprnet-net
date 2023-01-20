@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import styled from "@emotion/styled";
 
-
 import Link from '../future-hopr-lib-components/Typography/link'
 import Section from '../future-hopr-lib-components/Section'
 import BalanceField from '../future-hopr-lib-components/BalanceField'
 import Typography from '../future-hopr-lib-components/Typography';
+import TableDataColumed from '../future-hopr-lib-components/Table/columed-data'
+
 
 import { seasonNumber, baseAPRPercentage } from '../staking-config'
 import { countAPRPercentage } from '../utils/functions'
-
-
 
 const Amounts = styled.div`
   display: flex;
@@ -45,7 +44,34 @@ export default function Section2(props) {
       id='section2'
       yellow
     >
-      <Amounts>
+      <TableDataColumed>
+        <tbody>
+          <tr>
+            <th>Wallet Balance</th>
+            <td>{balance_xHOPR} xHOPR</td>
+          </tr>
+          <tr>
+            <th></th>
+            <td>{balance_wxHOPR} wxHOPR</td>
+          </tr>
+          <tr>
+            <th></th>
+            <td>{balance_xDAI} xDAI</td>
+          </tr>
+        </tbody>
+        <tbody>
+            <tr>
+              <th>Available Rewards</th>
+              <td>{currentRewardPool} wxHOPR</td>
+            </tr>
+            <tr>
+              <th>Total Staked</th>
+              <td>{totalActualStake} xHOPR</td>
+            </tr>
+          </tbody>
+      </TableDataColumed>
+      <br></br>
+      {/* <Amounts>
         <div>
           <Typography>
             Your wallet
@@ -89,7 +115,7 @@ export default function Section2(props) {
             />
           </div>
         </div>
-      </Amounts>
+      </Amounts> */}
       <div className="css-wc4a8h">
         <Link
           href="https://medium.com/hoprnet/780edfd4f1e1"
