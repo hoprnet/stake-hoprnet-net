@@ -30,8 +30,9 @@ export default function Section2(props) {
     balance_xDAI,
     balance_xHOPR,
     balance_wxHOPR,
-    currentRewardPool,
-    totalActualStake,
+    balance_availableReward,
+    balance_totalClaimedRewards,
+    totalLocked,
     boostRate
   } = props;
 
@@ -62,11 +63,15 @@ export default function Section2(props) {
         <tbody>
             <tr>
               <th>Available Rewards</th>
-              <td>{currentRewardPool} wxHOPR</td>
+              <td>{balance_availableReward} wxHOPR</td>
+            </tr>
+            <tr>
+              <th>Claimed Rewards</th>
+              <td>{balance_totalClaimedRewards} wxHOPR</td>
             </tr>
             <tr>
               <th>Total Staked</th>
-              <td>{totalActualStake} xHOPR</td>
+              <td>{totalLocked} xHOPR</td>
             </tr>
           </tbody>
       </TableDataColumed>
@@ -111,7 +116,7 @@ export default function Section2(props) {
             <BalanceField
               coin="Total Staked"
               icon="../assets/coins/xdai.png"
-              value={totalActualStake}
+              value={totalLocked}
             />
           </div>
         </div>

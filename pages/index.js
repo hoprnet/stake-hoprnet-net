@@ -3,11 +3,17 @@ import React, { useState, useEffect } from 'react';
 import styled from "@emotion/styled";
 import Web3 from "web3";
 import erc20abi from '../utils/erc20-abi.json'
+import erc721abi from '../utils/erc721-abi.json'
 import stakingSeason5abi from '../utils/staking-season5-abi.json'
 
 import { shorten0xAddress, detectCurrentProvider, countAPRPercentage } from '../utils/functions'
 import { getSubGraphStakingSeasonData, getSubGraphStakingUserData } from '../utils/subgraph'
-import { seasonNumber, STAKING_SEASON_CONTRACT, xHOPR_CONTRACT } from '../staking-config'
+import { 
+  seasonNumber, 
+  STAKING_SEASON_CONTRACT, 
+  xHOPR_CONTRACT,
+  GNOSIS_CHAIN_HOPR_BOOST_NFT
+} from '../staking-config'
 
 import HeroSection from '../future-hopr-lib-components/Section/hero'
 import ChainButton from '../future-hopr-lib-components/Button/chain-button'
@@ -41,14 +47,13 @@ export default function Home() {
   const [balance_wxHOPR, set_balance_wxHOPR] = useState(null);
   const [balance_stakedxHOPR, set_balance_stakedxHOPR] = useState(null);
   const [balance_claimedRewards, set_balance_claimedRewards] = useState(null);
-  const [balance_cumulatedRewards, set_balance_cumulatedRewards] = useState(null);
+  const [balance_totalClaimedRewards, set_balance_totalClaimedRewards] = useState(null);
   const [balance_unclaimedRewards, set_balance_unclaimedRewards] = useState(null);
+  const [balance_availableReward, set_balance_availableReward] = useState(null);
   const [lastSyncTimestamp_cumulatedRewards, set_lastSyncTimestamp_cumulatedRewards] = useState(null);
   const [chooseWalletModal, set_chooseWalletModal] = useState(false);
-  const [currentRewardPool, set_currentRewardPool] = useState(null);
   const [lastSyncTimestamp, set_lastSyncTimestamp] = useState(null);
-  const [totalActualStake, set_totalActualStake] = useState(null);
-  const [totalUnclaimedRewards, set_totalUnclaimedRewards] = useState(null);
+  const [totalLocked, set_totalLocked] = useState(null);
   const [subgraphUserData, set_subgraphUserData] = useState(null);
 
   useEffect(() => {
@@ -56,9 +61,9 @@ export default function Home() {
       window.ethereum.on("accountsChanged", accountsChanged);
       window.ethereum.on("chainChanged", chainChanged);
     }
-
     setOverallData();
-    return () => clearInterval(interval);
+    // return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -106,7 +111,7 @@ export default function Home() {
       set_subgraphUserData(data);
       console.log('set_subgraphUserData', data)
       //   {
-      //     "actualStake": 1476.6376191518634,
+      //     "actualLockedTokenAmount": 1476.6376191518634,
       //     "boostRate": 793,
       //     "appliedBoosts": [
       //         {
@@ -167,7 +172,6 @@ export default function Home() {
         set_balance_claimedRewards(claimedRewards);
 
         let cumulatedRewards = web3.utils.fromWei(result.cumulatedRewards);
-        set_balance_cumulatedRewards(cumulatedRewards);
         set_balance_unclaimedRewards(cumulatedRewards - claimedRewards);
         set_lastSyncTimestamp_cumulatedRewards(parseInt(result.lastSyncTimestamp))
 
@@ -181,6 +185,7 @@ export default function Home() {
         if (userAccount.length === 0) {
           console.log('Please connect to meta mask');
         }
+        getOwnNFTs ();
       }
     } catch (err) {
       console.log(
@@ -197,15 +202,43 @@ export default function Home() {
 
   const setOverallData = async () => {
     let data = await getSubGraphStakingSeasonData();
-    set_currentRewardPool(data.programs.currentRewardPool)
+    set_balance_availableReward(data.programs.availableReward)
     set_lastSyncTimestamp(data.programs.lastSyncTimestamp)
-    set_totalActualStake(data.programs.totalActualStake)
-    set_totalUnclaimedRewards(data.programs.totalUnclaimedRewards)
+    set_totalLocked(data.programs.totalLocked)
+    set_balance_totalClaimedRewards(data.programs.totalClaimedRewards)
   }
+
+  async function getOwnNFTs () {
+    try {
+      const currentProvider = detectCurrentProvider();
+      if (currentProvider) {
+        if (currentProvider !== window.ethereum) {
+          console.log(
+            'Non-Ethereum browser detected. You should consider trying MetaMask!'
+          );
+        }
+
+        await currentProvider.request({ method: 'eth_requestAccounts' });
+        const web3 = new Web3(currentProvider);
+        const userAccount = await web3.eth.getAccounts();
+        const account = userAccount[0];
+
+        let contract = new web3.eth.Contract(erc721abi, GNOSIS_CHAIN_HOPR_BOOST_NFT);
+        let nftBalance = await contract.methods.balanceOf(account).call();
+        console.log('nftBalance', nftBalance);
+
+      }
+    } catch (err) {
+      console.log(
+        'There was an error fetching your NFTs. ', err
+      );
+    }
+  };
+
 
   const handleClosehandleClose = () => {
     setErrorMessage(null);
-  }
+  };
   
   async function claimRewards() {
     try {
@@ -335,10 +368,10 @@ export default function Home() {
         balance_xDAI={balance_xDAI}
         balance_xHOPR={balance_xHOPR}
         balance_wxHOPR={balance_wxHOPR}
-        currentRewardPool={currentRewardPool}
+        balance_availableReward={balance_availableReward}
+        balance_totalClaimedRewards={balance_totalClaimedRewards}
         lastSyncTimestamp={lastSyncTimestamp}
-        totalActualStake={totalActualStake}
-        totalUnclaimedRewards={totalUnclaimedRewards}
+        totalLocked={totalLocked}
         boostRate={subgraphUserData?.boostRate}
       />
       <Section3

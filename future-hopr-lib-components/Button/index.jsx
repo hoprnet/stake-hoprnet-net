@@ -44,7 +44,7 @@ const SButton = styled(MuiButton)`
 //MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  btn-hopr--v2 false false  css-9a6nxv-MuiButtonBase-root-MuiButton-root
 //MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium  btn-hopr--v2 false false  css-1uenv58-MuiButtonBase-root-MuiButton-root
 export default function Button(props) {
-    const {hopr, imageOnly, size70, ...rest} = props;
+    const {hopr, imageOnly, size70, loading, standardWidth, ...rest} = props;
 
     return (
         <SButton

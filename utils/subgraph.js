@@ -1,22 +1,32 @@
 import { request, gql } from 'graphql-request'
-
+import { theGraphStakingUrl } from '../staking-config'
 export async function getSubGraphStakingSeasonData() {
 
   const GET_THEGRAPH = gql`
         query getSubGraphStakingSeasonData {
             programs {
-              totalActualStake
-              totalUnclaimedRewards
-              currentRewardPool
+              totalLocked
+              totalClaimedRewards
               lastSyncTimestamp
+              availableReward
             }
         }
     `;
 
+//     programs {
+//       totalUnclaimedRewards
+//       totalLocked
+//       totalCumulatedRewards
+//       totalClaimedRewards
+//       lastSyncTimestamp
+//       availableReward
+//     }
+// }
+
   let data;
 
   try {
-    data = await request('https://api.thegraph.com/subgraphs/name/hoprnet/stake-season5', GET_THEGRAPH);
+    data = await request(theGraphStakingUrl, GET_THEGRAPH);
     console.log(data);
   } catch (e) {
     console.error(e);
@@ -24,10 +34,10 @@ export async function getSubGraphStakingSeasonData() {
 
 
   data.programs = {
-    currentRewardPool: data.programs[0].currentRewardPool / 10e18,
     lastSyncTimestamp: parseInt(data.programs[0].lastSyncTimestamp),
-    totalActualStake: data.programs[0].totalActualStake / 10e18,
-    totalUnclaimedRewards: data.programs[0].totalUnclaimedRewards / 10e18,
+    totalLocked: data.programs[0].totalLocked / 10e17,
+    totalClaimedRewards: data.programs[0].totalClaimedRewards / 10e17,
+    availableReward: data.programs[0].availableReward / 10e17
   }
   return data
 };
@@ -35,33 +45,39 @@ export async function getSubGraphStakingSeasonData() {
 export async function getSubGraphStakingUserData(address) {
 
   const GET_THEGRAPH = gql`
-        query getSubGraphStakingUserData {
-            account(id: "${address}") {
-              actualStake
-              boostRate
-              appliedBoosts {
-                boostNumerator
-                boostType
-                id
-                redeemDeadline
-              }
-              ignoredBoosts {
-                boostNumerator
-                boostType
-                id
-                redeemDeadline
-              }
+      query getSubGraphStakingUserData {
+          account(id: "${address}") {
+            actualLockedTokenAmount
+            appliedBoosts {
+              boostNumerator
+              boostTypeIndex
               id
-              lastSyncTimestamp
-              unclaimedRewards
+              owner
+              redeemDeadline
+              uri
             }
-        }
-    `;
+            boostRate
+            claimedRewards
+            cumulatedRewards
+            id
+            unclaimedRewards
+            lastSyncTimestamp
+            ignoredBoosts {
+              boostNumerator
+              uri
+              redeemDeadline
+              owner
+              id
+              boostTypeIndex
+            }
+          }
+      }
+  `;
 
   let data;
 
   try {
-    data = await request('https://api.thegraph.com/subgraphs/name/hoprnet/stake-season5', GET_THEGRAPH);
+    data = await request(theGraphStakingUrl, GET_THEGRAPH);
     console.log(data);
   } catch (e) {
     console.error(e);
@@ -70,15 +86,77 @@ export async function getSubGraphStakingUserData(address) {
 
   if(!data.account) {
     return {
-      actualStake: 0,
+      actualLockedTokenAmount: 0,
       unclaimedRewards: 0,
       boostRate: 0,
     }
   }
 
   data = data.account;
-  if(data.actualStake && data.unclaimedRewards) {
-    data.actualStake = data.actualStake / 10e18;
+  if(data.actualLockedTokenAmount && data.unclaimedRewards) {
+    data.actualLockedTokenAmount = data.actualLockedTokenAmount / 10e17;
+    data.unclaimedRewards = data.unclaimedRewards / 10e17;
+    data.lastSyncTimestamp = parseInt(data.lastSyncTimestamp);
+    data.boostRate = parseInt(data.boostRate);
+  }
+
+  return data
+};
+
+
+export async function getSubGraphNFTsUserData(address) {
+
+  const GET_THEGRAPH = gql`
+      query getSubGraphStakingUserData {
+          account(id: "${address}") {
+            actualLockedTokenAmount
+            appliedBoosts {
+              boostNumerator
+              boostTypeIndex
+              id
+              owner
+              redeemDeadline
+              uri
+            }
+            boostRate
+            claimedRewards
+            cumulatedRewards
+            id
+            unclaimedRewards
+            lastSyncTimestamp
+            ignoredBoosts {
+              boostNumerator
+              uri
+              redeemDeadline
+              owner
+              id
+              boostTypeIndex
+            }
+          }
+      }
+  `;
+
+  let data;
+
+  try {
+    data = await request(theGraphStakingUrl, GET_THEGRAPH);
+    console.log(data);
+  } catch (e) {
+    console.error(e);
+  }
+
+
+  if(!data.account) {
+    return {
+      actualLockedTokenAmount: 0,
+      unclaimedRewards: 0,
+      boostRate: 0,
+    }
+  }
+
+  data = data.account;
+  if(data.actualLockedTokenAmount && data.unclaimedRewards) {
+    data.actualLockedTokenAmount = data.actualLockedTokenAmount / 10e18;
     data.unclaimedRewards = data.unclaimedRewards / 10e18;
     data.lastSyncTimestamp = parseInt(data.lastSyncTimestamp);
     data.boostRate = parseInt(data.boostRate);

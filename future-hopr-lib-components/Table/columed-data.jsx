@@ -50,9 +50,12 @@ export const Table = styled.table`
 export default function TableDataColumed(props) {
     return (
         <Tables>
-            {props.children.length > 0 ? props.children?.map(elem => {
+            {props.children.length > 0 ? props.children?.map((elem, key) => {
                 return (
-                    <Table className="not-on-mobile">
+                    <Table 
+                        className="not-on-mobile"
+                        key={key}
+                    >
                         {elem}
                     </Table>
                 )
