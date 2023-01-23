@@ -2,6 +2,7 @@ import { request, gql } from 'graphql-request'
 import { theGraphStakingUrl } from '../staking-config'
 export async function getSubGraphStakingSeasonData() {
 
+  // NEW
   const GET_THEGRAPH = gql`
         query getSubGraphStakingSeasonData {
             programs {
@@ -12,6 +13,19 @@ export async function getSubGraphStakingSeasonData() {
             }
         }
     `;
+
+  //OLD
+  // const GET_THEGRAPH = gql`
+  //     query getSubGraphStakingSeasonData {
+  //         programs {
+  //           blockedType
+  //           currentRewardPool
+  //           lastSyncTimestamp
+  //           totalActualStake
+  //           totalUnclaimedRewards
+  //         }
+  //     }
+  //   `;
 
 //     programs {
 //       totalUnclaimedRewards
@@ -34,16 +48,34 @@ export async function getSubGraphStakingSeasonData() {
 
 
   data.programs = {
-    lastSyncTimestamp: parseInt(data.programs[0].lastSyncTimestamp),
+ //   lastSyncTimestamp: parseInt(data.programs[0].lastSyncTimestamp),
+
+
+    // NEW
     totalLocked: data.programs[0].totalLocked / 10e17,
     totalClaimedRewards: data.programs[0].totalClaimedRewards / 10e17,
     availableReward: data.programs[0].availableReward / 10e17
+
+    // OLD
+    // totalLocked: data.programs[0].totalActualStake / 10e17,
+    // availableReward: data.programs[0].totalUnclaimedRewards / 10e17,
+
+    // currentRewardPool: data.programs[0].currentRewardPool / 10e18,
+    // lastSyncTimestamp: parseInt(data.programs[0].lastSyncTimestamp),
+
+    
   }
   return data
 };
 
-export async function getSubGraphStakingUserData(address) {
 
+// currentRewardPool: data.programs[0].currentRewardPool / 10e18,
+// lastSyncTimestamp: parseInt(data.programs[0].lastSyncTimestamp),
+// totalActualStake: data.programs[0].totalActualStake / 10e18,
+// totalUnclaimedRewards: data.programs[0].totalUnclaimedRewards / 10e18,
+
+export async function getSubGraphStakingUserData(address) {
+ // NEW
   const GET_THEGRAPH = gql`
       query getSubGraphStakingUserData {
           account(id: "${address}") {
@@ -73,6 +105,33 @@ export async function getSubGraphStakingUserData(address) {
           }
       }
   `;
+
+  // OLD
+//   const GET_THEGRAPH = gql`
+//   query getSubGraphStakingUserData {
+//       account(id: "${address}") {
+//         unclaimedRewards
+//         lastSyncTimestamp
+//         ignoredBoosts {
+//           redeemDeadline
+//           id
+//           boostType
+//           boostNumerator
+//         }
+//         id
+//         boostRate
+//         appliedBoosts {
+//           redeemDeadline
+//           id
+//           boostType
+//           boostNumerator
+//         }
+//           actualStake
+//         }
+//       }
+//   }
+// `;
+
 
   let data;
 
@@ -107,60 +166,38 @@ export async function getSubGraphStakingUserData(address) {
 export async function getSubGraphNFTsUserData(address) {
 
   const GET_THEGRAPH = gql`
-      query getSubGraphStakingUserData {
-          account(id: "${address}") {
-            actualLockedTokenAmount
-            appliedBoosts {
-              boostNumerator
-              boostTypeIndex
-              id
-              owner
-              redeemDeadline
-              uri
-            }
-            boostRate
-            claimedRewards
-            cumulatedRewards
-            id
-            unclaimedRewards
-            lastSyncTimestamp
-            ignoredBoosts {
-              boostNumerator
-              uri
-              redeemDeadline
-              owner
-              id
-              boostTypeIndex
-            }
-          }
+    query getSubGraphNFTsUserData {
+      boosts(first: 1000, where: {owner: "${address}"}) {
+        id
+        boostTypeIndex
+        uri
       }
+    }
   `;
 
   let data;
 
   try {
     data = await request(theGraphStakingUrl, GET_THEGRAPH);
-    console.log(data);
+    console.log('getSubGraphNFTsUserData', data);
   } catch (e) {
     console.error(e);
   }
 
+  if(!data.boosts) {
+    return []
+  }
 
-  if(!data.account) {
+
+  let parsed = data.boosts.map(elem=>{
+    let type = elem.uri.replace("https://stake.hoprnet.org/", "");
+    type = type.split('/');
     return {
-      actualLockedTokenAmount: 0,
-      unclaimedRewards: 0,
-      boostRate: 0,
+      type: type[0],
+      rank: type[1],
+      ...elem
     }
-  }
+  })
 
-  data = data.account;
-  if(data.actualLockedTokenAmount && data.unclaimedRewards) {
-    data.actualLockedTokenAmount = data.actualLockedTokenAmount / 10e18;
-    data.unclaimedRewards = data.unclaimedRewards / 10e18;
-    data.lastSyncTimestamp = parseInt(data.lastSyncTimestamp);
-    data.boostRate = parseInt(data.boostRate);
-  }
-
-  return data
+  return parsed
 };

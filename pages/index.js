@@ -7,7 +7,7 @@ import erc721abi from '../utils/erc721-abi.json'
 import stakingSeason5abi from '../utils/staking-season5-abi.json'
 
 import { shorten0xAddress, detectCurrentProvider, countAPRPercentage } from '../utils/functions'
-import { getSubGraphStakingSeasonData, getSubGraphStakingUserData } from '../utils/subgraph'
+import { getSubGraphStakingSeasonData, getSubGraphStakingUserData, getSubGraphNFTsUserData } from '../utils/subgraph'
 import { 
   seasonNumber, 
   STAKING_SEASON_CONTRACT, 
@@ -33,9 +33,8 @@ import typingBotAnimation from '../assets/typing-bot-animation.json';
 
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
+import { rest } from 'lodash';
 
-
-var interval;
 
 export default function Home() {
   const [errorMessage, setErrorMessage] = useState(null);
@@ -55,6 +54,9 @@ export default function Home() {
   const [lastSyncTimestamp, set_lastSyncTimestamp] = useState(null);
   const [totalLocked, set_totalLocked] = useState(null);
   const [subgraphUserData, set_subgraphUserData] = useState(null);
+  const [appliedBoosts_NFTs, set_appliedBoosts_NFTs] = useState([]);
+  const [ignoredBoosts_NFTs, set_ignoredBoosts_NFTs] = useState([]);
+  const [ownBoosts_NFTs, set_ownBoosts_NFTs] = useState([]);
 
   useEffect(() => {
     if (window.ethereum) {
@@ -62,7 +64,6 @@ export default function Home() {
       window.ethereum.on("chainChanged", chainChanged);
     }
     setOverallData();
-    // return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -97,7 +98,7 @@ export default function Home() {
 
   const accountsChanged = async (addresses) => {
     let newAccount = addresses[0];
-    console.log('accountsChanged', newAccount)
+    console.log('accountsChanged', newAccount);
     setAccount(newAccount);
     try {
       const currentChain = await ethereum.request({ method: 'eth_chainId' });
@@ -108,8 +109,21 @@ export default function Home() {
         getBalances();
       }
       let data = await getSubGraphStakingUserData(newAccount);
-      set_subgraphUserData(data);
-      console.log('set_subgraphUserData', data)
+      console.log('subgraphUserData', data);
+      const { 
+        appliedBoosts,
+        ignoredBoosts,
+        ...rest
+      } = data;
+      set_subgraphUserData(rest);
+      set_appliedBoosts_NFTs(appliedBoosts);
+      set_ignoredBoosts_NFTs(ignoredBoosts);
+
+      data = await getSubGraphNFTsUserData(newAccount);
+      set_ownBoosts_NFTs(data);
+
+
+
       //   {
       //     "actualLockedTokenAmount": 1476.6376191518634,
       //     "boostRate": 793,
@@ -175,9 +189,9 @@ export default function Home() {
         set_balance_unclaimedRewards(cumulatedRewards - claimedRewards);
         set_lastSyncTimestamp_cumulatedRewards(parseInt(result.lastSyncTimestamp))
 
-        contract = new web3.eth.Contract(stakingSeason5abi, STAKING_SEASON_CONTRACT);
-        result = await contract.methods.redeemedNftIndex(account).call();
-        console.log('number of NFTs', result)
+        // contract = new web3.eth.Contract(stakingSeason5abi, STAKING_SEASON_CONTRACT);
+        // result = await contract.methods.redeemedNftIndex(account).call();
+        // console.log('number of NFTs', result)
 
         let getBlockNumber = await web3.eth.getBlockNumber()
         set_blockNumber(getBlockNumber);
@@ -185,7 +199,6 @@ export default function Home() {
         if (userAccount.length === 0) {
           console.log('Please connect to meta mask');
         }
-        getOwnNFTs ();
       }
     } catch (err) {
       console.log(
@@ -209,30 +222,7 @@ export default function Home() {
   }
 
   async function getOwnNFTs () {
-    try {
-      const currentProvider = detectCurrentProvider();
-      if (currentProvider) {
-        if (currentProvider !== window.ethereum) {
-          console.log(
-            'Non-Ethereum browser detected. You should consider trying MetaMask!'
-          );
-        }
 
-        await currentProvider.request({ method: 'eth_requestAccounts' });
-        const web3 = new Web3(currentProvider);
-        const userAccount = await web3.eth.getAccounts();
-        const account = userAccount[0];
-
-        let contract = new web3.eth.Contract(erc721abi, GNOSIS_CHAIN_HOPR_BOOST_NFT);
-        let nftBalance = await contract.methods.balanceOf(account).call();
-        console.log('nftBalance', nftBalance);
-
-      }
-    } catch (err) {
-      console.log(
-        'There was an error fetching your NFTs. ', err
-      );
-    }
   };
 
 
@@ -389,7 +379,9 @@ export default function Home() {
         getBalances={getBalances}
       />
       <Section4
-      
+        ownBoosts_NFTs={ownBoosts_NFTs}
+        appliedBoosts_NFTs={appliedBoosts_NFTs}
+        ignoredBoosts_NFTs={ignoredBoosts_NFTs}
       />
       <EncourageSection
         title='TRY OUT THE HOPR PROTOCOL IN UNDER 5 SECONDS'

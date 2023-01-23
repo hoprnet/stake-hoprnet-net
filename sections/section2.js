@@ -8,8 +8,17 @@ import Typography from '../future-hopr-lib-components/Typography';
 import TableDataColumed from '../future-hopr-lib-components/Table/columed-data'
 
 
-import { seasonNumber, baseAPRPercentage } from '../staking-config'
-import { countAPRPercentage } from '../utils/functions'
+import { 
+  seasonNumber, 
+  baseAPRPercentage, 
+  STAKING_SEASON_CONTRACT,
+  PROGRAM_START_MS,
+  PROGRAM_END_MS
+} from '../staking-config'
+import {
+  countAPRPercentage,
+  formatDateToCET
+} from '../utils/functions'
 
 const Amounts = styled.div`
   display: flex;
@@ -128,7 +137,7 @@ export default function Section2(props) {
           openIcon
         />{" "}
         <Link
-          href="https://blockscout.com/poa/xdai/address/0xd80fbbfe9d057254d80eebb49f17aca66a238e2d/transactions"
+          href={`https://blockscout.com/poa/xdai/address/${STAKING_SEASON_CONTRACT}/transactions`}
           text="Contract Address"
           openIcon
         />
@@ -145,21 +154,22 @@ export default function Section2(props) {
           tokens to earn a total APR of {totalAPRPercentage.toFixed(2)}% ({baseAPRPercentage.toFixed(2)}% base + {boostAPRPercentage.toFixed(2)}% boosted)</p>
           <br/>
         <p className=" css-yvr15l">
-          HOPR Staking Season 4 has finished, to recover your xHOPR stake, locked NFTs and unclaimed wxHOPR rewards, visit
+          HOPR Staking Season {seasonNumber-1} has finished, to recover your xHOPR stake, locked NFTs and unclaimed wxHOPR rewards, visit
           {" "}<Link
-            href="https://stake-s4.hoprnet.org"
-            text="stake S4"
+            href={`https://stake-s${seasonNumber-1}.hoprnet.org`}
+            text={`stake S${seasonNumber-1}`}
             openIcon
           />, connect your wallet and press “Unlock”. To restake, simply return to this site.
         </p>
-        <h4>MAKE SURE TO STAKE FROM YOUR SEASON 4 ADDRESS TO BE ELIGIBLE FOR EXTRA REWARDS</h4>
+        <h4>MAKE SURE TO STAKE FROM YOUR SEASON {seasonNumber-1} ADDRESS TO BE ELIGIBLE FOR EXTRA REWARDS</h4>
         <br />
-        <p className=" css-9tmdd2">Starting <strong>Wed Oct 26 2022</strong>, rewards can be claimed on each block. All rewards will be returned as
+        <p className=" css-9tmdd2">Starting <strong>{formatDateToCET(PROGRAM_START_MS)}</strong>, rewards can be claimed on each block. All rewards will be returned as
           {" "}<Link
             href="https://blockscout.com/poa/xdai/address/0xD4fdec44DB9D44B8f2b6d529620f9C0C7066A2c1/transactions"
             text="wxHOPR"
             openIcon
-          /> tokens. xHOPR staked today will be locked for <strong>13</strong> days.
+          /> tokens. xHOPR staked today will be locked untill <strong>{formatDateToCET(PROGRAM_END_MS)}</strong>.<br/>
+          
         </p>
         <br></br>
         <p>Increase your APR by redeeming NFTs to your account. HOPR Boost NFTs can be earned by participating in events. Season 3 and 4 NFTs can be restaked in Season 5 with the same APR boost. Season 1 and 2 NFTs and the HODLr NFT have been discontinued. New NFTs based on your previous collection will be available soon.</p>

@@ -12,7 +12,15 @@ import IconButton from '@mui/material/IconButton';
 
 import Button from '../future-hopr-lib-components/Button'
 
-import { countRewardsPerSecond, countRewardsPerDay } from '../utils/functions'
+import { 
+  countRewardsPerSecond, 
+  countRewardsPerDay
+} from '../utils/functions'
+
+import { 
+  PROGRAM_START_MS, 
+  PROGRAM_END_MS
+} from '../staking-config'
 
 export const Tables = styled.div`
   display: flex;
@@ -109,6 +117,16 @@ export default function Section3(props) {
     ) return;
     console.log('setInterval STARTING');
     set_claimable('Loading...');
+    if(Date.now() <= PROGRAM_START_MS ) {
+      set_claimable(0);
+      return;
+    } else if(Date.now() >= PROGRAM_END_MS) {
+      let secondsSinceSync = Math.round(PROGRAM_END_MS/1000) - lastSyncTimestamp_cumulatedRewards;
+      const secondsSinceSyncReal = secondsSinceSync >= 0 ? secondsSinceSync : 0;
+      const claimableTmp = balance_unclaimedRewards + (secondsSinceSyncReal * countRewardsPerSecond(balance_stakedxHOPR, boostRate))
+      set_claimable(claimableTmp.toFixed(18));
+      return;
+    };
     const interval = setInterval(() => {
       let secondsSinceSync = Math.round(Date.now()/1000) - lastSyncTimestamp_cumulatedRewards;
       const secondsSinceSyncReal = secondsSinceSync >= 0 ? secondsSinceSync : 0;
