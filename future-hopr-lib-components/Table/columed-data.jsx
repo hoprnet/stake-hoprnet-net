@@ -37,6 +37,11 @@ export const Table = styled.table`
     td {
         padding: 8px;
     }
+    td {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100px;
+    }
     th:first-of-type {
         width: ${props => props.width1stColumn ? props.width1stColumn : "160"}px;
     }

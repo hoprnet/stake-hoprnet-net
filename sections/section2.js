@@ -66,7 +66,7 @@ export default function Section2(props) {
           </tr>
           <tr>
             <th></th>
-            <td><div>{balance_xDAI ? balance_xDAI : '-'}</div> <div>xDAI</div></td>
+            <td>{balance_xDAI ? balance_xDAI : '-'} xDAI</td>
           </tr>
         </tbody>
         <tbody>

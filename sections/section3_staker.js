@@ -88,6 +88,11 @@ const SearchPeerId = styled(TextField)`
   input {
     -moz-appearance: textfield;
   }
+  @media (max-width: 320px) {
+    .MuiInputAdornment-root {
+      display: none;
+    }
+  }
 }
 `
 
