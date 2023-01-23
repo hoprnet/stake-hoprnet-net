@@ -172,11 +172,11 @@ export default function Section3(props) {
         <tbody>
           <tr>
             <th>Block number</th>
-            <td>{blockNumber}</td>
+            <td>{blockNumber ? blockNumber : '-'}</td>
           </tr>
           <tr>
             <th>Staked</th>
-            <td>{balance_stakedxHOPR} xHOPR</td>
+            <td>{balance_stakedxHOPR ? balance_stakedxHOPR : '-'} xHOPR</td>
           </tr>
           <tr>
             <th>Received Network Rewards </th>
@@ -184,7 +184,7 @@ export default function Section3(props) {
           </tr>
           <tr>
             <th>Claimed</th>
-            <td>{balance_claimedRewards} wxHOPR</td>
+            <td>{balance_claimedRewards ? balance_claimedRewards : '-'} wxHOPR</td>
           </tr>
         </tbody>
         <tbody>
@@ -202,7 +202,7 @@ export default function Section3(props) {
             </tr>
             <tr>
               <th>Claimable</th>
-              <td>{claimable ? claimable : balance_unclaimedRewards} wxHOPR</td>
+              <td>{claimable ? claimable : balance_unclaimedRewards ? balance_unclaimedRewards : '-'} wxHOPR</td>
             </tr>
           </tbody>
       </TableDataColumed>

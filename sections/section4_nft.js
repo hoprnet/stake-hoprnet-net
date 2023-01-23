@@ -1,26 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import styled from "@emotion/styled";
 
-import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
 import Typography from '../future-hopr-lib-components/Typography';
 import Section from '../future-hopr-lib-components/Section'
-import TableDataColumed from '../future-hopr-lib-components/Table/columed-data'
-
-
 import Accordion from '../future-hopr-lib-components/Accordion';
 import AccordionSummary from '../future-hopr-lib-components/Accordion/AccordionSummary';
+import AccordionDetails from '../future-hopr-lib-components/Accordion/AccordionDetails';
 
-import RefreshIcon from '@mui/icons-material/Refresh';
-import IconButton from '@mui/material/IconButton';
-import AccordionDetails from '@mui/material/AccordionDetails';
-//import Typography from '@mui/material/Typography';
+
+import Nft from '../future-hopr-lib-components/NFT'
+
+// Mui
+
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-import Button from '../future-hopr-lib-components/Button'
 
-import { countRewardsPerSecond, countRewardsPerDay } from '../utils/functions'
-
+const NftContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: space-evenly;
+`
 
 export default function Section3(props) {
   const {
@@ -40,13 +40,23 @@ export default function Section3(props) {
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <Typography type="h6">HOPR NFTs</Typography>
+          <Typography type="h6">HOPR NFTs {ownBoosts_NFTs?.length ? `(${ownBoosts_NFTs.length})` : '' }</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>
-            No NFTs.
-            {JSON.stringify(ownBoosts_NFTs, null, 2)}
-          </Typography>
+          {ownBoosts_NFTs.length === 0 ? 'No NFTs.' : '' }
+          {console.log(ownBoosts_NFTs)}
+          <NftContainer>
+            {ownBoosts_NFTs.map((nft) => 
+              <Nft
+                key={`ownBoosts_NFTs-${nft.id}`}
+                id={nft.id}
+                image={nft.imageHosted}
+                type={nft.type}
+                boost={nft.boost}
+                rank={nft.rank}
+              />)
+            }
+          </NftContainer>
         </AccordionDetails>
       </Accordion>
       <Accordion>
@@ -55,7 +65,7 @@ export default function Section3(props) {
           aria-controls="panel2a-content"
           id="panel2a-header"
         >
-          <Typography type="h6">Staked HOPR NFTs</Typography>
+          <Typography type="h6">Staked HOPR NFTs {appliedBoosts_NFTs?.length ? `(${appliedBoosts_NFTs.length})` : '' }</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Typography>

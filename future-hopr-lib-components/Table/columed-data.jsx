@@ -25,7 +25,6 @@ export const Table = styled.table`
     font-family: "Source Code Pro";
     width: 100%;
     font-size: 14px;
- //   font-weight: 400;
     border-bottom: 0.1rem solid darkgray;
     border-collapse: collapse; 
     th {
@@ -39,8 +38,7 @@ export const Table = styled.table`
         padding: 8px;
     }
     th:first-of-type {
-  //      font-weight: 600;
-        width: 160px;
+        width: ${props => props.width1stColumn ? props.width1stColumn : "160"}px;
     }
 
 `;
@@ -54,6 +52,7 @@ export default function TableDataColumed(props) {
                 return (
                     <Table 
                         className="not-on-mobile"
+                        width1stColumn={props.width1stColumn}
                         key={key}
                     >
                         {elem}

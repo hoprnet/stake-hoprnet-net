@@ -58,15 +58,15 @@ export default function Section2(props) {
         <tbody>
           <tr>
             <th>Wallet Balance</th>
-            <td>{balance_xHOPR} xHOPR</td>
+            <td>{balance_xHOPR ? balance_xHOPR : '-'} xHOPR</td>
           </tr>
           <tr>
             <th></th>
-            <td>{balance_wxHOPR} wxHOPR</td>
+            <td>{balance_wxHOPR ? balance_wxHOPR : '-'} wxHOPR</td>
           </tr>
           <tr>
             <th></th>
-            <td>{balance_xDAI} xDAI</td>
+            <td>{balance_xDAI ? balance_xDAI : '-'} xDAI</td>
           </tr>
         </tbody>
         <tbody>

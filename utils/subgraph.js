@@ -1,5 +1,8 @@
 import { request, gql } from 'graphql-request'
-import { theGraphStakingUrl } from '../staking-config'
+import { theGraphStakingUrl, IPFS_HOSTED_URL } from '../staking-config'
+import nfts from '../nft/nfts.json'
+
+
 export async function getSubGraphStakingSeasonData() {
 
   // NEW
@@ -190,11 +193,14 @@ export async function getSubGraphNFTsUserData(address) {
 
 
   let parsed = data.boosts.map(elem=>{
-    let type = elem.uri.replace("https://stake.hoprnet.org/", "");
-    type = type.split('/');
+    const uri2 = elem.uri.replace("https://stake.hoprnet.org/", "").split('/');
+    const type = uri2[0];
+    const rank = uri2[1];
     return {
-      type: type[0],
-      rank: type[1],
+      type,
+      rank,
+      imageHosted: IPFS_HOSTED_URL + nfts[type][rank].image.replace('ipfs://', ''),
+      ...nfts[type][rank],
       ...elem
     }
   })
