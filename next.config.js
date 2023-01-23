@@ -9,14 +9,14 @@ const nextConfig = {
   //     '/': { page: '/' },
   //   }
   // },
-  // async rewrites() {
-  //   return [
-  //     {
-  //       source: '/:path',
-  //       destination: '/nft/:path',
-  //     },
-  //   ]
-  // },
+  async rewrites() {
+    return [
+      {
+        source: '/:path',
+        destination: '/nft/:path',
+      },
+    ]
+  },
 }
 
 module.exports = nextConfig
