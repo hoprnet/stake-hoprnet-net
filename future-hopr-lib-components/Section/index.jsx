@@ -27,6 +27,10 @@ const SSection = styled.section`
   &.section--light-gray {
     background: #e3e5e7;
   }
+  &.section--disabled {
+    filter: opacity(0.35);
+    pointer-events: none;
+  }
 
   &.full-height-min {
     min-height: calc(100vh - 68px - 170px);
@@ -78,6 +82,7 @@ function Section(props) {
         props.fullHeightMin && 'full-height-min',
         props.fullHeight && 'full-height',
         props.center && 'center',
+        props.disabled && 'section--disabled'
       ].join(' ')}
       id={props.id}
     >

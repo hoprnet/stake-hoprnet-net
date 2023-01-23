@@ -52,7 +52,6 @@ export default function Section2(props) {
   return (
     <Section
       id='section2'
-      yellow
     >
       <div className="chakra-container css-jf7n8r">
         <p className=" css-yvr15l">

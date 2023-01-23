@@ -102,6 +102,7 @@ export default function Section3(props) {
     <Section
       id='section4'
       lightGray
+      disabled={props.disabled}
     >
       <Accordion>
         <AccordionSummary

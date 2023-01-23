@@ -369,6 +369,7 @@ export default function Home() {
         boostRate={subgraphUserData?.boostRate}
       />
       <Section3
+        disabled={chainId !== '0x64'}
         blockNumber={blockNumber}
         balance_xHOPR={balance_xHOPR}
         balance_stakedxHOPR={balance_stakedxHOPR}
@@ -383,6 +384,7 @@ export default function Home() {
         getBalances={getBalances}
       />
       <Section4
+        disabled={chainId !== '0x64'}
         ownBoosts_NFTs={ownBoosts_NFTs}
         appliedBoosts_NFTs={appliedBoosts_NFTs}
         ignoredBoosts_NFTs={ignoredBoosts_NFTs}

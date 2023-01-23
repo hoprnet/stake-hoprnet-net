@@ -33,6 +33,9 @@ const Container = styled.div`
         color: white;
         font-size: 13px;
         font-weight: 700;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 `
 

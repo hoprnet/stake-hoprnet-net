@@ -145,6 +145,7 @@ export default function Section3(props) {
     <Section
       id='section3'
       lightGray
+      disabled={props.disabled}
     >
       <Tables>
         <Typography type="h6" style={{marginBottom: '8px'}}>
