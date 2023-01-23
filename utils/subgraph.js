@@ -13,6 +13,7 @@ export async function getSubGraphStakingSeasonData() {
               totalClaimedRewards
               lastSyncTimestamp
               availableReward
+              blockedTypeIndexes
             }
         }
     `;
@@ -50,14 +51,15 @@ export async function getSubGraphStakingSeasonData() {
   }
 
 
-  data.programs = {
+  data = {
  //   lastSyncTimestamp: parseInt(data.programs[0].lastSyncTimestamp),
 
-
+    ...data.programs[0],
     // NEW
     totalLocked: data.programs[0].totalLocked / 10e17,
     totalClaimedRewards: data.programs[0].totalClaimedRewards / 10e17,
     availableReward: data.programs[0].availableReward / 10e17
+    
 
     // OLD
     // totalLocked: data.programs[0].totalActualStake / 10e17,
@@ -68,6 +70,10 @@ export async function getSubGraphStakingSeasonData() {
 
     
   }
+
+
+
+  
   return data
 };
 
@@ -80,33 +86,33 @@ export async function getSubGraphStakingSeasonData() {
 export async function getSubGraphStakingUserData(address) {
  // NEW
   const GET_THEGRAPH = gql`
-      query getSubGraphStakingUserData {
-          account(id: "${address}") {
-            actualLockedTokenAmount
-            appliedBoosts {
-              boostNumerator
-              boostTypeIndex
-              id
-              owner
-              redeemDeadline
-              uri
-            }
-            boostRate
-            claimedRewards
-            cumulatedRewards
+    query getSubGraphStakingUserData {
+        account(id: "${address}") {
+          actualLockedTokenAmount
+          appliedBoosts {
+            boostNumerator
+            boostTypeIndex
             id
-            unclaimedRewards
-            lastSyncTimestamp
-            ignoredBoosts {
-              boostNumerator
-              uri
-              redeemDeadline
-              owner
-              id
-              boostTypeIndex
-            }
+            owner
+            redeemDeadline
+            uri
           }
-      }
+          boostRate
+          claimedRewards
+          cumulatedRewards
+          id
+          unclaimedRewards
+          lastSyncTimestamp
+          ignoredBoosts {
+            boostNumerator
+            uri
+            redeemDeadline
+            owner
+            id
+            boostTypeIndex
+          }
+        }
+    }
   `;
 
   // OLD

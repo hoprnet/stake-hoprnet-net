@@ -26,6 +26,7 @@ import LaunchPlaygroundBtn from '../future-hopr-lib-components/Button/LaunchPlay
 
 
 import Section2 from '../sections/section2'
+import Section2B from '../sections/section2B'
 import Section3 from '../sections/section3_staker'
 import Section4 from '../sections/section4_nft'
 
@@ -49,6 +50,7 @@ export default function Home() {
   const [balance_totalClaimedRewards, set_balance_totalClaimedRewards] = useState(null);
   const [balance_unclaimedRewards, set_balance_unclaimedRewards] = useState(null);
   const [balance_availableReward, set_balance_availableReward] = useState(null);
+  const [blockedTypeIndexes, set_blockedTypeIndexes] = useState([]);
   const [lastSyncTimestamp_cumulatedRewards, set_lastSyncTimestamp_cumulatedRewards] = useState(null);
   const [chooseWalletModal, set_chooseWalletModal] = useState(false);
   const [lastSyncTimestamp, set_lastSyncTimestamp] = useState(null);
@@ -215,10 +217,12 @@ export default function Home() {
 
   const setOverallData = async () => {
     let data = await getSubGraphStakingSeasonData();
-    set_balance_availableReward(data.programs.availableReward)
-    set_lastSyncTimestamp(data.programs.lastSyncTimestamp)
-    set_totalLocked(data.programs.totalLocked)
-    set_balance_totalClaimedRewards(data.programs.totalClaimedRewards)
+    console.log('getSubGraphStakingSeasonData', data)
+    set_balance_availableReward(data.availableReward);
+    set_lastSyncTimestamp(data.lastSyncTimestamp);
+    set_totalLocked(data.totalLocked);
+    set_balance_totalClaimedRewards(data.totalClaimedRewards);
+    set_blockedTypeIndexes(data.blockedTypeIndexes);
   }
 
   async function getOwnNFTs () {
@@ -382,6 +386,17 @@ export default function Home() {
         ownBoosts_NFTs={ownBoosts_NFTs}
         appliedBoosts_NFTs={appliedBoosts_NFTs}
         ignoredBoosts_NFTs={ignoredBoosts_NFTs}
+        blockedTypeIndexes={blockedTypeIndexes}
+      />
+      <Section2B
+        balance_xDAI={balance_xDAI}
+        balance_xHOPR={balance_xHOPR}
+        balance_wxHOPR={balance_wxHOPR}
+        balance_availableReward={balance_availableReward}
+        balance_totalClaimedRewards={balance_totalClaimedRewards}
+        lastSyncTimestamp={lastSyncTimestamp}
+        totalLocked={totalLocked}
+        boostRate={subgraphUserData?.boostRate}
       />
       <EncourageSection
         title='TRY OUT THE HOPR PROTOCOL IN UNDER 5 SECONDS'

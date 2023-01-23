@@ -6,6 +6,7 @@ import Typography from '../Typography/index.jsx'
 import Button from '../Button/index.jsx'
 
 import animation from '../../assets/network-registry-animation.json';
+//import animation from '../../assets/HOPR_Staking_Animation.json';
 import lottie from "lottie-web";
 
 const SSection = styled(Section)`

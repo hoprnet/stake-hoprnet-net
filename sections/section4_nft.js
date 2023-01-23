@@ -27,8 +27,77 @@ export default function Section3(props) {
     appliedBoosts_NFTs,
     ignoredBoosts_NFTs,
     ownBoosts_NFTs,
+    blockedTypeIndexes,
   } = props;
 
+  const [ownBoosts_NFTs_toShow, set_ownBoosts_NFTs_toShow] = useState([]);
+  const [ownBoosts_NFTs_toShow_length, set_ownBoosts_NFTs_toShow_length] = useState(null)
+
+  useEffect(() => {
+    ownBoosts_NFTs_filter(ownBoosts_NFTs);
+  }, [ownBoosts_NFTs]);
+
+  function ownBoosts_NFTs_filter(NFTs) {
+    let allowed = NFTs.filter(nft => !blockedTypeIndexes.includes(nft.boostTypeIndex));
+    let filtered = [];
+    for(let a = 0; a < allowed.length; a++) {
+      let index = filtered.findIndex(nft => (nft.type === allowed[a].type && nft.rank === allowed[a].rank));
+      if( index === -1 ) {
+        filtered.push({
+          ...allowed[a],
+          count: 1
+        })
+      } else {
+        filtered[index].count++;
+      }
+    }
+
+    let sorted = stableSort(filtered, getComparator('desc', 'boost'));
+
+    set_ownBoosts_NFTs_toShow_length(allowed.length);
+    set_ownBoosts_NFTs_toShow(sorted);
+  }
+
+  function descendingComparator(a, b, orderBy) {
+    let a2 = a[orderBy];
+    let b2 = b[orderBy];
+  
+    switch(orderBy){
+      case 'latencyAverage':
+        if (a2 === null) a2 = Number.MAX_SAFE_INTEGER;
+        if (b2 === null) b2 = Number.MAX_SAFE_INTEGER;
+        break;
+    }
+  
+    if (b2 < a2) {
+      return -1;
+    }
+    if (b2 > a2) {
+      return 1;
+    }
+    return 0;
+  }
+  
+  function getComparator(order, orderBy) {
+    return order === 'desc'
+      ? (a, b) => descendingComparator(a, b, orderBy)
+      : (a, b) => -descendingComparator(a, b, orderBy);
+  }
+
+  // This method is created for cross-browser compatibility, if you don't
+  // need to support IE11, you can use Array.prototype.sort() directly
+  function stableSort(array, comparator) {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+      const order = comparator(a[0], b[0]);
+      if (order !== 0) {
+        return order;
+      }
+      return a[1] - b[1];
+    });
+    return stabilizedThis.map((el) => el[0]);
+  }
+  
   return (
     <Section
       id='section4'
@@ -40,13 +109,13 @@ export default function Section3(props) {
           aria-controls="panel1a-content"
           id="panel1a-header"
         >
-          <Typography type="h6">HOPR NFTs {ownBoosts_NFTs?.length ? `(${ownBoosts_NFTs.length})` : '' }</Typography>
+          <Typography type="h6">HOPR NFTs {ownBoosts_NFTs_toShow_length ? `(${ownBoosts_NFTs_toShow_length})` : '' }</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          {ownBoosts_NFTs.length === 0 ? 'No NFTs.' : '' }
-          {console.log(ownBoosts_NFTs)}
+          {ownBoosts_NFTs_toShow.length === 0 ? 'No NFTs.' : '' }
+          {console.log(ownBoosts_NFTs_toShow)}
           <NftContainer>
-            {ownBoosts_NFTs.map((nft) => 
+            {ownBoosts_NFTs_toShow.map((nft) => 
               <Nft
                 key={`ownBoosts_NFTs-${nft.id}`}
                 id={nft.id}
@@ -54,6 +123,7 @@ export default function Section3(props) {
                 type={nft.type}
                 boost={nft.boost}
                 rank={nft.rank}
+                count={nft.count}
               />)
             }
           </NftContainer>

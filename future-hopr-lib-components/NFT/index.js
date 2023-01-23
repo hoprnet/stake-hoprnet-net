@@ -5,6 +5,7 @@ import { Table } from '../Table/columed-data'
 import Button from '../Button'
 
 const Container = styled.div`
+    position: relative;
     display: flex;
     flex-direction: column;
     align-content: space-evenly;
@@ -19,6 +20,20 @@ const Container = styled.div`
         width: calc( 100% - 16px);
         margin: 4px 8px;
     }
+    .count{
+        top: -6px;
+        right: -6px;
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        border-radius: 30px;
+        background: red;
+        box-shadow: 0px 4px 6px rgb(0 0 0 / 50%);
+        text-align: center;
+        color: white;
+        font-size: 13px;
+        font-weight: 700;
+    }
 `
 
 export default function Nft(props) {
@@ -29,10 +44,6 @@ export default function Nft(props) {
                 <div className="css-1gdwl90">
                     <Table width1stColumn="90">
                         <tbody>
-                            <tr>
-                                <th>Token Id</th>
-                                <td>{props.id}</td>
-                            </tr>
                             <tr>
                                 <th>Type</th>
                                 <td>{props.type}</td>
@@ -45,10 +56,6 @@ export default function Nft(props) {
                                 <th>Boost</th>
                                 <td>{(props.boost*100).toFixed(2)}%</td>
                             </tr>
-                            <tr>
-                                <th>Expired</th>
-                                <td>{ }- xHOPR</td>
-                            </tr>
                         </tbody>
                     </Table>
                     <Button>
@@ -56,6 +63,12 @@ export default function Nft(props) {
                     </Button>
                 </div>
             </div>
+            {
+                props.count > 1 &&
+                <div className="count">
+                    {props.count}
+                </div>
+            }
         </Container>
     )
 }
