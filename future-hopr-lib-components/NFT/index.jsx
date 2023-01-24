@@ -45,6 +45,11 @@ const Container = styled.div`
         justify-content: center;
         align-items: center;
     }
+    &.ignored {
+        img {
+            filter: opacity(0.4);
+        }
+    }
 `
 
 export default function Nft(props) {
@@ -57,7 +62,11 @@ export default function Nft(props) {
     }
 
     return (
-        <Container>
+        <Container 
+            className={[
+                props.ignored ? 'ignored' : ''
+            ].join(' ')}
+        >
             <img src={props.image} className="nft-image" />
             <div className="css-ndd2wf">
                 <div className="css-1gdwl90">
