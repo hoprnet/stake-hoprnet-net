@@ -37,6 +37,7 @@ export default function Section4(props) {
   const [staked_NFTs_length, set_staked_NFTs_length] = useState(null);
 
   useEffect(() => {
+//    let applied = 
     const {
       length,
       sorted
@@ -172,7 +173,7 @@ export default function Section4(props) {
           <Typography type="h6">Staked HOPR NFTs {staked_NFTs_length ? `(${staked_NFTs_length})` : '' }</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          {appliedBoosts_NFTs.length === 0 ? 'No NFTs.' : '' }
+          {appliedBoosts_NFTs?.length === 0 ? 'No NFTs.' : '' }
             <NftContainer>
               {applied_NFTs_toShow.map((nft) => 
                 <Nft

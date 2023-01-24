@@ -4,8 +4,6 @@ import nfts from '../nft/nfts.json'
 
 
 export async function getSubGraphStakingSeasonData() {
-
-  // NEW
   const GET_THEGRAPH = gql`
         query getSubGraphStakingSeasonData {
             programs {
@@ -17,62 +15,18 @@ export async function getSubGraphStakingSeasonData() {
             }
         }
     `;
-
-  //OLD
-  // const GET_THEGRAPH = gql`
-  //     query getSubGraphStakingSeasonData {
-  //         programs {
-  //           blockedType
-  //           currentRewardPool
-  //           lastSyncTimestamp
-  //           totalActualStake
-  //           totalUnclaimedRewards
-  //         }
-  //     }
-  //   `;
-
-//     programs {
-//       totalUnclaimedRewards
-//       totalLocked
-//       totalCumulatedRewards
-//       totalClaimedRewards
-//       lastSyncTimestamp
-//       availableReward
-//     }
-// }
-
   let data;
-
   try {
     data = await request(theGraphStakingUrl, GET_THEGRAPH);
   } catch (e) {
     console.error(e);
   }
-
-
   data = {
- //   lastSyncTimestamp: parseInt(data.programs[0].lastSyncTimestamp),
-
     ...data.programs[0],
-    // NEW
     totalLocked: data.programs[0].totalLocked / 10e17,
     totalClaimedRewards: data.programs[0].totalClaimedRewards / 10e17,
     availableReward: data.programs[0].availableReward / 10e17
-    
-
-    // OLD
-    // totalLocked: data.programs[0].totalActualStake / 10e17,
-    // availableReward: data.programs[0].totalUnclaimedRewards / 10e17,
-
-    // currentRewardPool: data.programs[0].currentRewardPool / 10e18,
-    // lastSyncTimestamp: parseInt(data.programs[0].lastSyncTimestamp),
-
-    
   }
-
-
-
-  
   return data
 };
 
@@ -155,6 +109,8 @@ export async function getSubGraphStakingUserData(address) {
       actualLockedTokenAmount: 0,
       unclaimedRewards: 0,
       boostRate: 0,
+      appliedBoosts: [],
+      ignoredBoosts: []
     }
   }
 
