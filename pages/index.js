@@ -247,7 +247,11 @@ export default function Home() {
         const account = userAccount[0];
         console.log('account', account)
         const contract = new web3.eth.Contract(stakingSeason5abi, STAKING_SEASON_CONTRACT);
-        const result = await contract.methods.claimRewards(account).send({from: account});
+        const result = await contract.methods.claimRewards(account).send({
+          from: account,
+          maxPriorityFeePerGas: null,
+          maxFeePerGas: null, 
+        });
         if(result.status && result.transactionHash) {
           getBalances();
         }
@@ -293,7 +297,11 @@ export default function Home() {
         const account = userAccount[0];
         const contract = new web3.eth.Contract(erc20abi, xHOPR_CONTRACT);
         const weiAmount = web3.utils.toWei(toStake);
-        const result = await contract.methods.transferAndCall(STAKING_SEASON_CONTRACT, weiAmount,  '0x0000000000000000000000000000000000000000000000000000000000000000').send({from: account})
+        const result = await contract.methods.transferAndCall(STAKING_SEASON_CONTRACT, weiAmount,  '0x0000000000000000000000000000000000000000000000000000000000000000').send({
+          from: account,
+          maxPriorityFeePerGas: null,
+          maxFeePerGas: null, 
+        })
         console.log('MM result', result);
         if(result.status && result.transactionHash) {
           getBalances();
@@ -318,7 +326,11 @@ export default function Home() {
         const userAccount = await web3.eth.getAccounts();
         const account = userAccount[0];
         const contract = new web3.eth.Contract(stakingSeason5abi, STAKING_SEASON_CONTRACT);
-        const result = await contract.methods.unlockFor(account).send({from: account});
+        const result = await contract.methods.unlockFor(account).send({
+          from: account,
+          maxPriorityFeePerGas: null,
+          maxFeePerGas: null, 
+        });
         console.log('MM result', result);
         if(result.status && result.transactionHash) {
           getBalances();
@@ -347,7 +359,11 @@ export default function Home() {
         const userAccount = await web3.eth.getAccounts();
         const account = userAccount[0];
         const contract = new web3.eth.Contract(erc721abi, GNOSIS_CHAIN_HOPR_BOOST_NFT);
-        const result = await contract.methods.safeTransferFrom(account, STAKING_SEASON_CONTRACT, nftId).send({from: account});
+        const result = await contract.methods.safeTransferFrom(account, STAKING_SEASON_CONTRACT, nftId).send({
+          from: account,
+          maxPriorityFeePerGas: null,
+          maxFeePerGas: null, 
+        });
         console.log('MM result', result);
         if(result.status && result.transactionHash) {
           let movedNft = ownBoosts_NFTs.filter(nft => nft.id === nftId)[0];
