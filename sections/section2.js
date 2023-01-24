@@ -75,7 +75,7 @@ export default function Section2(props) {
             text="xHOPR"
             openIcon
           />{" "}
-          tokens to earn a total APR of <strong>{totalAPRPercentage.toFixed(2)}%</strong> (<strong>{baseAPRPercentage.toFixed(2)}%</strong> base + <strong>{boostAPRPercentage.toFixed(2)}%</strong> boosted)</p>
+          tokens to earn a total APR of <strong>{totalAPRPercentage.toFixed(2)}%</strong> (<strong>{baseAPRPercentage.toFixed(2)}%</strong> base + <strong>{(Math.round(boostAPRPercentage*10)/10).toFixed(2)}%</strong> boosted)</p>
       </div>
       <br></br>
       <TableDataColumed>

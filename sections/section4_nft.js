@@ -74,9 +74,11 @@ export default function Section4(props) {
     let filtered = [];
     for(let a = 0; a < allowed.length; a++) {
       let index = filtered.findIndex(nft => (nft.type === allowed[a].type && nft.rank === allowed[a].rank));
+      let alreadyStaked = checkIfalreadyStaked(allowed[a], NFTsToRemove);
       if( index === -1 ) {
         filtered.push({
           ...allowed[a],
+          alreadyStaked,
           count: 1
         })
       } else {
@@ -88,6 +90,11 @@ export default function Section4(props) {
       length: allowed.length,
       sorted
     }
+  }
+
+  function checkIfalreadyStaked(nft, NFTsToRemove) {
+    if (NFTsToRemove.length === 0) return false;
+    return true;
   }
 
   function descendingComparator(a, b, orderBy) {
