@@ -145,10 +145,11 @@ function parseNFTs(ntfsFromGraph){
     const uri2 = elem.uri.replace("https://stake.hoprnet.org/", "").split('/');
     const type = uri2[0];
     const rank = uri2[1];
+    const imageHosted = nfts[type][rank]?.image ? IPFS_HOSTED_URL + nfts[type][rank].image.replace('ipfs://', '') : '';
     return {
       type,
       rank,
-      imageHosted: IPFS_HOSTED_URL + nfts[type][rank].image.replace('ipfs://', ''),
+      imageHosted,
       ...nfts[type][rank],
       ...elem
     }
