@@ -68,33 +68,6 @@ export async function getSubGraphStakingUserData(address) {
     }
   `;
 
-  // OLD
-//   const GET_THEGRAPH = gql`
-//   query getSubGraphStakingUserData {
-//       account(id: "${address}") {
-//         unclaimedRewards
-//         lastSyncTimestamp
-//         ignoredBoosts {
-//           redeemDeadline
-//           id
-//           boostType
-//           boostNumerator
-//         }
-//         id
-//         boostRate
-//         appliedBoosts {
-//           redeemDeadline
-//           id
-//           boostType
-//           boostNumerator
-//         }
-//           actualStake
-//         }
-//       }
-//   }
-// `;
-
-
   let data;
 
   try {
@@ -115,12 +88,17 @@ export async function getSubGraphStakingUserData(address) {
   }
 
   data = data.account;
-  if(data.actualLockedTokenAmount && data.unclaimedRewards) {
+  if(data.actualLockedTokenAmount) {
     data.actualLockedTokenAmount = data.actualLockedTokenAmount / 10e17;
     data.unclaimedRewards = data.unclaimedRewards / 10e17;
+    data.claimedRewards = data.claimedRewards / 10e17;
     data.lastSyncTimestamp = parseInt(data.lastSyncTimestamp);
     data.boostRate = parseInt(data.boostRate);
   }
+
+  //0x226d833075C26dbF9aA377De0363e435808953a4
+  //0x226d833075c26dbf9aa377de0363e435808953a4
+  //0x226d833075c26dbf9aa377de0363e435808953a4
 
   if(data.appliedBoosts.length > 0) {
     data.appliedBoosts = parseNFTs(data.appliedBoosts);

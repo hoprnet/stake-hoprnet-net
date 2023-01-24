@@ -159,6 +159,7 @@ export default function Section4(props) {
                 rank={nft.rank}
                 count={nft.count}
                 handleLockNFT={props.handleLockNFT}
+                locked={props.viewMode}
               />)
             }
           </NftContainer>

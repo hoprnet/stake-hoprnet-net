@@ -23,6 +23,7 @@ import Modal from '../future-hopr-lib-components/Modal'
 import Layout from '../future-hopr-lib-components/Layout';
 import EncourageSection from '../future-hopr-lib-components/Section/encourage'
 import LaunchPlaygroundBtn from '../future-hopr-lib-components/Button/LaunchPlayground';
+import TextField from '../future-hopr-lib-components/TextField';
 
 
 import Section2 from '../sections/section2'
@@ -39,7 +40,9 @@ import { rest } from 'lodash';
 
 export default function Home() {
   const [errorMessage, setErrorMessage] = useState(null);
+  const [viewMode, set_viewMode] = useState(false);
   const [account, setAccount] = useState(null);
+  const [tmp_account, set_tmp_account] = useState("");
   const [chainId, set_chainId] = useState(null);
   const [blockNumber, set_blockNumber] = useState(null);
   const [balance_xDAI, set_balance_xdai] = useState(null);
@@ -53,6 +56,7 @@ export default function Home() {
   const [blockedTypeIndexes, set_blockedTypeIndexes] = useState([]);
   const [lastSyncTimestamp_cumulatedRewards, set_lastSyncTimestamp_cumulatedRewards] = useState(null);
   const [chooseWalletModal, set_chooseWalletModal] = useState(false);
+  const [viewModeModal, set_viewModeModal] = useState(false);
   const [lastSyncTimestamp, set_lastSyncTimestamp] = useState(null);
   const [totalLocked, set_totalLocked] = useState(null);
   const [subgraphUserData, set_subgraphUserData] = useState(null);
@@ -88,6 +92,7 @@ export default function Home() {
         console.log('accountsChanged accounts:', res, currentChain);
         await accountsChanged(res);
         set_chooseWalletModal(false);
+        set_viewMode(false);
       } catch (err) {
         console.error(err);
         setErrorMessage(`There was a problem connecting to MetaMask.`,);
@@ -95,6 +100,19 @@ export default function Home() {
     } else {
       setErrorMessage("Install MetaMask");
     }
+  };
+
+  const connectViewMode = async (account) => {
+    const SubGraph = await getSubGraphData(account);
+    set_balance_xdai(null);
+    set_balance_xHOPR(null);
+    set_balance_wxHOPR(null);
+    set_blockNumber(null);
+    set_balance_stakedxHOPR(SubGraph.actualLockedTokenAmount);
+    set_balance_claimedRewards(SubGraph.claimedRewards);
+    set_balance_unclaimedRewards(SubGraph.unclaimedRewards);
+    set_lastSyncTimestamp_cumulatedRewards(SubGraph.lastSyncTimestamp);
+    set_viewMode(true);
   };
 
   const accountsChanged = async (addresses) => {
@@ -106,43 +124,31 @@ export default function Home() {
       console.log('currentChain', currentChain)
       set_chainId(currentChain);
       if (currentChain === '0x64') {
-        console.log('currentChain === 0x64')
+        console.log('currentChain === 0x64');
         getBalances();
       }
-      let data = await getSubGraphStakingUserData(newAccount);
-      console.log('subgraphUserData', data);
-      const { 
-        appliedBoosts,
-        ignoredBoosts,
-        ...rest
-      } = data;
-      set_subgraphUserData(rest);
-      set_appliedBoosts_NFTs(appliedBoosts);
-      set_ignoredBoosts_NFTs(ignoredBoosts);
-
-      data = await getSubGraphNFTsUserData(newAccount);
-      set_ownBoosts_NFTs(data);
-
-      //   {
-      //     "actualLockedTokenAmount": 1476.6376191518634,
-      //     "boostRate": 793,
-      //     "appliedBoosts": [
-      //         {
-      //             "boostNumerator": "793",
-      //             "boostType": "23",
-      //             "id": "14643",
-      //             "redeemDeadline": "1642424400"
-      //         }
-      //     ],
-      //     "ignoredBoosts": [],
-      //     "id": "0xe844f9e13...",
-      //     "lastSyncTimestamp": 1672395925,
-      //     "unclaimedRewards": 0
-      // }
+      await getSubGraphData(newAccount);
     } catch (err) {
       console.error(err);
       setErrorMessage("There was a problem connecting to MetaMask");
     }
+  };
+
+  const getSubGraphData = async (address) => {
+    let subGraphStakingUserData = await getSubGraphStakingUserData(address);
+    console.log('subgraphUserData', subGraphStakingUserData);
+    const { 
+      appliedBoosts,
+      ignoredBoosts,
+      ...rest
+    } = subGraphStakingUserData;
+    set_subgraphUserData(rest);
+    set_appliedBoosts_NFTs(appliedBoosts);
+    set_ignoredBoosts_NFTs(ignoredBoosts);
+
+    let data = await getSubGraphNFTsUserData(address);
+    set_ownBoosts_NFTs(data);
+    return subGraphStakingUserData;
   };
 
   async function getBalances () {
@@ -221,11 +227,6 @@ export default function Home() {
     set_balance_totalClaimedRewards(data.totalClaimedRewards);
     set_blockedTypeIndexes(data.blockedTypeIndexes);
   }
-
-  async function getOwnNFTs () {
-
-  };
-
 
   const handleClosehandleClose = () => {
     setErrorMessage(null);
@@ -406,10 +407,13 @@ export default function Home() {
   };
 
   const rightButtons = () => <>
-    <ChainButton
-      connected={!!account}
-      chainId={chainId}
-    />
+    { 
+      !viewMode &&
+      <ChainButton
+        connected={!!account}
+        chainId={chainId}
+      />
+    }
     {connectWallet()}
   </>;
 
@@ -432,6 +436,7 @@ export default function Home() {
       />
       <Section3
         disabled={chainId !== '0x64'}
+        viewMode={viewMode}
         blockNumber={blockNumber}
         balance_xHOPR={balance_xHOPR}
         balance_stakedxHOPR={balance_stakedxHOPR}
@@ -448,6 +453,7 @@ export default function Home() {
       />
       <Section4
         disabled={chainId !== '0x64'}
+        viewMode={viewMode}
         ownBoosts_NFTs={ownBoosts_NFTs}
         appliedBoosts_NFTs={appliedBoosts_NFTs}
         ignoredBoosts_NFTs={ignoredBoosts_NFTs}
@@ -481,8 +487,38 @@ export default function Home() {
             onClick={connectHandlerMetaMask}
             wallet="metamask"
           />
+          <WalletButton
+            onClick={() => { 
+              set_chooseWalletModal(false);
+              set_viewModeModal(true);
+            }}
+            wallet="viewMode"
+          />
           <p>By connecting a wallet, you agree to HOPR’s Terms of Service and acknowledge that you have read and understand the Disclaimer.</p>
         </ConnectWalletContent>
+      </Modal>
+      <Modal
+        open={viewModeModal}
+        onClose={() => { set_viewModeModal(false) }}
+        title="CONNECT AN ADDRESS"
+      >
+        <TextField
+          label="Address" 
+          value={tmp_account}
+          onChange={(event)=>{
+            set_tmp_account(event.target.value)
+          }}
+        />
+        <Button
+          onClick={() => { 
+            set_viewModeModal(false);
+            setAccount(tmp_account.toLowerCase());
+            connectViewMode(tmp_account.toLowerCase());
+          }}
+          fullWidth
+        >
+          View
+        </Button>
       </Modal>
       <Snackbar
         severity="error"

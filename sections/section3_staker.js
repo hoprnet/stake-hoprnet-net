@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from "@emotion/styled";
 
-import TextField from '@mui/material/TextField';
+import TextField from '../future-hopr-lib-components/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 import Typography from '../future-hopr-lib-components/Typography';
 import Section from '../future-hopr-lib-components/Section'
@@ -41,6 +41,12 @@ export const SIconButton = styled(IconButton)`
   svg {
     color: #04049f;
   }
+  &.Mui-disabled {
+    svg {
+      background-color: transparent;
+      color: rgba(0, 0, 0, 0.26);
+    }
+  }
   &.reloading {
     animation: rotation 2s infinite linear;
   }
@@ -73,13 +79,7 @@ const SearchRow = styled.div`
   }
 `
 const SearchPeerId = styled(TextField)`
-  font-family: 'Source Code Pro', monospace;
-  width: 100%;
   margin-bottom: 8px;
-  background: white;
-  * {
-    font-family: 'Source Code Pro', monospace;!important
-  }
   input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -105,6 +105,7 @@ export default function Section3(props) {
     balance_unclaimedRewards,
     boostRate,
     lastSyncTimestamp_cumulatedRewards,
+    viewMode
   } = props;
   const [claimable, set_claimable] = useState(null);
   const [toStake, set_toStake] = useState('');
@@ -151,7 +152,7 @@ export default function Section3(props) {
     <Section
       id='section3'
       lightGray
-      disabled={props.disabled}
+      disabled={props.disabled && !viewMode}
     >
       <Tables>
         <Typography type="h6" style={{marginBottom: '8px'}}>
@@ -161,7 +162,7 @@ export default function Section3(props) {
           color="primary" 
           aria-label="refresh crypto"  
           className={`${reloading ? 'reloading' : ''}`}
-          disabled={reloading}
+          disabled={reloading || viewMode}
           onClick={async ()=>{
             set_reloading(true);
             await props.getBalances();
@@ -221,30 +222,32 @@ export default function Section3(props) {
           <Button
             hopr
             onClick={()=>{set_toStake(balance_xHOPR)}}
+            disabled={viewMode}
           >
             Max
           </Button>
           <SearchPeerId 
             label="Stake xHOPR" 
-            variant="outlined" 
             type="number"
             value={toStake}
-            onChange={()=>{
+            onChange={(event)=>{
               set_toStake(event.target.value)
             }}
             InputProps={{
               endAdornment: <InputAdornment position="end">xHOPR</InputAdornment>,
             }}
             size="small"
+            disabled={viewMode}
           />
         </AlwaysRow>
         <Button
-          disabled={!(toStake > 0) || stakeDisabled || Date.now() > PROGRAM_END_MS}
+          disabled={!(toStake > 0) || stakeDisabled || Date.now() > PROGRAM_END_MS || viewMode}
           loading={stakeDisabled}
           onClick={async ()=>{
             set_stakeDisabled(true);
             set_reloading(true);
             await props.handleStake(toStake);
+            set_toStake("")
             set_stakeDisabled(false);
             setTimeout(()=>{set_reloading(false)}, 1500);
           }}
@@ -261,7 +264,7 @@ export default function Section3(props) {
             set_unlockDisabled(false);
             setTimeout(()=>{set_reloading(false)}, 1500);
           }}
-          disabled={unlockDisabled || Date.now() < PROGRAM_END_MS}
+          disabled={unlockDisabled || Date.now() < PROGRAM_END_MS || viewMode}
           loading={unlockDisabled}
         >
           Unlock
@@ -274,7 +277,7 @@ export default function Section3(props) {
             set_claimDisabled(false);
             setTimeout(()=>{set_reloading(false)}, 1500);
           }}
-          disabled={claimDisabled}
+          disabled={claimDisabled || viewMode}
           loading={claimDisabled}
         >
           Claim rewards
