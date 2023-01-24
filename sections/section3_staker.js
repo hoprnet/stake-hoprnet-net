@@ -111,6 +111,7 @@ export default function Section3(props) {
   const [reloading, set_reloading] = useState(false);
   const [stakeDisabled, set_stakeDisabled] = useState(false);
   const [claimDisabled, set_claimDisabled] = useState(false);
+  const [unlockDisabled, set_unlockDisabled] = useState(false);
 
   countRewardsPerSecond(balance_stakedxHOPR, boostRate)
 
@@ -238,7 +239,7 @@ export default function Section3(props) {
           />
         </AlwaysRow>
         <Button
-          disabled={!(toStake > 0) || stakeDisabled}
+          disabled={!(toStake > 0) || stakeDisabled || Date.now() > PROGRAM_END_MS}
           loading={stakeDisabled}
           onClick={async ()=>{
             set_stakeDisabled(true);
@@ -252,9 +253,16 @@ export default function Section3(props) {
         </Button>
       </SearchRow>
       <SearchRow right>
-        <Button
-          onClick={()=>{set_toStake(balance_xHOPR)}}
-          disabled
+        <Button 
+          onClick={async ()=>{
+            set_unlockDisabled(true);
+            set_reloading(true);
+            await props.handleUnlock();
+            set_unlockDisabled(false);
+            setTimeout(()=>{set_reloading(false)}, 1500);
+          }}
+          disabled={unlockDisabled || Date.now() < PROGRAM_END_MS}
+          loading={unlockDisabled}
         >
           Unlock
         </Button>

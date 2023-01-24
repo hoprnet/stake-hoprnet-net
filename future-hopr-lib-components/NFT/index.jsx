@@ -15,10 +15,16 @@ const Container = styled.div`
         margin: auto;
         max-width: 100%;
         height: auto;
+        @media (max-width: 820px) {
+            width: 200px;
+        }
     }
     .btn-hopr--v2{
         width: calc( 100% - 16px);
         margin: 4px 8px;
+    }
+    table {
+        border-bottom: unset;
     }
     .count{
         top: -6px;

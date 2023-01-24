@@ -28,9 +28,6 @@ const Container = styled.div`
   .menu {
     display: flex;
     flex-direction: row;
-    @media screen and (max-width: 680px) {
-      display: none;
-    }
   }
 `;
 

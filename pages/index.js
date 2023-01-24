@@ -296,7 +296,31 @@ export default function Home() {
         const contract = new web3.eth.Contract(erc20abi, xHOPR_CONTRACT);
         const weiAmount = web3.utils.toWei(toStake);
         const result = await contract.methods.transferAndCall(STAKING_SEASON_CONTRACT, weiAmount,  '0x0000000000000000000000000000000000000000000000000000000000000000').send({from: account})
-     //   const result = await contract.methods.transfer(STAKING_SEASON_CONTRACT, weiAmount).send({from: account})
+        console.log('MM result', result);
+        if(result.status && result.transactionHash) {
+          getBalances();
+        }
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  }
+
+  async function handleUnlock(){
+    try {
+      const currentProvider = detectCurrentProvider();
+      if (currentProvider) {
+        if (currentProvider !== window.ethereum) {
+          console.log(
+            'Non-Ethereum browser detected. You should consider trying MetaMask!'
+          );
+        }
+        await currentProvider.request({ method: 'eth_requestAccounts' });
+        const web3 = new Web3(currentProvider);
+        const userAccount = await web3.eth.getAccounts();
+        const account = userAccount[0];
+        const contract = new web3.eth.Contract(stakingSeason5abi, STAKING_SEASON_CONTRACT);
+        const result = await contract.methods.unlockFor(account).send({from: account});
         console.log('MM result', result);
         if(result.status && result.transactionHash) {
           getBalances();
@@ -382,6 +406,7 @@ export default function Home() {
         claimRewards={claimRewards}
         handleStake={handleStake}
         getBalances={getBalances}
+        handleUnlock={handleUnlock}
       />
       <Section4
         disabled={chainId !== '0x64'}

@@ -17,6 +17,9 @@ const SButton = styled(MuiButton)`
     white-space: nowrap;
     width: 100%;
     max-width: 222px;
+    @media only screen and (max-width: 530px) {
+        display: none;
+    }
 `
 
 export default function ChainButton(props) {

@@ -54,6 +54,30 @@ export default function Section2(props) {
       id='section2'
       yellow
     >
+      <div className="css-wc4a8h">
+        <Link
+          href="https://medium.com/hoprnet/780edfd4f1e1"
+          text="Read about HOPR staking"
+          openIcon
+        />{" "}
+        <Link
+          href={`https://blockscout.com/poa/xdai/address/${STAKING_SEASON_CONTRACT}/transactions`}
+          text="Contract Address"
+          openIcon
+        />
+      </div>
+      <div className="chakra-container css-jf7n8r">
+      <br/>
+        <p className=" css-9tmdd2">
+          Stake
+          {" "}<Link
+            href="https://blockscout.com/poa/xdai/address/0xD057604A14982FE8D88c5fC25Aac3267eA142a08/transactions"
+            text="xHOPR"
+            openIcon
+          />{" "}
+          tokens to earn a total APR of <strong>{totalAPRPercentage.toFixed(2)}%</strong> (<strong>{baseAPRPercentage.toFixed(2)}%</strong> base + <strong>{boostAPRPercentage.toFixed(2)}%</strong> boosted)</p>
+      </div>
+      <br></br>
       <TableDataColumed>
         <tbody>
           <tr>
@@ -84,75 +108,7 @@ export default function Section2(props) {
             </tr>
           </tbody>
       </TableDataColumed>
-      <br></br>
-      {/* <Amounts>
-        <div>
-          <Typography>
-            Your wallet
-          </Typography>
-          <div
-            className='BalanceContainer'
-          >
-            <BalanceField
-              coin="xDai"
-              icon="../assets/coins/xdai.png"
-              value={balance_xDAI}
-            />
-            <BalanceField
-              coin="xHOPR"
-              icon="../assets/coins/xdai.png"
-              value={balance_xHOPR}
-            />
-            <BalanceField
-              coin="wxHOPR"
-              icon="../assets/coins/xdai.png"
-              value={balance_wxHOPR}
-            />
-          </div>
-        </div>
-        <div>
-          <Typography>
-            Staking Season {seasonNumber}
-          </Typography>
-          <div
-            className='BalanceContainer'
-          >
-            <BalanceField
-              coin="Available Rewards"
-              icon="../assets/coins/xdai.png"
-              value={currentRewardPool}
-            />
-            <BalanceField
-              coin="Total Staked"
-              icon="../assets/coins/xdai.png"
-              value={totalLocked}
-            />
-          </div>
-        </div>
-      </Amounts> */}
-      <div className="css-wc4a8h">
-        <Link
-          href="https://medium.com/hoprnet/780edfd4f1e1"
-          text="Read about HOPR staking"
-          openIcon
-        />{" "}
-        <Link
-          href={`https://blockscout.com/poa/xdai/address/${STAKING_SEASON_CONTRACT}/transactions`}
-          text="Contract Address"
-          openIcon
-        />
-      </div>
-      <div className="chakra-container css-jf7n8r">
-      <br/>
-        <p className=" css-9tmdd2">
-          Stake
-          {" "}<Link
-            href="https://blockscout.com/poa/xdai/address/0xD057604A14982FE8D88c5fC25Aac3267eA142a08/transactions"
-            text="xHOPR"
-            openIcon
-          />{" "}
-          tokens to earn a total APR of {totalAPRPercentage.toFixed(2)}% ({baseAPRPercentage.toFixed(2)}% base + {boostAPRPercentage.toFixed(2)}% boosted)</p>
-      </div>
+
     </Section>
   )
 }
