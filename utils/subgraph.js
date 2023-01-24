@@ -103,14 +103,6 @@ export async function getSubGraphStakingUserData(address) {
           id
           unclaimedRewards
           lastSyncTimestamp
-          ignoredBoosts {
-            boostNumerator
-            uri
-            redeemDeadline
-            owner
-            id
-            boostTypeIndex
-          }
         }
     }
   `;
@@ -168,6 +160,10 @@ export async function getSubGraphStakingUserData(address) {
     data.boostRate = parseInt(data.boostRate);
   }
 
+  if(data.appliedBoosts.length > 0) {
+    data.appliedBoosts = parseNFTs(data.appliedBoosts);
+  }
+
   return data
 };
 
@@ -197,8 +193,12 @@ export async function getSubGraphNFTsUserData(address) {
     return []
   }
 
+  return parseNFTs(data.boosts);
+};
 
-  let parsed = data.boosts.map(elem=>{
+
+function parseNFTs(ntfsFromGraph){
+  let parsed = ntfsFromGraph.map(elem=>{
     const uri2 = elem.uri.replace("https://stake.hoprnet.org/", "").split('/');
     const type = uri2[0];
     const rank = uri2[1];
@@ -210,6 +210,5 @@ export async function getSubGraphNFTsUserData(address) {
       ...elem
     }
   })
-
-  return parsed
-};
+  return parsed;
+}

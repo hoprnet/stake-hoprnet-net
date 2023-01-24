@@ -10,6 +10,8 @@ const Container = styled.div`
     flex-direction: column;
     align-content: space-evenly;
     border: 1px solid rgb(204, 204, 204);
+    padding: 4px;
+    border-radius: 8px;
     img {
         width: 240px;
         margin: auto;
@@ -67,9 +69,13 @@ export default function Nft(props) {
                             </tr>
                         </tbody>
                     </Table>
-                    <Button>
-                        Lock NFT
-                    </Button>
+                    {
+                        !props.locked &&
+                        <Button>
+                            Lock NFT
+                        </Button>
+                    }
+
                 </div>
             </div>
             {

@@ -12,8 +12,8 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: '/:path',
-        destination: '/nft/:path',
+        source: '/:path*',
+        destination: '/nft/:path*',
       },
     ]
   },

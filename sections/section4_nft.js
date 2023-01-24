@@ -31,14 +31,28 @@ export default function Section3(props) {
   } = props;
 
   const [ownBoosts_NFTs_toShow, set_ownBoosts_NFTs_toShow] = useState([]);
-  const [ownBoosts_NFTs_toShow_length, set_ownBoosts_NFTs_toShow_length] = useState(null)
+  const [ownBoosts_NFTs_toShow_length, set_ownBoosts_NFTs_toShow_length] = useState(null);
+  const [applied_NFTs_toShow, set_applied_NFTs_toShow] = useState([]);
 
   useEffect(() => {
-    ownBoosts_NFTs_filter(ownBoosts_NFTs);
+    const {
+      length,
+      sorted
+    } = NFTs_filter(ownBoosts_NFTs);
+    set_ownBoosts_NFTs_toShow_length(length);
+    set_ownBoosts_NFTs_toShow(sorted);
   }, [ownBoosts_NFTs]);
 
-  function ownBoosts_NFTs_filter(NFTs) {
-    let allowed = NFTs.filter(nft => !blockedTypeIndexes.includes(nft.boostTypeIndex));
+  useEffect(() => {
+    console.log('useEffect appliedBoosts_NFTs', appliedBoosts_NFTs)
+    const {
+      sorted
+    } = NFTs_filter(appliedBoosts_NFTs);
+    set_applied_NFTs_toShow(sorted);
+  }, [appliedBoosts_NFTs]);
+
+  function NFTs_filter(NFTs) {
+    const allowed = NFTs.filter(nft => !blockedTypeIndexes.includes(nft.boostTypeIndex));
     let filtered = [];
     for(let a = 0; a < allowed.length; a++) {
       let index = filtered.findIndex(nft => (nft.type === allowed[a].type && nft.rank === allowed[a].rank));
@@ -51,11 +65,11 @@ export default function Section3(props) {
         filtered[index].count++;
       }
     }
-
-    let sorted = stableSort(filtered, getComparator('desc', 'boost'));
-
-    set_ownBoosts_NFTs_toShow_length(allowed.length);
-    set_ownBoosts_NFTs_toShow(sorted);
+    const sorted = stableSort(filtered, getComparator('desc', 'boost'));
+    return {
+      length: allowed.length,
+      sorted
+    }
   }
 
   function descendingComparator(a, b, orderBy) {
@@ -114,7 +128,6 @@ export default function Section3(props) {
         </AccordionSummary>
         <AccordionDetails>
           {ownBoosts_NFTs_toShow.length === 0 ? 'No NFTs.' : '' }
-          {console.log(ownBoosts_NFTs_toShow)}
           <NftContainer>
             {ownBoosts_NFTs_toShow.map((nft) => 
               <Nft
@@ -139,9 +152,21 @@ export default function Section3(props) {
           <Typography type="h6">Staked HOPR NFTs {appliedBoosts_NFTs?.length ? `(${appliedBoosts_NFTs.length})` : '' }</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>
-            No NFTs.
-          </Typography>
+          {appliedBoosts_NFTs.length === 0 ? 'No NFTs.' : '' }
+            <NftContainer>
+            {applied_NFTs_toShow.map((nft) => 
+                <Nft
+                  key={`appliedBoosts_NFTs-${nft.id}`}
+                  id={nft.id}
+                  image={nft.imageHosted}
+                  type={nft.type}
+                  boost={nft.boost}
+                  rank={nft.rank}
+                  count={nft.count}
+                  locked
+                />)
+              }
+            </NftContainer>
         </AccordionDetails>
       </Accordion>
     </Section>
