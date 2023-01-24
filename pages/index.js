@@ -78,7 +78,6 @@ export default function Home() {
   }, [account, chainId]);
 
   const connectHandlerMetaMask = async (input) => {
-    console.log('connectHandlerMetaMask', input)
     if (window.ethereum) {
       try {
         const res = await window.ethereum.request({
@@ -123,8 +122,6 @@ export default function Home() {
 
       data = await getSubGraphNFTsUserData(newAccount);
       set_ownBoosts_NFTs(data);
-
-
 
       //   {
       //     "actualLockedTokenAmount": 1476.6376191518634,
@@ -331,6 +328,47 @@ export default function Home() {
     }
   }
 
+  async function handleLockNFT(nftId){
+
+    console.log('handleLockNFT', nftId)
+  //  return new Promise(resolve => setTimeout(resolve, 2000));
+    
+    try {
+      const currentProvider = detectCurrentProvider();
+      if (currentProvider) {
+        if (currentProvider !== window.ethereum) {
+          console.log(
+            'Non-Ethereum browser detected. You should consider trying MetaMask!'
+          );
+        }
+        await currentProvider.request({ method: 'eth_requestAccounts' });
+        const web3 = new Web3(currentProvider);
+        const userAccount = await web3.eth.getAccounts();
+        const account = userAccount[0];
+        const contract = new web3.eth.Contract(erc721abi, GNOSIS_CHAIN_HOPR_BOOST_NFT);
+        const result = await contract.methods.safeTransferFrom(account, STAKING_SEASON_CONTRACT, nftId).send({from: account});
+        console.log('MM result', result);
+        if(result.status && result.transactionHash) {
+          let movedNft = ownBoosts_NFTs.filter(nft => nft.id === nftId)[0];
+          console.log('movedNft', movedNft);
+          set_ownBoosts_NFTs(prev => {
+            console.log('prev', prev);
+            let newer = prev.filter(nft => nft.id !== nftId);
+            console.log('newer', newer);
+            return prev.filter(nft => nft.id !== nftId);
+          });
+          if(appliedBoosts_NFTs.findIndex(nft => nft.type === movedNft.type) === -1) {
+            set_appliedBoosts_NFTs( prev => {return [...prev, movedNft]});
+          } else { // TODO: to make better (check if you have lower rank?)
+            set_ignoredBoosts_NFTs( prev => {return [...prev, movedNft]});
+          }
+        }
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  }
+
   const ConnectWalletContent = styled.div`
     display: flex;
     flex-direction: column;
@@ -414,6 +452,7 @@ export default function Home() {
         appliedBoosts_NFTs={appliedBoosts_NFTs}
         ignoredBoosts_NFTs={ignoredBoosts_NFTs}
         blockedTypeIndexes={blockedTypeIndexes}
+        handleLockNFT={handleLockNFT}
       />
       <Section2B
         balance_xDAI={balance_xDAI}

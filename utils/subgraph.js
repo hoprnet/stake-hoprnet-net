@@ -45,7 +45,6 @@ export async function getSubGraphStakingSeasonData() {
 
   try {
     data = await request(theGraphStakingUrl, GET_THEGRAPH);
-    console.log(data);
   } catch (e) {
     console.error(e);
   }
@@ -103,6 +102,14 @@ export async function getSubGraphStakingUserData(address) {
           id
           unclaimedRewards
           lastSyncTimestamp
+          ignoredBoosts {
+            boostNumerator
+            boostTypeIndex
+            id
+            owner
+            redeemDeadline
+            uri
+          }
         }
     }
   `;
@@ -138,7 +145,6 @@ export async function getSubGraphStakingUserData(address) {
 
   try {
     data = await request(theGraphStakingUrl, GET_THEGRAPH);
-    console.log(data);
   } catch (e) {
     console.error(e);
   }
@@ -164,6 +170,10 @@ export async function getSubGraphStakingUserData(address) {
     data.appliedBoosts = parseNFTs(data.appliedBoosts);
   }
 
+  if(data.ignoredBoosts.length > 0) {
+    data.ignoredBoosts = parseNFTs(data.ignoredBoosts);
+  }
+
   return data
 };
 
@@ -184,7 +194,6 @@ export async function getSubGraphNFTsUserData(address) {
 
   try {
     data = await request(theGraphStakingUrl, GET_THEGRAPH);
-    console.log('getSubGraphNFTsUserData', data);
   } catch (e) {
     console.error(e);
   }

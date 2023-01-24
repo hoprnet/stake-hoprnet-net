@@ -22,7 +22,7 @@ const NftContainer = styled.div`
   justify-content: space-evenly;
 `
 
-export default function Section3(props) {
+export default function Section4(props) {
   const {
     appliedBoosts_NFTs,
     ignoredBoosts_NFTs,
@@ -33,26 +33,43 @@ export default function Section3(props) {
   const [ownBoosts_NFTs_toShow, set_ownBoosts_NFTs_toShow] = useState([]);
   const [ownBoosts_NFTs_toShow_length, set_ownBoosts_NFTs_toShow_length] = useState(null);
   const [applied_NFTs_toShow, set_applied_NFTs_toShow] = useState([]);
+  const [ignored_NFTs_toShow, set_ignored_NFTs_toShow] = useState([]);
+  const [staked_NFTs_length, set_staked_NFTs_length] = useState(null);
 
   useEffect(() => {
     const {
       length,
       sorted
-    } = NFTs_filter(ownBoosts_NFTs);
+    } = NFTs_filter(ownBoosts_NFTs, [...appliedBoosts_NFTs, ...ignoredBoosts_NFTs]);
     set_ownBoosts_NFTs_toShow_length(length);
     set_ownBoosts_NFTs_toShow(sorted);
-  }, [ownBoosts_NFTs]);
+  }, [ownBoosts_NFTs, appliedBoosts_NFTs, ignoredBoosts_NFTs]);
 
   useEffect(() => {
-    console.log('useEffect appliedBoosts_NFTs', appliedBoosts_NFTs)
     const {
       sorted
     } = NFTs_filter(appliedBoosts_NFTs);
     set_applied_NFTs_toShow(sorted);
   }, [appliedBoosts_NFTs]);
 
-  function NFTs_filter(NFTs) {
-    const allowed = NFTs.filter(nft => !blockedTypeIndexes.includes(nft.boostTypeIndex));
+  useEffect(() => {
+    const {
+      sorted
+    } = NFTs_filter(ignoredBoosts_NFTs);
+    set_ignored_NFTs_toShow(sorted);
+  }, [ignoredBoosts_NFTs]);
+
+  useEffect(() => {
+    set_staked_NFTs_length([...appliedBoosts_NFTs, ...ignoredBoosts_NFTs].length);
+  }, [appliedBoosts_NFTs, ignoredBoosts_NFTs]);
+
+  function NFTs_filter(NFTs, NFTsToRemove = []) {
+    const toRemove = NFTsToRemove.map(elem => elem.id);
+    console.log('toRemove', toRemove)
+    const allowed = NFTs
+      .filter(nft => !blockedTypeIndexes.includes(nft.boostTypeIndex))
+      .filter(nft => !toRemove.includes(nft.id));
+    console.log('allowed', allowed)
     let filtered = [];
     for(let a = 0; a < allowed.length; a++) {
       let index = filtered.findIndex(nft => (nft.type === allowed[a].type && nft.rank === allowed[a].rank));
@@ -111,7 +128,9 @@ export default function Section3(props) {
     });
     return stabilizedThis.map((el) => el[0]);
   }
-  
+
+
+
   return (
     <Section
       id='section4'
@@ -138,6 +157,7 @@ export default function Section3(props) {
                 boost={nft.boost}
                 rank={nft.rank}
                 count={nft.count}
+                handleLockNFT={props.handleLockNFT}
               />)
             }
           </NftContainer>
@@ -149,12 +169,12 @@ export default function Section3(props) {
           aria-controls="panel2a-content"
           id="panel2a-header"
         >
-          <Typography type="h6">Staked HOPR NFTs {appliedBoosts_NFTs?.length ? `(${appliedBoosts_NFTs.length})` : '' }</Typography>
+          <Typography type="h6">Staked HOPR NFTs {staked_NFTs_length ? `(${staked_NFTs_length})` : '' }</Typography>
         </AccordionSummary>
         <AccordionDetails>
           {appliedBoosts_NFTs.length === 0 ? 'No NFTs.' : '' }
             <NftContainer>
-            {applied_NFTs_toShow.map((nft) => 
+              {applied_NFTs_toShow.map((nft) => 
                 <Nft
                   key={`appliedBoosts_NFTs-${nft.id}`}
                   id={nft.id}
@@ -164,6 +184,19 @@ export default function Section3(props) {
                   rank={nft.rank}
                   count={nft.count}
                   locked
+                />)
+              }
+              {ignored_NFTs_toShow.map((nft) => 
+                <Nft
+                  key={`ignoredBoosts_NFTs-${nft.id}`}
+                  id={nft.id}
+                  image={nft.imageHosted}
+                  type={nft.type}
+                  boost={nft.boost}
+                  rank={nft.rank}
+                  count={nft.count}
+                  locked
+                  ignored
                 />)
               }
             </NftContainer>

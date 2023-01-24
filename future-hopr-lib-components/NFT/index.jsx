@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from "@emotion/styled";
 
 import { Table } from '../Table/columed-data'
@@ -48,6 +48,14 @@ const Container = styled.div`
 `
 
 export default function Nft(props) {
+    const [disableButton, set_disableButton] = useState(false);
+
+    async function handleLockNFT(){
+        set_disableButton(true);
+        await props.handleLockNFT(props.id);
+        set_disableButton(false);
+    }
+
     return (
         <Container>
             <img src={props.image} className="nft-image" />
@@ -65,13 +73,21 @@ export default function Nft(props) {
                             </tr>
                             <tr>
                                 <th>Boost</th>
-                                <td>{(props.boost*100).toFixed(2)}%</td>
+                                {
+                                    props.ignored ? 
+                                    <td>Ignored</td>
+                                    :
+                                    <td>{(props.boost*100).toFixed(2)}%</td>
+                                }
                             </tr>
                         </tbody>
                     </Table>
                     {
                         !props.locked &&
-                        <Button>
+                        <Button
+                            onClick={handleLockNFT}
+                            disabled={disableButton}
+                        >
                             Lock NFT
                         </Button>
                     }
