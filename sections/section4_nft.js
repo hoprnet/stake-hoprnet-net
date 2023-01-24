@@ -136,7 +136,7 @@ export default function Section4(props) {
     <Section
       id='section4'
       lightGray
-      disabled={props.disabled}
+      disabled={props.disabled && !props.viewMode}
     >
       <Accordion>
         <AccordionSummary

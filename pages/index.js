@@ -376,8 +376,43 @@ export default function Home() {
           });
           if(appliedBoosts_NFTs.findIndex(nft => nft.type === movedNft.type) === -1) {
             set_appliedBoosts_NFTs( prev => {return [...prev, movedNft]});
+            set_subgraphUserData( prev => {
+              return {
+                ...prev,
+                boostRate: prev.boostRate + movedNft.boostRate,
+              }
+            });
           } else { // TODO: to make better (check if you have lower rank?)
-            set_ignoredBoosts_NFTs( prev => {return [...prev, movedNft]});
+            const nftsOfSameType = appliedBoosts_NFTs.filter(nft => nft.type === movedNft.type);
+            const nftsWithHigherOrTheSameAPR = nftsOfSameType.filter(nft => nft.boost >= movedNft.boost);
+            const nftsWithLowerAPR = nftsOfSameType.filter(nft => nft.boost < movedNft.boost);
+            if(nftsWithHigherOrTheSameAPR.length > 0) {
+              set_ignoredBoosts_NFTs( prev => {return [...prev, movedNft]});
+              console.log('set_ignoredBoosts_NFTs');
+            } else if (nftsWithLowerAPR.length > 0) {
+              let boostToRemove = 0;
+              for(let i = 0; i < nftsWithLowerAPR.length; i++) {
+                if(boostToRemove < nftsWithLowerAPR[i].boostRate) boostToRemove = nftsWithLowerAPR[i].boostRate;
+              }
+              let nftToRemoveIndex = appliedBoosts_NFTs.findIndex(nft => nft.type === movedNft.type &&  nft.boostRate === boostToRemove);
+              set_ignoredBoosts_NFTs( prev => {return [
+                ...prev, 
+                appliedBoosts_NFTs[nftToRemoveIndex]
+              ]});
+              set_appliedBoosts_NFTs( prev => {
+                return [
+                  ...prev.slice(0,nftToRemoveIndex),
+                  ...prev.slice(nftToRemoveIndex+1),
+                  movedNft
+                ]
+              });
+              set_subgraphUserData( prev => {
+                return {
+                  ...prev,
+                  boostRate: prev.boostRate + movedNft.boostRate - boostToRemove,
+                }
+              });
+            }
           }
         }
       }
@@ -393,18 +428,6 @@ export default function Home() {
     margin-top: 8px;
     p {
       margin-top: 48px;
-    }
-  `
-
-
-  const SpaceBetween = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    gap: 16px;
-    @media only screen and (max-width: 600px) {
-      flex-direction: column;
-      align-items: center;
     }
   `
 

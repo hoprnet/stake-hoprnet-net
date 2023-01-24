@@ -1,5 +1,5 @@
 import { request, gql } from 'graphql-request'
-import { theGraphStakingUrl, IPFS_HOSTED_URL } from '../staking-config'
+import { theGraphStakingUrl, IPFS_HOSTED_URL, factor } from '../staking-config'
 import nfts from '../nft/nfts.json'
 
 
@@ -146,9 +146,11 @@ function parseNFTs(ntfsFromGraph){
     const type = uri2[0];
     const rank = uri2[1];
     const imageHosted = nfts[type][rank]?.image ? IPFS_HOSTED_URL + nfts[type][rank].image.replace('ipfs://', '') : '';
+    const boostRate = nfts[type][rank]?.boost ? nfts[type][rank].boost * factor : 0;
     return {
       type,
       rank,
+      boostRate,
       imageHosted,
       ...nfts[type][rank],
       ...elem
