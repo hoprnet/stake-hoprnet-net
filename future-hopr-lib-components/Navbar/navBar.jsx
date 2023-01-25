@@ -14,6 +14,13 @@ const AppBar = styled(MuiAppBar)`
   box-shadow: unset;
   padding-left: 16px;
   padding-right: 16px;
+
+  ${props => props.tallerNavBarOnMobile &&  `
+    @media screen and (max-width: 520px) {
+    //  height: 100px;
+      position: static;
+    }
+  `}
 `;
 
 const Container = styled.div`
@@ -46,8 +53,8 @@ const Logo = styled.div`
     overflow: hidden;
     img {
       flex-shrink: 0;
- //     min-width: 100%;
- //     min-height: 100%;
+      width: 100%;
+      height: 100%;
     }
   }
 `;
@@ -74,7 +81,10 @@ const NavBar = (props) => {
 
   return (
     <>
-      <AppBar className="navbar">
+      <AppBar 
+        className="Hopr-navBar navbar"
+        tallerNavBarOnMobile={props.tallerNavBarOnMobile}
+      >
         <Container>
           <Logo className="logo-hopr">
             <a href="/">

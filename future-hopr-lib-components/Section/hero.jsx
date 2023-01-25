@@ -10,17 +10,22 @@ import animation from '../../assets/network-registry-animation.json';
 import lottie from "lottie-web";
 
 const SSection = styled(Section)`
-  padding-bottom: 80px;
-  padding-top: 0;
+    padding-bottom: 80px;
+    padding-top: 0;
+    @media (max-width: 520px) {
+        h2 {
+            margin-top: 48px;
+        }
+    }
 `
 
 const ImageContainer = styled.div`
-  max-width: 780px;
-  width: 100%;
-  min-height: 100px;
-  position: relative;
-  display: flex;
-  justify-content: center;
+    max-width: 780px;
+    width: 100%;
+    min-height: 100px;
+    position: relative;
+    display: flex;
+    justify-content: center;
 `
 
 const Animation = styled.div`
@@ -31,7 +36,7 @@ const Animation = styled.div`
 `
 
 const Subtext = styled(Typography)`
-  max-width: 640px;
+    max-width: 640px;
 `
 
 function Section1(props) {
@@ -56,21 +61,21 @@ function Section1(props) {
             center
         >
             <ImageContainer >
-                <svg 
-                version="1.1" 
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 100 50"
+                <svg
+                    version="1.1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 100 50"
                 >
-                    <circle cx="50" cy="-8" r="50" fill="#FFFFA0"/>
+                    <circle cx="50" cy="-8" r="50" fill="#FFFFA0" />
                 </svg>
 
                 <Animation id='derp-animation' />
             </ImageContainer>
 
-            <Typography type="h2">
+            <Typography type="h2" center fullWidth>
                 {props.title}
             </Typography>
-{/* 
+            {/* 
             <Subtext center>
                 Add the DERP RPC endpoint to your crypto wallet to see exactly what information is being leaked about you every time you connect to a crypto service.
             </Subtext>

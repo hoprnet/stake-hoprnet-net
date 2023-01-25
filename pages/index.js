@@ -438,8 +438,16 @@ export default function Home() {
     }
   `
 
+  const ConnectWalletBtn = styled(Button)`
+    @media screen and (max-width: 340px) {
+      .hideOnMobile{
+        display: none;
+      }
+    }
+  `
+  
   const connectWallet = () => {
-    return <Button
+    return <ConnectWalletBtn
       standardWidth
       onClick={() => { set_chooseWalletModal(true) }}
     >
@@ -447,9 +455,9 @@ export default function Home() {
         account ?
           shorten0xAddress(account)
           :
-          <span style={{ whiteSpace: 'nowrap' }}>Connect Wallet</span>
+          <span style={{ whiteSpace: 'nowrap' }}><span className="hideOnMobile">Connect </span>Wallet</span>
       }
-    </Button>
+    </ConnectWalletBtn>
   };
 
   const rightButtons = () => <>
@@ -466,6 +474,7 @@ export default function Home() {
   return (
     <Layout
       itemsNavbarRight={rightButtons()}
+      tallerNavBarOnMobile
     >
       <HeroSection
         title={`HOPR Staking Season ${seasonNumber}`}

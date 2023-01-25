@@ -3,9 +3,9 @@ import React from 'react';
 import styled from '@emotion/styled'
 
 // Components
-//import NavBar from './navbar';
 import NavBar from '../Navbar/navBar.jsx'
 import Footer from './footer';
+import { PropaneSharp } from '@mui/icons-material';
 
 
 const SLayout = styled.div`
@@ -13,9 +13,14 @@ const SLayout = styled.div`
 
 const Content = styled.div`
   margin-top: 60px;
+  ${props => props.tallerNavBarOnMobile &&  `
+    @media screen and (max-width: 520px) {
+        margin-top: 0px;
+    }
+  `}
 `
 
-const Layout = ({ className = '', children, setShowSetup, itemsNavbarRight}) => {
+const Layout = ({ className = '', children, setShowSetup, itemsNavbarRight, tallerNavBarOnMobile}) => {
     return (
         <SLayout className="Layout">
             {/* <NavBar
@@ -25,8 +30,12 @@ const Layout = ({ className = '', children, setShowSetup, itemsNavbarRight}) => 
                 mainLogo="/assets/icons/logo.svg"
                 mainLogoAlt="hopr logo"
                 itemsNavbarRight={itemsNavbarRight}
+                tallerNavBarOnMobile={tallerNavBarOnMobile}
             />
-            <Content className="Content">
+            <Content 
+                className="Content"
+                tallerNavBarOnMobile={tallerNavBarOnMobile}
+            >
                 {children}
             </Content>
             <Footer />
