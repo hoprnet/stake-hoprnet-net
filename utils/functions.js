@@ -51,3 +51,11 @@ export function formatDateToCET(epoch_ms) {
   const formatted = `${year}-${month}-${day} ${hours}:${minutes} CET`
   return formatted;
 };
+
+export function getNFTImageUrl(nft) {
+  const uri2 = nft.uri.replace("https://stake.hoprnet.org/", "").split('/');
+  const type = uri2[0];
+  const rank = uri2[1];
+  const url = `${window.location.origin}/nft-images/${type}/${rank}.jpg`;
+  return url;
+};

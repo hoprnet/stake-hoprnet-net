@@ -29,7 +29,9 @@ import TextField from '../future-hopr-lib-components/TextField';
 import Section2 from '../sections/section2'
 import Section2B from '../sections/section2B'
 import Section3 from '../sections/section3_staker'
-import Section4 from '../sections/section4_nft'
+
+import dynamic from 'next/dynamic'
+const Section4 = dynamic(() => import('../sections/section4_nft'), { ssr: false })
 
 import typingBotAnimation from '../assets/typing-bot-animation.json';
 
@@ -95,7 +97,7 @@ export default function Home() {
         set_viewMode(false);
       } catch (err) {
         console.error(err);
-        setErrorMessage(`There was a problem connecting to MetaMask.`,);
+        setErrorMessage(`There was a problem connecting to MetaMask (1). `,);
       }
     } else {
       setErrorMessage("Install MetaMask");
@@ -130,25 +132,30 @@ export default function Home() {
       await getSubGraphData(newAccount);
     } catch (err) {
       console.error(err);
-      setErrorMessage("There was a problem connecting to MetaMask");
+      setErrorMessage("There was a problem connecting to MetaMask (2).");
     }
   };
 
   const getSubGraphData = async (address) => {
-    let subGraphStakingUserData = await getSubGraphStakingUserData(address);
-    console.log('subgraphUserData', subGraphStakingUserData);
-    const { 
-      appliedBoosts,
-      ignoredBoosts,
-      ...rest
-    } = subGraphStakingUserData;
-    set_subgraphUserData(rest);
-    set_appliedBoosts_NFTs(appliedBoosts);
-    set_ignoredBoosts_NFTs(ignoredBoosts);
+    try {
+      let subGraphStakingUserData = await getSubGraphStakingUserData(address);
+      console.log('subgraphUserData', subGraphStakingUserData);
+      const { 
+        appliedBoosts,
+        ignoredBoosts,
+        ...rest
+      } = subGraphStakingUserData;
+      set_subgraphUserData(rest);
+      set_appliedBoosts_NFTs(appliedBoosts);
+      set_ignoredBoosts_NFTs(ignoredBoosts);
 
-    let data = await getSubGraphNFTsUserData(address);
-    set_ownBoosts_NFTs(data);
-    return subGraphStakingUserData;
+      let data = await getSubGraphNFTsUserData(address);
+      set_ownBoosts_NFTs(data);
+      return subGraphStakingUserData;
+    } catch (err) {
+      console.error(err);
+      setErrorMessage("There was a problem connecting to TheGraph");
+    }
   };
 
   async function getBalances () {

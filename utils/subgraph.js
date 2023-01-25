@@ -1,5 +1,6 @@
 import { request, gql } from 'graphql-request'
 import { theGraphStakingUrl, IPFS_HOSTED_URL, factor } from '../staking-config'
+import { getNFTImageUrl } from './functions'
 import nfts from '../nft/nfts.json'
 
 
@@ -20,6 +21,13 @@ export async function getSubGraphStakingSeasonData() {
     data = await request(theGraphStakingUrl, GET_THEGRAPH);
   } catch (e) {
     console.error(e);
+  }
+  if (!data?.programs[0]) {
+    return {
+      totalLocked: 'Connection error',
+      totalClaimedRewards: 'Connection error',
+      availableReward: 'Connection error'
+    }
   }
   data = {
     ...data.programs[0],
@@ -145,7 +153,7 @@ function parseNFTs(ntfsFromGraph){
     const uri2 = elem.uri.replace("https://stake.hoprnet.org/", "").split('/');
     const type = uri2[0];
     const rank = uri2[1];
-    const imageHosted = nfts[type][rank]?.image ? IPFS_HOSTED_URL + nfts[type][rank].image.replace('ipfs://', '') : '';
+    const imageHosted = getNFTImageUrl(elem);
     const boostRate = nfts[type][rank]?.boost ? nfts[type][rank].boost * factor : 0;
     return {
       type,
