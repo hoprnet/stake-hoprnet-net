@@ -6,7 +6,7 @@ export const GNOSIS_CHAIN_HOPR_BOOST_NFT = "0x43d13d7b83607f14335cf2cb75e87da369
 
 
 //export const theGraphStakingUrl = 'https://api.thegraph.com/subgraphs/name/hoprnet/stake-season6' //Season 6
-export const theGraphStakingUrl = 'https://api.studio.thegraph.com/query/40439/stake-season5/v0.0.3' //Season 5
+export const theGraphStakingUrl = 'https://api.studio.thegraph.com/query/40439/stake-season5/v0.0.5' //Season 5
 
 //export const PROGRAM_START = 1674738000;  //Season 6
 //export const PROGRAM_END = 1682510400;  //Season 6
