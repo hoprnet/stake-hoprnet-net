@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import animation from '../assets/HOPR_Staking_Animation.json';
 
 import styled from "@emotion/styled";
 import Web3 from "web3";
@@ -445,7 +446,7 @@ export default function Home() {
       }
     }
   `
-  
+
   const connectWallet = () => {
     return <ConnectWalletBtn
       standardWidth
@@ -471,6 +472,28 @@ export default function Home() {
     {connectWallet()}
   </>;
 
+
+  const animationCss = `
+    width: 100%;
+    max-width: 330px;
+    position: absolute;
+    top: -80px;
+    margin-bottom: 80px;
+    @media (max-width: 680px) {
+      width: 50%;
+    }
+    @media (max-width: 500px) {
+      top: -70px;
+      width: 55%;
+    }
+    @media (max-width: 400px) {
+      top: -60px;
+    }
+    @media (max-width: 300px) {
+      top: -40px;
+    }
+  `
+
   return (
     <Layout
       itemsNavbarRight={rightButtons()}
@@ -478,6 +501,9 @@ export default function Home() {
     >
       <HeroSection
         title={`HOPR Staking Season ${seasonNumber}`}
+        yellowBallBackground
+        animation={animation}
+        animationCss={animationCss}
       />
       <Section2
         balance_xDAI={balance_xDAI}
