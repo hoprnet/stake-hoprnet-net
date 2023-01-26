@@ -160,7 +160,7 @@ export default function Section3(props) {
 
   useEffect(() => {
     if(!counter || seasonFinised) return;
-    set_timeTo(timeAgo.format(PROGRAM_END_MS));
+    set_timeTo(timeAgo.format(PROGRAM_END_MS, customStyle));
     const interval = setInterval(() => {
       if (Date.now() >= PROGRAM_END_MS) {
         set_seasonFinised(true);
