@@ -34,8 +34,6 @@ import Section3 from '../sections/section3_staker'
 import dynamic from 'next/dynamic'
 const Section4 = dynamic(() => import('../sections/section4_nft'), { ssr: false })
 
-
-
 import typingBotAnimation from '../assets/typing-bot-animation.json';
 
 import Alert from '@mui/material/Alert';
@@ -86,13 +84,8 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    connectHandlerMetaMask();
+    connectHandlerMetaMask(true);
   }, []);
-
-  useEffect(() => {
-    connectHandlerMetaMask();
-  }, []);
-
 
   useEffect(() => {
     if (!!account) {
@@ -102,8 +95,14 @@ export default function Home() {
     }
   }, [account, chainId]);
 
-  const connectHandlerMetaMask = async (input) => {
-    if (window.ethereum) {
+  const connectHandlerMetaMask = async (firstRun) => {
+    if (typeof window.ethereum !== 'undefined') {
+      const currentProvider = detectCurrentProvider();
+      console.log(currentProvider)
+      const web3 = new Web3(currentProvider);
+      const userAccount = await web3.eth.getAccounts();
+      if (firstRun && userAccount.length === 0) return;
+
       try {
         const res = await window.ethereum.request({
           method: "eth_requestAccounts",
@@ -118,7 +117,7 @@ export default function Home() {
         console.error(err);
         setErrorMessage(`There was a problem connecting to MetaMask (1). `,);
       }
-    } else {
+    } else if (firstRun===undefined) {
       setErrorMessage("Install MetaMask");
     }
   };
@@ -603,7 +602,7 @@ export default function Home() {
       >
         <ConnectWalletContent>
           <WalletButton
-            onClick={connectHandlerMetaMask}
+            onClick={()=>{connectHandlerMetaMask()}}
             wallet="metamask"
           />
           <WalletButton
@@ -647,7 +646,7 @@ export default function Home() {
       >
         <Alert severity="error">{errorMessage}</Alert>
       </Snackbar>
-      {
+      {/* {
         theGraphIssue &&
           <Snackbar
             severity="error"
@@ -661,7 +660,7 @@ export default function Home() {
               Staking is functional. You can check blockscout for up to date information.
             </Alert>
           </Snackbar>
-      }
+      } */}
     </Layout>
   )
 }
