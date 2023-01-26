@@ -98,7 +98,6 @@ export default function Home() {
   const connectHandlerMetaMask = async (firstRun) => {
     if (typeof window.ethereum !== 'undefined') {
       const currentProvider = detectCurrentProvider();
-      console.log(currentProvider)
       const web3 = new Web3(currentProvider);
       const userAccount = await web3.eth.getAccounts();
       if (firstRun && userAccount.length === 0) return;
@@ -646,7 +645,7 @@ export default function Home() {
       >
         <Alert severity="error">{errorMessage}</Alert>
       </Snackbar>
-      {/* {
+      {
         theGraphIssue &&
           <Snackbar
             severity="error"
@@ -660,7 +659,7 @@ export default function Home() {
               Staking is functional. You can check blockscout for up to date information.
             </Alert>
           </Snackbar>
-      } */}
+      }
     </Layout>
   )
 }
