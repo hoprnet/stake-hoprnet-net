@@ -359,7 +359,7 @@ export default function Section3(props) {
             set_unlockDisabled(false);
             setTimeout(()=>{set_reloading(false)}, 1500);
           }}
-          disabled={unlockDisabled || Date.now() < PROGRAM_END_MS || viewMode}
+          disabled={unlockDisabled ||  viewMode}
           loading={unlockDisabled}
         >
           Unlock 
