@@ -14,6 +14,11 @@ export async function getSubGraphStakingSeasonData() {
               availableReward
               blockedTypeIndexes
             }
+            _meta {
+              block {
+                timestamp
+              }
+            }
         }
     `;
   let data;
@@ -33,7 +38,8 @@ export async function getSubGraphStakingSeasonData() {
     ...data.programs[0],
     totalLocked: data.programs[0].totalLocked / 10e17,
     totalClaimedRewards: data.programs[0].totalClaimedRewards / 10e17,
-    availableReward: data.programs[0].availableReward / 10e17
+    availableReward: data.programs[0].availableReward / 10e17,
+    blockChainTimestamp: data._meta.block.timestamp
   }
   return data
 };

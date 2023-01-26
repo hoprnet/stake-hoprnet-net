@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import styled from "@emotion/styled";
+import TimeAgo from 'javascript-time-ago'
+import en from 'javascript-time-ago/locale/en'
+import { round } from 'javascript-time-ago/steps'
 
 import TextField from '../future-hopr-lib-components/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
 import Typography from '../future-hopr-lib-components/Typography';
 import Section from '../future-hopr-lib-components/Section'
 import TableDataColumed from '../future-hopr-lib-components/Table/columed-data'
+import Button from '../future-hopr-lib-components/Button'
 
+import InputAdornment from '@mui/material/InputAdornment';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import IconButton from '@mui/material/IconButton';
-
-import Button from '../future-hopr-lib-components/Button'
 
 import { 
   countRewardsPerSecond, 
@@ -95,6 +97,43 @@ const SearchPeerId = styled(TextField)`
   }
 }
 `
+TimeAgo.addDefaultLocale(en);
+const customLabels = {
+  second: {
+    past: {
+      one: "{0} second earlier",
+      other: "{0} seconds earlier"
+    },
+    future: {
+      one: "in {0} second",
+      other: "in {0} seconds"
+    }
+  },
+};
+
+//TimeAgo.addLabels('en', 'custom', customLabels)
+const timeAgo = new TimeAgo('en-US');
+const customStyle = {
+  steps: [
+    {
+      // "second" labels are used for formatting the output.
+      formatAs: 'second'
+    },
+    {
+      minTime: 60 * 5, //till 5min
+      formatAs: 'minute'
+    },
+    {
+      minTime: 60 * 60 * 12, //till 12h
+      formatAs: 'hour'
+    },
+    {
+      minTime: 60 * 60 * 48, //till 48h
+      formatAs: 'day'
+    },
+  ],
+//  labels: 'custom'
+}
 
 export default function Section3(props) {
   const {
@@ -105,7 +144,8 @@ export default function Section3(props) {
     balance_unclaimedRewards,
     boostRate,
     lastSyncTimestamp_cumulatedRewards,
-    viewMode
+    viewMode,
+    counter
   } = props;
   const [claimable, set_claimable] = useState(null);
   const [toStake, set_toStake] = useState('');
@@ -113,8 +153,22 @@ export default function Section3(props) {
   const [stakeDisabled, set_stakeDisabled] = useState(false);
   const [claimDisabled, set_claimDisabled] = useState(false);
   const [unlockDisabled, set_unlockDisabled] = useState(false);
+  const [timeTo, set_timeTo] = useState(null);
+  const [seasonFinised, set_seasonFinised] = useState(false);
 
-  countRewardsPerSecond(balance_stakedxHOPR, boostRate)
+  countRewardsPerSecond(balance_stakedxHOPR, boostRate);
+
+  useEffect(() => {
+    if(!counter || seasonFinised) return;
+    set_timeTo(timeAgo.format(PROGRAM_END_MS));
+    const interval = setInterval(() => {
+      if (Date.now() >= PROGRAM_END_MS) {
+        set_seasonFinised(true);
+      }
+      set_timeTo(timeAgo.format(PROGRAM_END_MS, customStyle));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [counter, seasonFinised]);
 
   useEffect(() => {
     if( (!lastSyncTimestamp_cumulatedRewards && lastSyncTimestamp_cumulatedRewards !==0 )|| 
@@ -135,6 +189,7 @@ export default function Section3(props) {
       return;
     };
     const interval = setInterval(() => {
+      if(Date.now() >= PROGRAM_END_MS) return;
       let secondsSinceSync = Math.round(Date.now()/1000) - lastSyncTimestamp_cumulatedRewards;
       const secondsSinceSyncReal = secondsSinceSync >= 0 ? secondsSinceSync : 0;
       const claimableTmp = balance_unclaimedRewards + (secondsSinceSyncReal * countRewardsPerSecond(balance_stakedxHOPR, boostRate))
@@ -267,7 +322,13 @@ export default function Section3(props) {
           disabled={unlockDisabled || Date.now() < PROGRAM_END_MS || viewMode}
           loading={unlockDisabled}
         >
-          Unlock
+          Unlock 
+          {
+            (counter && !seasonFinised) &&
+            <span>
+              ({timeTo})
+            </span>
+          }
         </Button>
         <Button
           onClick={async ()=>{

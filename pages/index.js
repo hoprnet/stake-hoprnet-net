@@ -66,6 +66,7 @@ export default function Home() {
   const [appliedBoosts_NFTs, set_appliedBoosts_NFTs] = useState([]);
   const [ignoredBoosts_NFTs, set_ignoredBoosts_NFTs] = useState([]);
   const [ownBoosts_NFTs, set_ownBoosts_NFTs] = useState([]);
+  const [counter, set_counter] = useState(false);
 
   useEffect(() => {
     if (window.ethereum) {
@@ -234,6 +235,15 @@ export default function Home() {
     set_totalLocked(data.totalLocked);
     set_balance_totalClaimedRewards(data.totalClaimedRewards);
     set_blockedTypeIndexes(data.blockedTypeIndexes);
+    startCountingEpoch(data.blockChainTimestamp);
+  }
+
+  const startCountingEpoch = (epoch) => {
+    const difference = Math.abs(Date.now()/1000-epoch);
+    console.log('Difference between your time and synced block time', difference);
+    if(difference < 60) {
+      set_counter(true);
+    }
   }
 
   const handleClosehandleClose = () => {
@@ -527,6 +537,7 @@ export default function Home() {
         boostRate={subgraphUserData?.boostRate}
         balance_unclaimedRewards={balance_unclaimedRewards}
         lastSyncTimestamp_cumulatedRewards={lastSyncTimestamp_cumulatedRewards}
+        counter={counter}
         claimRewards={claimRewards}
         handleStake={handleStake}
         getBalances={getBalances}
