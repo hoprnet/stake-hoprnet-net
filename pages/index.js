@@ -79,6 +79,10 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    connectHandlerMetaMask();
+  }, []);
+
+  useEffect(() => {
     if (!!account) {
       set_balance_xdai(null);
       set_balance_xHOPR(null);
