@@ -16,6 +16,7 @@ import {
   GNOSIS_CHAIN_HOPR_BOOST_NFT
 } from '../staking-config'
 
+import Banner from '../future-hopr-lib-components/Banner'
 import HeroSection from '../future-hopr-lib-components/Section/hero'
 import ChainButton from '../future-hopr-lib-components/Button/chain-button'
 import Button from '../future-hopr-lib-components/Button'
@@ -509,6 +510,13 @@ export default function Home() {
       itemsNavbarRight={rightButtons()}
       tallerNavBarOnMobile
     >
+      <Banner
+        text={`Unstake your stake from Season ${seasonNumber-1} by following`}
+        linkText={'this link'}
+        linkHref={`https://stake-s${seasonNumber-1}.hoprnet.org/`}
+        btnBext={`Season ${seasonNumber-1}`}
+        onButtonClick={()=>{window.open(`https://stake-s${seasonNumber-1}.hoprnet.org/`, '_blank');}}
+      />
       <HeroSection
         title={`HOPR Staking Season ${seasonNumber}`}
         yellowBallBackground
