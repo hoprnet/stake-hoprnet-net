@@ -27,7 +27,6 @@ import EncourageSection from '../future-hopr-lib-components/Section/encourage'
 import LaunchPlaygroundBtn from '../future-hopr-lib-components/Button/LaunchPlayground';
 import TextField from '../future-hopr-lib-components/TextField';
 
-
 import Section2 from '../sections/section2'
 import Section2B from '../sections/section2B'
 import Section3 from '../sections/section3_staker'
@@ -35,11 +34,18 @@ import Section3 from '../sections/section3_staker'
 import dynamic from 'next/dynamic'
 const Section4 = dynamic(() => import('../sections/section4_nft'), { ssr: false })
 
+
+
 import typingBotAnimation from '../assets/typing-bot-animation.json';
 
 import Alert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import { rest } from 'lodash';
+
+import TimeAgo from 'javascript-time-ago'
+import en from 'javascript-time-ago/locale/en'
+TimeAgo.addDefaultLocale(en);
+const timeAgo = new TimeAgo('en-US');
 
 
 export default function Home() {
@@ -68,6 +74,7 @@ export default function Home() {
   const [ignoredBoosts_NFTs, set_ignoredBoosts_NFTs] = useState([]);
   const [ownBoosts_NFTs, set_ownBoosts_NFTs] = useState([]);
   const [counter, set_counter] = useState(false);
+  const [theGraphIssue, set_theGraphIssue] = useState(null);
 
   useEffect(() => {
     if (window.ethereum) {
@@ -81,6 +88,11 @@ export default function Home() {
   useEffect(() => {
     connectHandlerMetaMask();
   }, []);
+
+  useEffect(() => {
+    connectHandlerMetaMask();
+  }, []);
+
 
   useEffect(() => {
     if (!!account) {
@@ -248,11 +260,14 @@ export default function Home() {
     console.log('Difference between your time and synced block time', difference);
     if(difference < 60) {
       set_counter(true);
-    }
+    } else if (difference > 120) {
+      set_theGraphIssue(epoch*1000);
+    } 
   }
 
   const handleClosehandleClose = () => {
     setErrorMessage(null);
+
   };
   
   async function claimRewards() {
@@ -632,6 +647,21 @@ export default function Home() {
       >
         <Alert severity="error">{errorMessage}</Alert>
       </Snackbar>
+      {
+        theGraphIssue &&
+          <Snackbar
+            severity="error"
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            open={true}
+            onClose={()=>{set_theGraphIssue()}}
+          >
+            <Alert severity="error">
+              The Graph was last updated over <strong>{timeAgo.format(theGraphIssue)}</strong>.<br/>
+              This might result in old data being displayed on this website.<br/><br/>
+              Staking is functional. You can check blockscout for up to date information.
+            </Alert>
+          </Snackbar>
+      }
     </Layout>
   )
 }
