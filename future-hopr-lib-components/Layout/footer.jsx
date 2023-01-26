@@ -146,7 +146,7 @@ const Footer = () => {
               <address>HOPR<br/>Bleicherweg 33<br/>8002 Zürich<br/>Switzerland</address>
               <address>HOPR Tech Pte. Ltd.<br/>68 Circular Road, #02-01,<br/>049422 Singapore<br/>Singapore</address>
             </Addresses>
-            <div>©2022 HOPR Association, all rights reserved</div>
+            <div>© HOPR Association, all rights reserved</div>
           </div>
         </LeftColumn>
         <div className='right-column'>

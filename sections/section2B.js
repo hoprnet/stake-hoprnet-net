@@ -62,7 +62,6 @@ export default function Section2(props) {
             openIcon
           />, connect your wallet and press “Unlock”. To restake, simply return to this site.
         </p>
-        <h4>MAKE SURE TO STAKE FROM YOUR SEASON {seasonNumber-1} ADDRESS TO BE ELIGIBLE FOR EXTRA REWARDS</h4>
         <br />
         <p className=" css-9tmdd2">Starting <strong>{formatDateToCET(PROGRAM_START_MS)}</strong>, rewards can be claimed on each block. All rewards will be returned as
           {" "}<Link
@@ -73,7 +72,20 @@ export default function Section2(props) {
           
         </p>
         <br></br>
-        <p>Increase your APR by redeeming NFTs to your account. HOPR Boost NFTs can be earned by participating in events. Season 3 and 4 NFTs can be restaked in Season 5 with the same APR boost. Season 1 and 2 NFTs and the HODLr NFT have been discontinued. New NFTs based on your previous collection will be available soon.</p>
+        <p>Increase your APR by redeeming NFTs to your account.
+          {" "}<Link
+            href="https://medium.com/hoprnet/hopr-nft-overview-4cacb3c19082"
+            text="HOPR Boost NFTs"
+            openIcon
+          />{" "}can be earned by participating in events. Season {seasonNumber-2} and {seasonNumber-1} NFTs can be restaked in Season {seasonNumber} with the same APR boost. 
+          NFTs from earlier seasons and the HODLr NFT have been discontinued. New rewards based on network rewards will be available soon. Check our
+          {" "}<Link
+            href="https://medium.com/hoprnet/hopr-staking-faqs-780edfd4f1e1"
+            text=" staking FAQs"
+            openIcon
+          />.
+        </p>
+        <br></br>
         <p>
           You can swap xHOPR tokens via
           {" "}<Link
@@ -111,6 +123,7 @@ export default function Section2(props) {
           />{" "}
           to learn about new events.
         </p>
+        <br></br>
         <p className=" css-2q8riv">
           Alternatively, you can convert your HOPR to xHOPR. For a complete list of bridging options, view our
           {" "}<Link

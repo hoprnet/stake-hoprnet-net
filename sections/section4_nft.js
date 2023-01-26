@@ -66,11 +66,11 @@ export default function Section4(props) {
 
   function NFTs_filter(NFTs, NFTsToRemove = []) {
     const toRemove = NFTsToRemove.map(elem => elem.id);
-    console.log('toRemove', toRemove)
+ //   console.log('toRemove', toRemove)
     const allowed = NFTs
       .filter(nft => !blockedTypeIndexes.includes(nft.boostTypeIndex))
       .filter(nft => !toRemove.includes(nft.id));
-    console.log('allowed', allowed)
+  //  console.log('allowed', allowed)
     let filtered = [];
     for(let a = 0; a < allowed.length; a++) {
       let index = filtered.findIndex(nft => (nft.type === allowed[a].type && nft.rank === allowed[a].rank));
