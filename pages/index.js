@@ -101,6 +101,7 @@ export default function Home() {
       const currentProvider = detectCurrentProvider();
       const web3 = new Web3(currentProvider);
       const userAccount = await web3.eth.getAccounts();
+      console.log('userAccount', firstRun, userAccount);
       if (firstRun && userAccount.length === 0) return;
 
       try {
