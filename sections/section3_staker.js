@@ -220,6 +220,29 @@ export default function Section3(props) {
     return countRewardsPerDay(balance_stakedxHOPR, baseAPR_chainboost + boostRate);
   }
 
+  
+  function formatBigNumbersToHTML(amount) {
+    return amount;
+    amount = 200005555500.5;
+    let string = '' + amount;
+    let encounteredDot = false;
+    let counter = 0;
+    let newer;
+    for(let i = 0; i < string.length; i++) {
+      let index = string.length - i;
+      if(string[index] === '.') encounteredDot = true;
+      if(!encounteredDot) continue;
+      counter++;
+      if(counter === 4) {
+        string = string.slice(0, index) + ' ' + string.slice(index);
+        counter = 0;
+      }
+    }
+    if(!encounteredDot) return amount;
+    return <>{string}</>;
+  };
+
+
   return (
     <Section
       id='section3'
@@ -256,7 +279,7 @@ export default function Section3(props) {
           </tr>
           <tr>
             <th>Staked</th>
-            <td>{balance_stakedxHOPR ? balance_stakedxHOPR : '-'} xHOPR</td>
+            <td>{balance_stakedxHOPR ? formatBigNumbersToHTML(balance_stakedxHOPR) : '-'} xHOPR</td>
           </tr>
           <tr>
             <th>Received Network Rewards </th>
