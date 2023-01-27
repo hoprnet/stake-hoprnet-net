@@ -21,7 +21,9 @@ import {
 
 import { 
   PROGRAM_START_MS, 
-  PROGRAM_END_MS
+  PROGRAM_END_MS,
+  BOOST_CAP,
+  baseAPR_chainboost
 } from '../staking-config'
 
 export const Tables = styled.div`
@@ -156,8 +158,6 @@ export default function Section3(props) {
   const [timeTo, set_timeTo] = useState(null);
   const [seasonFinised, set_seasonFinised] = useState(false);
 
-  countRewardsPerSecond(balance_stakedxHOPR, boostRate);
-
   useEffect(() => {
     if(!counter || seasonFinised) return;
     set_timeTo(timeAgo.format(PROGRAM_END_MS, customStyle));
@@ -178,13 +178,17 @@ export default function Section3(props) {
     ) return;
     console.log('setInterval STARTING');
     set_claimable('Loading...');
+    const totalBoost = baseAPR_chainboost + boostRate;
     if(Date.now() <= PROGRAM_START_MS ) {
       set_claimable(0);
       return;
     } else if(Date.now() >= PROGRAM_END_MS) {
       let secondsSinceSync = Math.round(PROGRAM_END_MS/1000) - lastSyncTimestamp_cumulatedRewards;
       const secondsSinceSyncReal = secondsSinceSync >= 0 ? secondsSinceSync : 0;
-      const claimableTmp = balance_unclaimedRewards + (secondsSinceSyncReal * countRewardsPerSecond(balance_stakedxHOPR, boostRate))
+      var claimableTmp = balance_unclaimedRewards + (secondsSinceSyncReal * countRewardsPerSecond(balance_stakedxHOPR, totalBoost));
+      if(balance_stakedxHOPR > BOOST_CAP) {
+        claimableTmp = balance_unclaimedRewards + (secondsSinceSyncReal * countRewardsPerSecond(balance_stakedxHOPR, baseAPR_chainboost)) + (secondsSinceSyncReal * countRewardsPerSecond(BOOST_CAP, boostRate));
+      }
       set_claimable(claimableTmp.toFixed(18));
       return;
     };
@@ -192,7 +196,10 @@ export default function Section3(props) {
       if(Date.now() >= PROGRAM_END_MS) return;
       let secondsSinceSync = Math.round(Date.now()/1000) - lastSyncTimestamp_cumulatedRewards;
       const secondsSinceSyncReal = secondsSinceSync >= 0 ? secondsSinceSync : 0;
-      const claimableTmp = balance_unclaimedRewards + (secondsSinceSyncReal * countRewardsPerSecond(balance_stakedxHOPR, boostRate))
+      var claimableTmp = balance_unclaimedRewards + (secondsSinceSyncReal * countRewardsPerSecond(balance_stakedxHOPR, totalBoost));
+      if(balance_stakedxHOPR > BOOST_CAP) {
+        claimableTmp = balance_unclaimedRewards + (secondsSinceSyncReal * countRewardsPerSecond(balance_stakedxHOPR, baseAPR_chainboost)) + (secondsSinceSyncReal * countRewardsPerSecond(BOOST_CAP, boostRate));
+      }
       set_claimable(claimableTmp.toFixed(18));
     }, 1000);
     return () => clearInterval(interval);
@@ -202,6 +209,16 @@ export default function Section3(props) {
     balance_stakedxHOPR,
     boostRate
   ]);
+
+  const rewardsPerSecond = () => {
+    if(balance_stakedxHOPR > BOOST_CAP) return countRewardsPerSecond(balance_stakedxHOPR, baseAPR_chainboost) +  countRewardsPerSecond(BOOST_CAP, boostRate);
+    return countRewardsPerSecond(balance_stakedxHOPR, baseAPR_chainboost + boostRate);
+  }
+
+  const rewardsPerDay = () => {
+    if(balance_stakedxHOPR > BOOST_CAP) return countRewardsPerDay(balance_stakedxHOPR, baseAPR_chainboost) +  countRewardsPerDay(BOOST_CAP, boostRate);
+    return countRewardsPerDay(balance_stakedxHOPR, baseAPR_chainboost + boostRate);
+  }
 
   return (
     <Section
@@ -253,11 +270,11 @@ export default function Section3(props) {
         <tbody>
             <tr>
               <th>Stake Rewards</th>
-              <td>{countRewardsPerSecond(balance_stakedxHOPR, boostRate)} wxHOPR/sec</td>
+              <td>{rewardsPerSecond()} wxHOPR/sec</td>
             </tr>
             <tr>
               <th></th>
-              <td>{countRewardsPerDay(balance_stakedxHOPR, boostRate)} wxHOPR/day</td>
+              <td>{rewardsPerDay()} wxHOPR/day</td>
             </tr>
             <tr>
               <th>Next est. Network Rewards</th>

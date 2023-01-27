@@ -25,6 +25,8 @@ export const baseAPR_chainboost = 396; //Season 6
 export const baseAPR = baseAPR_chainboost / factor; // 0.025008047999999998
 export const baseAPRPercentage = baseAPR * 100; // 2.5008047999999998
 
+//export const BOOST_CAP = 200000; //Season 5
+export const BOOST_CAP = 250000; //Season 6
 
 //IPFS
 export const IPFS_HOSTED_URL = 'https://cloudflare-ipfs.com/ipfs/';

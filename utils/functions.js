@@ -31,8 +31,7 @@ export function countAPRPercentage (boostRate) {
 
 export function countRewardsPerDay(staked, boostRate) {
   const boostReal = boostRate >= 0 ? boostRate : 0;
-  const totalBoost = baseAPR_chainboost + boostReal;
-  const APRsec = countAPRDecimal(totalBoost)/365;
+  const APRsec = countAPRDecimal(boostReal)/365;
   return staked*APRsec; // wxHOPR/sec
 };
 
