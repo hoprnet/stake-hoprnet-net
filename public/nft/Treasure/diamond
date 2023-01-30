@@ -1,5 +1,6 @@
 {
     "type": "Treasure",
+    "name": "Treasure",
     "rank": "diamond",
     "image": "ipfs://QmanJVhdj8kFYKDNpkYdy7JFVoL6Zm7KerWXCtrgbQkiAW/diamond.jpg",
     "deadline": 1642424400,

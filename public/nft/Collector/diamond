@@ -1,5 +1,6 @@
 {
     "type": "Collector",
+    "name": "Collector",
     "rank": "diamond",
     "image": "ipfs://QmWPcRgoUDWxFiXV4eT9Q9gm8AJPUr1tYTE5wdPCVtkNaA/diamond.jpg",
     "deadline": 1658840400,

@@ -1,5 +1,6 @@
 {
     "type": "QV_game",
+    "name": "QV Game",
     "rank": "bronze",
     "image": "ipfs://QmY7npqgH3is5gfHtuRCj6RoZxBULMKH3rvyMgcAvdyLsY/bronze.jpg",
     "deadline": 1658840400,

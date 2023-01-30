@@ -1,5 +1,6 @@
 {
     "type": "Monte_Rosa",
+    "name": "Monte Rosa",
     "rank": "diamond",
     "image": "ipfs://QmSyMjqusN4rDWEuY2Y7VUVmwhpHyRXT4BV1SZ2AgHBmtJ/diamond.jpg",
     "deadline": 1674738000,

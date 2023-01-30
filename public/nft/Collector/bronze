@@ -1,5 +1,6 @@
 {
     "type": "Collector",
+    "name": "Collector",
     "rank": "bronze",
     "image": "ipfs://QmWPcRgoUDWxFiXV4eT9Q9gm8AJPUr1tYTE5wdPCVtkNaA/bronze.jpg",
     "deadline": 1658840400,
