@@ -1,18 +1,18 @@
 {
-    "type": "demo",
-    "name": "demo",
-    "rank": "gold",
-    "image": "ipfs://QmU33aCfa8L8Ch6jxHci4HYzVCXEn7MgDSKpNgdbWtKKnK/gold.jpg",
-    "deadline": 1626080323,
+    "type": "Monte_Rosa_v3",
+    "name": "Monte Rosa v3",
+    "rank": "diamond",
+    "image": "ipfs://QmZ8HkQGmwJVSR9X6oZibmBTYwJiHD2PsKGxGR5PhRUPMR/diamond.jpg",
+    "deadline": 1674738000,
     "boost": 0.05,
     "attributes": [
         {
             "trait_type": "NFT type",
-            "value": "demo"
+            "value": "Monte Rosa v3"
         },
         {
             "trait_type": "NFT rank",
-            "value": "Gold"
+            "value": "Diamond"
         },
         {
             "display_type": "boost_percentage",
