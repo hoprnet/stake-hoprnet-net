@@ -4,5 +4,24 @@
     "rank": "gold",
     "image": "ipfs://QmU33aCfa8L8Ch6jxHci4HYzVCXEn7MgDSKpNgdbWtKKnK/gold.jpg",
     "deadline": 1626080323,
-    "boost": 0.05
+    "boost": 0.05,
+    "attributes": [
+        {
+            "trait_type": "NFT type",
+            "value": "demo"
+        },
+        {
+            "trait_type": "NFT rank",
+            "value": "Gold"
+        },
+        {
+            "display_type": "boost_percentage",
+            "trait_type": "NFT Boost APR",
+            "value": "5"
+        },
+        {
+            "trait_type": "Staking Season eligibility",
+            "value": "Staking Season 6"
+        }
+    ]
 }
