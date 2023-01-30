@@ -3,5 +3,24 @@
     "rank": "hacker",
     "image": "ipfs://QmPPqgPkTrMDaEhHWvgR1AGrspRjCCFE4Kz6wYv1CKt5uf/hacker.png",
     "deadline": 1650978000,
-    "boost": 0.02
+    "boost": 0.02,
+    "attributes": [
+        {
+            "trait_type": "NFT type",
+            "value": "ETH Denver"
+        },
+        {
+            "trait_type": "NFT rank",
+            "value": "Hacker"
+        },
+        {
+            "display_type": "boost_percentage",
+            "trait_type": "NFT Boost APR",
+            "value": "2"
+        },
+        {
+            "trait_type": "Staking Season eligibility",
+            "value": "Discontinued"
+        }
+    ]
 }

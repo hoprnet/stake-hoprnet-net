@@ -3,5 +3,24 @@
     "rank": "diamond",
     "image": "ipfs://Qmahg5yYbc3M2w6MMQTDS6FxwWoKz6UNFTZCq8YHS9tJQp/diamond.jpg",
     "deadline": 1650978000,
-    "boost": 0.07
+    "boost": 0.07,
+    "attributes": [
+        {
+            "trait_type": "NFT type",
+            "value": "Matterhorn"
+        },
+        {
+            "trait_type": "NFT rank",
+            "value": "Diamond"
+        },
+        {
+            "display_type": "boost_percentage",
+            "trait_type": "NFT Boost APR",
+            "value": "7"
+        },
+        {
+            "trait_type": "Staking Season eligibility",
+            "value": "Discontinued"
+        }
+    ]
 }

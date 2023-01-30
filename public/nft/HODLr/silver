@@ -3,5 +3,24 @@
     "rank": "silver",
     "image": "ipfs://Qma9aGWo6KXbNV1fLzcQYSiuhjSTxzx8DHVskDSutKGQB3/silver.jpg",
     "deadline": 1627992000,
-    "boost": 0.05
+    "boost": 0.05,
+    "attributes": [
+        {
+            "trait_type": "NFT type",
+            "value": "HODLr"
+        },
+        {
+            "trait_type": "NFT rank",
+            "value": "Silver"
+        },
+        {
+            "display_type": "boost_percentage",
+            "trait_type": "NFT Boost APR",
+            "value": "5"
+        },
+        {
+            "trait_type": "Staking Season eligibility",
+            "value": "Discontinued"
+        }
+    ]
 }

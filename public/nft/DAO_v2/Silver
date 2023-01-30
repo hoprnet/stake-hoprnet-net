@@ -3,5 +3,24 @@
     "rank": "silver",
     "image": "ipfs://QmUNoKwd7n9zhnPkaa5BSppe1PJcjHUhEK8XF5oHha1XMk/silver.jpg",
     "deadline": 1642424400,
-    "boost": 0.06
+    "boost": 0.06,
+    "attributes": [
+        {
+            "trait_type": "NFT type",
+            "value": "DAO v2"
+        },
+        {
+            "trait_type": "NFT rank",
+            "value": "Silver"
+        },
+        {
+            "display_type": "boost_percentage",
+            "trait_type": "NFT Boost APR",
+            "value": "6"
+        },
+        {
+            "trait_type": "Staking Season eligibility",
+            "value": "Discontinued"
+        }
+    ]
 }

@@ -3,5 +3,24 @@
     "rank": "gold",
     "image": "ipfs://QmY7npqgH3is5gfHtuRCj6RoZxBULMKH3rvyMgcAvdyLsY/gold.jpg",
     "deadline": 1658840400,
-    "boost": 0.015
+    "boost": 0.015,
+    "attributes": [
+        {
+            "trait_type": "NFT type",
+            "value": "QV Game"
+        },
+        {
+            "trait_type": "NFT rank",
+            "value": "Gold"
+        },
+        {
+            "display_type": "boost_percentage",
+            "trait_type": "NFT Boost APR",
+            "value": "1.5"
+        },
+        {
+            "trait_type": "Staking Season eligibility",
+            "value": "Discontinued"
+        }
+    ]
 }

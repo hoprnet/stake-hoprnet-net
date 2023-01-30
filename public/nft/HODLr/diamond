@@ -1,7 +1,26 @@
 {
     "type": "HODLr",
     "rank": "diamond",
-    "image": "ipfs://Qmf3LXajCa9LNi88i82fZNw8s1P6MdnF6pVAEY3NJZv5qD/diamond.jpg",
+    "image": "ipfs://Qma9aGWo6KXbNV1fLzcQYSiuhjSTxzx8DHVskDSutKGQB3/diamond.jpg",
     "deadline": 1627992000,
-    "boost": 0.1
+    "boost": 0.1,
+    "attributes": [
+        {
+            "trait_type": "NFT type",
+            "value": "HODLr"
+        },
+        {
+            "trait_type": "NFT rank",
+            "value": "Diamond"
+        },
+        {
+            "display_type": "boost_percentage",
+            "trait_type": "NFT Boost APR",
+            "value": "10"
+        },
+        {
+            "trait_type": "Staking Season eligibility",
+            "value": "Discontinued"
+        }
+    ]
 }

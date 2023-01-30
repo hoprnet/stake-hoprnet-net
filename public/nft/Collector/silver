@@ -3,5 +3,24 @@
     "rank": "silver",
     "image": "ipfs://QmWPcRgoUDWxFiXV4eT9Q9gm8AJPUr1tYTE5wdPCVtkNaA/silver.jpg",
     "deadline": 1658840400,
-    "boost": 0.10
+    "boost": 0.1,
+    "attributes": [
+        {
+            "trait_type": "NFT type",
+            "value": "Collector"
+        },
+        {
+            "trait_type": "NFT rank",
+            "value": "Silver"
+        },
+        {
+            "display_type": "boost_percentage",
+            "trait_type": "NFT Boost APR",
+            "value": "10"
+        },
+        {
+            "trait_type": "Staking Season eligibility",
+            "value": "Staking Season 6"
+        }
+    ]
 }

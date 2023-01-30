@@ -3,5 +3,24 @@
     "rank": "bronze",
     "image": "ipfs://QmdKGXpFGA5s3z8h46BYHQ3uq76MBzpiZXPoSLFiMXuE78/bronze.jpg",
     "deadline": 1642424400,
-    "boost": 0.01
+    "boost": 0.01,
+    "attributes": [
+        {
+            "trait_type": "NFT type",
+            "value": "Puzzle Hunt v1"
+        },
+        {
+            "trait_type": "NFT rank",
+            "value": "Bronze"
+        },
+        {
+            "display_type": "boost_percentage",
+            "trait_type": "NFT Boost APR",
+            "value": "1"
+        },
+        {
+            "trait_type": "Staking Season eligibility",
+            "value": "Discontinued"
+        }
+    ]
 }

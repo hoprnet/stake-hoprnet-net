@@ -3,5 +3,24 @@
     "rank": "diamond",
     "image": "ipfs://QmXUhs8vi7NpRa5ZJb4mEoVRUBLT6vc7L1AjaEgJ41ikUC/diamond.jpg",
     "deadline": 1642424400,
-    "boost": 0.075
+    "boost": 0.075,
+    "attributes": [
+        {
+            "trait_type": "NFT type",
+            "value": "Wildhorn v2"
+        },
+        {
+            "trait_type": "NFT rank",
+            "value": "Diamond"
+        },
+        {
+            "display_type": "boost_percentage",
+            "trait_type": "NFT Boost APR",
+            "value": "7.5"
+        },
+        {
+            "trait_type": "Staking Season eligibility",
+            "value": "Discontinued"
+        }
+    ]
 }

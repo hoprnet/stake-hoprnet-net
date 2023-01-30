@@ -3,5 +3,24 @@
     "rank": "diamond",
     "image": "ipfs://QmVj5M9J9UvdnPogzP4puSxiCDRK6CUqVJmN1kgVBVne4q/diamond.jpg",
     "deadline": 1674738000,
-    "boost": 0.02
+    "boost": 0.02,
+    "attributes": [
+        {
+            "trait_type": "NFT type",
+            "value": "Bug Hunter"
+        },
+        {
+            "trait_type": "NFT rank",
+            "value": "Diamond"
+        },
+        {
+            "display_type": "boost_percentage",
+            "trait_type": "NFT Boost APR",
+            "value": "2"
+        },
+        {
+            "trait_type": "Staking Season eligibility",
+            "value": "Staking Season 6"
+        }
+    ]
 }

@@ -3,5 +3,24 @@
     "rank": "gold",
     "image": "ipfs://QmbgCQ4Tvicjq91SB8yQdCL4ptbeQZRUhTCMRtnkPcNPor/gold.jpg",
     "deadline": 1674738000,
-    "boost": 0.0625
+    "boost": 0.0625,
+    "attributes": [
+        {
+            "trait_type": "NFT type",
+            "value": "Monte Rosa v2"
+        },
+        {
+            "trait_type": "NFT rank",
+            "value": "Gold"
+        },
+        {
+            "display_type": "boost_percentage",
+            "trait_type": "NFT Boost APR",
+            "value": "6.25"
+        },
+        {
+            "trait_type": "Staking Season eligibility",
+            "value": "Staking Season 6"
+        }
+    ]
 }

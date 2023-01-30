@@ -3,5 +3,24 @@
     "rank": "gold",
     "image": "ipfs://QmaXn1m9VFiT1zjWEK44FCoD1KfjHyfpSmmgP1reE5SALG/gold.jpg",
     "deadline": 1674738000,
-    "boost": 0.02
+    "boost": 0.02,
+    "attributes": [
+        {
+            "trait_type": "NFT type",
+            "value": "Surveyor v2"
+        },
+        {
+            "trait_type": "NFT rank",
+            "value": "Gold"
+        },
+        {
+            "display_type": "boost_percentage",
+            "trait_type": "NFT Boost APR",
+            "value": "2"
+        },
+        {
+            "trait_type": "Staking Season eligibility",
+            "value": "Staking Season 6"
+        }
+    ]
 }

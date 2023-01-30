@@ -3,5 +3,24 @@
     "rank": "silver",
     "image": "ipfs://QmT31hxAbR7mbPCGQSKu57xL594BcYExxPDQgaznPRSzPS/silver.jpg",
     "deadline": 1658840400,
-    "boost": 0.005
+    "boost": 0.005,
+    "attributes": [
+        {
+            "trait_type": "NFT type",
+            "value": "Meme Master v2"
+        },
+        {
+            "trait_type": "NFT rank",
+            "value": "Silver"
+        },
+        {
+            "display_type": "boost_percentage",
+            "trait_type": "NFT Boost APR",
+            "value": "0.5"
+        },
+        {
+            "trait_type": "Staking Season eligibility",
+            "value": "Discontinued"
+        }
+    ]
 }

@@ -3,5 +3,24 @@
     "rank": "diamond",
     "image": "ipfs://QmVrkzmDgUi9yGR2x4jnya4R6fcgyHadyxoenELBTFRsgd/diamond.jpg",
     "deadline": 1658840400,
-    "boost": 0.05
+    "boost": 0.05,
+    "attributes": [
+        {
+            "trait_type": "NFT type",
+            "value": "Meme Master"
+        },
+        {
+            "trait_type": "NFT rank",
+            "value": "Diamond"
+        },
+        {
+            "display_type": "boost_percentage",
+            "trait_type": "NFT Boost APR",
+            "value": "5"
+        },
+        {
+            "trait_type": "Staking Season eligibility",
+            "value": "Discontinued"
+        }
+    ]
 }

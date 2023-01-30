@@ -3,5 +3,24 @@
     "rank": "diamond",
     "image": "ipfs://QmXjU42goqGfvzNy7JB2FZJ2sFBFZqtnHjt3RDJ1W2bQ2U/diamond.jpg",
     "deadline": 1658840400,
-    "boost": 0.1
+    "boost": 0.1,
+    "attributes": [
+        {
+            "trait_type": "NFT type",
+            "value": "Restaker"
+        },
+        {
+            "trait_type": "NFT rank",
+            "value": "Diamond"
+        },
+        {
+            "display_type": "boost_percentage",
+            "trait_type": "NFT Boost APR",
+            "value": "10"
+        },
+        {
+            "trait_type": "Staking Season eligibility",
+            "value": "Discontinued"
+        }
+    ]
 }

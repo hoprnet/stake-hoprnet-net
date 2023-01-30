@@ -3,5 +3,24 @@
     "rank": "diamond",
     "image": "ipfs://QmeongajvVRVqVvhha68PRHLX5dUBKtNXNYsSLJaQUbFVX/diamond.jpg",
     "deadline": 1674738000,
-    "boost": 0.03
+    "boost": 0.03,
+    "attributes": [
+        {
+            "trait_type": "NFT type",
+            "value": "Happy HOPR days"
+        },
+        {
+            "trait_type": "NFT rank",
+            "value": "Diamond"
+        },
+        {
+            "display_type": "boost_percentage",
+            "trait_type": "NFT Boost APR",
+            "value": "3"
+        },
+        {
+            "trait_type": "Staking Season eligibility",
+            "value": "Staking Season 6"
+        }
+    ]
 }

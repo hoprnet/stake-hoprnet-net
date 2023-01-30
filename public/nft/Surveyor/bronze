@@ -3,5 +3,24 @@
     "rank": "bronze",
     "image": "ipfs://QmfHNH1eNLgQ8V5gpu6iuMrJarBEumqCperbKhj7tUzE3s/bronze.jpg",
     "deadline": 1642424400,
-    "boost": 0.02
+    "boost": 0.02,
+    "attributes": [
+        {
+            "trait_type": "NFT type",
+            "value": "Surveyor"
+        },
+        {
+            "trait_type": "NFT rank",
+            "value": "Bronze"
+        },
+        {
+            "display_type": "boost_percentage",
+            "trait_type": "NFT Boost APR",
+            "value": "2"
+        },
+        {
+            "trait_type": "Staking Season eligibility",
+            "value": "Discontinued"
+        }
+    ]
 }

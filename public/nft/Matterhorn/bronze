@@ -3,5 +3,24 @@
     "rank": "bronze",
     "image": "ipfs://Qmahg5yYbc3M2w6MMQTDS6FxwWoKz6UNFTZCq8YHS9tJQp/bronze.jpg",
     "deadline": 1650978000,
-    "boost": 0.04
+    "boost": 0.04,
+    "attributes": [
+        {
+            "trait_type": "NFT type",
+            "value": "Matterhorn"
+        },
+        {
+            "trait_type": "NFT rank",
+            "value": "Bronze"
+        },
+        {
+            "display_type": "boost_percentage",
+            "trait_type": "NFT Boost APR",
+            "value": "4"
+        },
+        {
+            "trait_type": "Staking Season eligibility",
+            "value": "Discontinued"
+        }
+    ]
 }

@@ -3,5 +3,24 @@
     "rank": "diamond",
     "image": "ipfs://QmZRMN29ktJgqeqmoSrZBGWTjqDTaVF4kcsVBgPvADe8ME/diamond.jpg",
     "deadline": 1658840400,
-    "boost": 0.03
+    "boost": 0.03,
+    "attributes": [
+        {
+            "trait_type": "NFT type",
+            "value": "Metadata Games"
+        },
+        {
+            "trait_type": "NFT rank",
+            "value": "Diamond"
+        },
+        {
+            "display_type": "boost_percentage",
+            "trait_type": "NFT Boost APR",
+            "value": "3"
+        },
+        {
+            "trait_type": "Staking Season eligibility",
+            "value": "Discontinued"
+        }
+    ]
 }

@@ -3,5 +3,24 @@
     "rank": "bronze",
     "image": "ipfs://QmUNoKwd7n9zhnPkaa5BSppe1PJcjHUhEK8XF5oHha1XMk/bronze.jpg",
     "deadline": 1642424400,
-    "boost": 0.045
+    "boost": 0.045,
+    "attributes": [
+        {
+            "trait_type": "NFT type",
+            "value": "DAO v2"
+        },
+        {
+            "trait_type": "NFT rank",
+            "value": "Bronze"
+        },
+        {
+            "display_type": "boost_percentage",
+            "trait_type": "NFT Boost APR",
+            "value": "4.5"
+        },
+        {
+            "trait_type": "Staking Season eligibility",
+            "value": "Discontinued"
+        }
+    ]
 }

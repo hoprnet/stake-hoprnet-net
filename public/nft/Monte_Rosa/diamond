@@ -3,5 +3,24 @@
     "rank": "diamond",
     "image": "ipfs://QmSyMjqusN4rDWEuY2Y7VUVmwhpHyRXT4BV1SZ2AgHBmtJ/diamond.jpg",
     "deadline": 1674738000,
-    "boost": 0.15
+    "boost": 0.15,
+    "attributes": [
+        {
+            "trait_type": "NFT type",
+            "value": "Monte Rosa"
+        },
+        {
+            "trait_type": "NFT rank",
+            "value": "Diamond"
+        },
+        {
+            "display_type": "boost_percentage",
+            "trait_type": "NFT Boost APR",
+            "value": "15"
+        },
+        {
+            "trait_type": "Staking Season eligibility",
+            "value": "Staking Season 6"
+        }
+    ]
 }

@@ -3,5 +3,24 @@
     "rank": "community",
     "image": "ipfs://QmU8f7Mb6N73mTdAqv8oYvWYS6B7wnyDV6nN5VADK9AWkm/community.jpg",
     "deadline": 1658840400,
-    "boost": 0
+    "boost": 0,
+    "attributes": [
+        {
+            "trait_type": "NFT type",
+            "value": "Network Registry"
+        },
+        {
+            "trait_type": "NFT rank",
+            "value": "Community"
+        },
+        {
+            "display_type": "boost_percentage",
+            "trait_type": "NFT Boost APR",
+            "value": "0"
+        },
+        {
+            "trait_type": "Staking Season eligibility",
+            "value": "Staking Season 6"
+        }
+    ]
 }
