@@ -1,5 +1,6 @@
 {
     "type": "PuzzleHunt_v1",
+    "name": "Puzzle Hunt v1",
     "rank": "gold",
     "image": "ipfs://QmdKGXpFGA5s3z8h46BYHQ3uq76MBzpiZXPoSLFiMXuE78/gold.jpg",
     "deadline": 1642424400,

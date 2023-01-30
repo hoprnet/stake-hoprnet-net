@@ -1,5 +1,6 @@
 {
     "type": "Surveyor_v2",
+    "name": "Surveyor v2",
     "rank": "gold",
     "image": "ipfs://QmaXn1m9VFiT1zjWEK44FCoD1KfjHyfpSmmgP1reE5SALG/gold.jpg",
     "deadline": 1674738000,

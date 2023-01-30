@@ -1,5 +1,6 @@
 {
     "type": "Restaker",
+    "name": "Restaker",
     "rank": "gold",
     "image": "ipfs://QmXjU42goqGfvzNy7JB2FZJ2sFBFZqtnHjt3RDJ1W2bQ2U/gold.jpg",
     "deadline": 1658840400,

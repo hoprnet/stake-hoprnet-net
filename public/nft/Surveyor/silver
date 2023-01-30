@@ -1,5 +1,6 @@
 {
     "type": "Surveyor",
+    "name": "Surveyor",
     "rank": "silver",
     "image": "ipfs://QmfHNH1eNLgQ8V5gpu6iuMrJarBEumqCperbKhj7tUzE3s/silver.jpg",
     "deadline": 1642424400,
