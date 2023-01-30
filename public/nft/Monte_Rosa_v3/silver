@@ -1,0 +1,27 @@
+{
+    "type": "Monte_Rosa_v3",
+    "name": "Monte Rosa v3",
+    "rank": "silver",
+    "image": "ipfs://QmZ8HkQGmwJVSR9X6oZibmBTYwJiHD2PsKGxGR5PhRUPMR/silver.jpg",
+    "deadline": 1674738000,
+    "boost": 0.0425,
+    "attributes": [
+        {
+            "trait_type": "NFT type",
+            "value": "Monte Rosa v3"
+        },
+        {
+            "trait_type": "NFT rank",
+            "value": "Silver"
+        },
+        {
+            "display_type": "boost_percentage",
+            "trait_type": "NFT Boost APR",
+            "value": "4.25"
+        },
+        {
+            "trait_type": "Staking Season eligibility",
+            "value": "Staking Season 6"
+        }
+    ]
+}
