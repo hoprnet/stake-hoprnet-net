@@ -208,7 +208,7 @@ export default function Home() {
 
         contract = new web3.eth.Contract(stakingSeason5abi, STAKING_SEASON_CONTRACT);
         result = await contract.methods.accounts(account).call();
-        console.log('MM account', result)
+        console.log('Blockchain SM .accounts(): ', result)
         format = web3.utils.fromWei(result.actualLockedTokenAmount);
         set_balance_stakedxHOPR(parseFloat(format));
 
