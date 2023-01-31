@@ -142,10 +142,9 @@ export default function Home() {
     setAccount(newAccount);
     try {
       const currentChain = await ethereum.request({ method: 'eth_chainId' });
-      console.log('currentChain', currentChain)
+   //   console.log('currentChain', currentChain)
       set_chainId(currentChain);
       if (currentChain === '0x64') {
-        console.log('currentChain === 0x64');
         getBalances();
       }
       await getSubGraphData(newAccount);
@@ -257,7 +256,7 @@ export default function Home() {
 
   const startCountingEpoch = (epoch) => {
     const difference = Math.abs(Date.now()/1000-epoch);
-    console.log('Difference between your time and synced block time', difference);
+    console.log(`Difference between your time and TheGraph last synced block time: ${difference.toFixed(2)}s`);
     if(difference < 60) {
       set_counter(true);
     } else if (difference > 120) {

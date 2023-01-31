@@ -176,7 +176,7 @@ export default function Section3(props) {
         (!balance_stakedxHOPR && balance_stakedxHOPR !==0) || 
         (!boostRate && boostRate !==0)
     ) return;
-    console.log('setInterval STARTING');
+  //  console.log('setInterval STARTING');
     set_claimable('Loading...');
     const totalBoost = baseAPR_chainboost + boostRate;
     if(Date.now() <= PROGRAM_START_MS ) {
