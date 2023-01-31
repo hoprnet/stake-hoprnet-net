@@ -157,7 +157,7 @@ export default function Home() {
   const getSubGraphData = async (address) => {
     try {
       let subGraphStakingUserData = await getSubGraphStakingUserData(address);
-      console.log('subgraphUserData', subGraphStakingUserData);
+      console.log('TheGraph UserData:', subGraphStakingUserData);
       const { 
         appliedBoosts,
         ignoredBoosts,
@@ -245,7 +245,7 @@ export default function Home() {
 
   const setOverallData = async () => {
     let data = await getSubGraphStakingSeasonData();
-    console.log('getSubGraphStakingSeasonData', data)
+    console.log('TheGraph Staking Season Data: ', data)
     set_balance_availableReward(data.availableReward);
     set_lastSyncTimestamp(data.lastSyncTimestamp);
     set_totalLocked(data.totalLocked);

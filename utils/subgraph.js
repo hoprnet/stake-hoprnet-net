@@ -151,7 +151,7 @@ export async function getSubGraphNFTsUserData(address) {
   }
 
   const parsedNFTs = parseNFTs(data.boosts);
-  console.log('parsedNFTs', parsedNFTs);
+  console.log('Users parsedNFTs', parsedNFTs);
   return parsedNFTs;
 };
 
