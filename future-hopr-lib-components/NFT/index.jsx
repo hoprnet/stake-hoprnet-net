@@ -5,6 +5,7 @@ import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 
 import { Table } from '../Table/columed-data'
 import Button from '../Button'
+import NftImageInteractive from './nftImageInteractive'
 //import { Button } from '@mui/material';
 
 const Container = styled.div`
@@ -84,7 +85,11 @@ export default function Nft(props) {
                 props.ignored ? 'ignored' : ''
             ].join(' ')}
         >
-            <img src={props.image} className="nft-image" />
+            {/* <img src={props.image} className="nft-image" /> */}
+            <NftImageInteractive 
+                image={props.image} 
+                nft={props.nft}
+            />
             <div className="css-ndd2wf">
                 <div className="css-1gdwl90">
                     <Table width1stColumn="65">
@@ -97,20 +102,12 @@ export default function Nft(props) {
                                 <th>Rank</th>
                                 <td>{props.rank}</td>
                             </tr>
-                            <tr>
-                                <th>Boost</th>
-                                {
-                                    props.ignored ? 
-                                    <td>Ignored</td>
-                                    :
-                                    <td>{(props.boost*100).toFixed(2)}%</td>
-                                }
-                            </tr>
                         </tbody>
                     </Table>
                     {
                         !props.locked &&
-                            props.willBeIgnoredInStaking ? 
+                            (
+                                props.willBeIgnoredInStaking ? 
                                 <CustomWidthTooltip
                                     title="This NFT will be ignored after locking, becuase you already have NFT of the same type with the same or better APR boost locked."
                                     placement="top"
@@ -131,6 +128,7 @@ export default function Nft(props) {
                                 >
                                     Lock NFT
                                 </Button>
+                            )
                     }
 
                 </div>

@@ -171,6 +171,7 @@ export default function Section4(props) {
                 handleLockNFT={props.handleLockNFT}
                 locked={props.viewMode}
                 willBeIgnoredInStaking={nft.willBeIgnoredInStaking}
+                nft={nft}
               />)
             }
           </NftContainer>
@@ -196,6 +197,7 @@ export default function Section4(props) {
                   boost={nft.boost}
                   rank={nft.rank}
                   count={nft.count}
+                  nft={nft}
                   locked
                 />)
               }
@@ -208,6 +210,7 @@ export default function Section4(props) {
                   boost={nft.boost}
                   rank={nft.rank}
                   count={nft.count}
+                  nft={nft}
                   locked
                   ignored
                 />)
