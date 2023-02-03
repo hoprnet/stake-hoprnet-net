@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import styled from "@emotion/styled";
 
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+
 import { Table } from '../Table/columed-data'
 import Button from '../Button'
+//import { Button } from '@mui/material';
 
 const Container = styled.div`
     position: relative;
@@ -13,12 +16,14 @@ const Container = styled.div`
     padding: 4px;
     border-radius: 8px;
     img {
-        width: 240px;
+        width: 230px;
         margin: auto;
         max-width: 100%;
-        height: auto;
+        height: 325px;
+        object-fit: contain;
         @media (max-width: 820px) {
             width: 200px;
+            height: 282px;
         }
     }
     .btn-hopr--v2{
@@ -52,6 +57,18 @@ const Container = styled.div`
     }
 `
 
+const CustomWidthTooltip = styled(({ className, ...props }) => (
+    <Tooltip 
+        {...props} 
+        classes={{ popper: className }} 
+    />
+  ))({
+    [`& .${tooltipClasses.tooltip}`]: {
+      maxWidth: 200,
+    },
+  });
+  
+
 export default function Nft(props) {
     const [disableButton, set_disableButton] = useState(false);
 
@@ -70,7 +87,7 @@ export default function Nft(props) {
             <img src={props.image} className="nft-image" />
             <div className="css-ndd2wf">
                 <div className="css-1gdwl90">
-                    <Table width1stColumn="90">
+                    <Table width1stColumn="65">
                         <tbody>
                             <tr>
                                 <th>Type</th>
@@ -93,12 +110,27 @@ export default function Nft(props) {
                     </Table>
                     {
                         !props.locked &&
-                        <Button
-                            onClick={handleLockNFT}
-                            disabled={disableButton}
-                        >
-                            Lock NFT
-                        </Button>
+                            props.willBeIgnoredInStaking ? 
+                                <CustomWidthTooltip
+                                    title="This NFT will be ignored after locking, becuase you already have NFT of the same type with the same or better APR boost locked."
+                                    placement="top"
+                                    arrow
+                                >
+                                    <Button
+                                       onClick={handleLockNFT}
+                                       disabled={disableButton}
+                                       fade={props.willBeIgnoredInStaking}
+                                    >
+                                        Lock NFT
+                                    </Button>
+                                </CustomWidthTooltip>
+                                :
+                                <Button
+                                    onClick={handleLockNFT}
+                                    disabled={disableButton}
+                                >
+                                    Lock NFT
+                                </Button>
                     }
 
                 </div>
