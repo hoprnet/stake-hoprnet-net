@@ -68,14 +68,17 @@ export default function Section4(props) {
     for(let a = 0; a < allowed.length; a++) {
       let index = filtered.findIndex(nft => (nft.type === allowed[a].type && nft.rank === allowed[a].rank));
       let willBeIgnoredInStaking = checkIfWillBeIgnoredOnStake(allowed[a], NFTsToRemove);
+      let id = allowed[a].id;
       if( index === -1 ) {
         filtered.push({
           ...allowed[a],
           willBeIgnoredInStaking,
+          ids: [id],
           count: 1
         })
       } else {
         filtered[index].count++;
+        filtered[index].ids = [...filtered[index].ids, id]
       }
     }
 

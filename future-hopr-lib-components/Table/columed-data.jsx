@@ -29,6 +29,7 @@ export const Table = styled.table`
     border-collapse: collapse; 
     th {
         text-align: left;
+        vertical-align: top;
     }
     tr {
         border-top: 0.1rem solid darkgray;

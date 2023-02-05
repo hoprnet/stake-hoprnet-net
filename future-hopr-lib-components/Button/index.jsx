@@ -40,12 +40,10 @@ const SButton = styled(MuiButton)`
       max-width: 54px;
     }
   }
-  &.btn-hopr--v2.btn-hopr--fade {
+  &.btn-hopr--v2.btn-hopr--fade:not(.Mui-disabled) {
     background: linear-gradient(rgb(0 0 80 / 60%), rgb(0 0 180 / 60%));
   }
 `
-//MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium  btn-hopr--v2 false false  css-9a6nxv-MuiButtonBase-root-MuiButton-root
-//MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium  btn-hopr--v2 false false  css-1uenv58-MuiButtonBase-root-MuiButton-root
 
 const Button = React.forwardRef((props, ref) => {
     const {hopr, imageOnly, size70, loading, standardWidth, fade, ...rest} = props;

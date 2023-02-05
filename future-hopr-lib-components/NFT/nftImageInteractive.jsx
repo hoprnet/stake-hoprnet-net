@@ -1,39 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styled from "@emotion/styled";
-
+import { onNotSelectingClick } from '../../utils/functions-react'
 import { Table } from '../Table/columed-data'
 
-// * {
-//     margin:0;
-//     padding:0;
-//     outline:none;
-//     list-style:none;
-//     text-decoration:none;
-//     box-sizing:border-box;
-//     color:#000;
-//     background: transparent;
-//     border:none;
-// }
-
-// html, body {
-//     height: 100%;
-//     width: 100%;  
-// }
-
-// body {
-//     background: #202020;
-//     font-family: 'Roboto', sans-serif;
-// }
-
 const Container = styled.div`
-
-    .transition(@transition) {
-        transition:         @transition;
-        -webkit-transition: @transition;
-        -moz-transition:    @transition;
-        -ms-transition:     @transition;
-        -o-transition:      @transition;
-    }
 
     width: 230px;
     height: 325px;
@@ -54,9 +24,9 @@ const Container = styled.div`
         height: 100%;
         width: 100%;
         transform-style:preserve-3d;
-        .transition(all ease-out 0.6s);
+        transition: all ease-out 0.4s;
         &.rotate {
-            transform:rotateY(20deg) scale(0.97);
+            transform:rotateY(20deg) scale(0.965) translateX(10px);
         }
         &.flip {
             transform:rotateY(180deg);
@@ -74,13 +44,13 @@ const Container = styled.div`
         cursor:pointer;
     }
 
-    .title {
+    .spine {
         content: "";
-        width: 230px;
-        width: 30px;
+        height: 325px;
+        width: 25px;
         position: absolute;
         right: 0;
-        left: -401px;
+        left: -230px;
         top: 0;
         bottom: 0;
         margin: auto;
@@ -92,6 +62,7 @@ const Container = styled.div`
         width: 230px;
         height: 325px;
         background-color: #e3e5e7;
+   //     background-color: #AB4747;
         position: absolute;
         top: 0;
         left: 0;
@@ -99,24 +70,21 @@ const Container = styled.div`
         bottom: 0;
         margin: auto;
         cursor:pointer;
-        transform:rotate(180deg) translateZ(-30px) translateX(5px);
+        transform:rotate(180deg) translateZ(-30px) translateX(3px);
+        &.fliped{
+            transform:rotate(180deg);
+        }
         .text {
             transform: rotateX(180deg);
             position: absolute;
             bottom: 30px;
             padding: 20px;
             text-align:left;
-            h3 {
-            margin-bottom: 20px;
-            color:#fff;
         }
-        span {
-            display: block;
-            margin-bottom:20px;
-            color:#fff;
-            &:last-of-type {
-                margin-top:30px;
-            }
+        .multipleIds {
+            max-height: 165px;
+            overflow-x: hidden;
+            overflow-y: auto;
         }
     }
 `
@@ -125,6 +93,22 @@ const Container = styled.div`
 export default function NftImageInteractive(props) {
     const [fliped, set_fliped] = useState(false);
     const [rotated, set_rotated] = useState(false);
+
+
+    const spineColor = (rank) => {
+        switch(rank){
+            case 'bronze':
+                return '#e9a950';
+            case 'silver':
+                return '#828282';
+            case 'gold':
+                return '#eceb8a';
+            case 'diamond':
+                return '#ffffff';
+            default:
+                return '#00009c';
+        }
+    }
 
     return (
         <Container className="wrap">
@@ -145,10 +129,16 @@ export default function NftImageInteractive(props) {
                         style={{backgroundImage: `url("${props.image}")`}}
                         onClick={()=>{set_fliped(true)}}
                     />
-                    <div className="title"></div>
                     <div 
-                        className="nft-back"
-                        onClick={()=>{set_fliped(false)}}
+                        className="spine"
+                        style={{background: spineColor(props.nft.rank)}}
+                    />
+                    <div 
+                        className={[
+                            "nft-back",
+                            fliped ? 'fliped' : '',
+                        ].join(' ')}
+                        {...onNotSelectingClick(()=>{set_fliped(false)})}
                     >
                         <Table 
                             width1stColumn="65"
@@ -156,9 +146,34 @@ export default function NftImageInteractive(props) {
                         >
                             <tbody>
                                 <tr>
-                                    <th>ID</th>
-                                    <td>{props.nft.id}</td>
+                                    <th>Type</th>
+                                    <td>{props.nft.type}</td>
                                 </tr>
+                                <tr>
+                                    <th>Rank</th>
+                                    <td>{props.nft.rank}</td>
+                                </tr>
+                                {
+                                    props.nft.ids.length > 1 ?
+                                    <tr>
+                                        <th>IDs</th>
+                                        <td>
+                                            <div 
+                                                className='multipleIds'
+                                            >
+                                                <div>
+                                                    16135, 16151, 16152, 16153, 16154, 16135, 16151, 16152, 16153, 1615416135, 16151, 16152, 16153, 1615416135, 16151, 16152, 16153, 1615416135, 16151, 16152, 16153, 1615416135, 16151, 16152, 16153, 1615416135, 16151, 16152, 16153, 16154
+                                                    {props.nft.ids.join(', ')}
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    :
+                                    <tr>
+                                        <th>ID</th>
+                                        <td>{props.nft.id}</td>
+                                    </tr>
+                                }
                                 <tr>
                                     <th>Boost</th>
                                     {
@@ -168,16 +183,6 @@ export default function NftImageInteractive(props) {
                                         <td>{(props.nft.boost*100).toFixed(2)}%</td>
                                     }
                                 </tr>
-                                <tr>
-                                    <th>Boost Rate</th>
-                                    {
-                                        props.nft.ignored ? 
-                                        <td>Ignored</td>
-                                        :
-                                        <td>{(props.nft.boostRate).toFixed(2)}</td>
-                                    }
-                                </tr>
-
                             </tbody>
                         </Table>
                     </div>

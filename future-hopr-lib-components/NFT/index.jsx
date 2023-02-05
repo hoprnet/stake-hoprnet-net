@@ -64,8 +64,11 @@ const CustomWidthTooltip = styled(({ className, ...props }) => (
         classes={{ popper: className }} 
     />
   ))({
-    [`& .${tooltipClasses.tooltip}`]: {
-      maxWidth: 200,
+    [`
+        color: white;
+        & .${tooltipClasses.tooltip}`
+    ]: {
+        maxWidth: 200,
     },
   });
   
@@ -92,18 +95,6 @@ export default function Nft(props) {
             />
             <div className="css-ndd2wf">
                 <div className="css-1gdwl90">
-                    <Table width1stColumn="65">
-                        <tbody>
-                            <tr>
-                                <th>Type</th>
-                                <td>{props.type}</td>
-                            </tr>
-                            <tr>
-                                <th>Rank</th>
-                                <td>{props.rank}</td>
-                            </tr>
-                        </tbody>
-                    </Table>
                     {
                         !props.locked &&
                             (
@@ -111,7 +102,7 @@ export default function Nft(props) {
                                 <CustomWidthTooltip
                                     title="This NFT will be ignored after locking, becuase you already have NFT of the same type with the same or better APR boost locked."
                                     placement="top"
-                                    arrow
+                                //    arrow
                                 >
                                     <Button
                                        onClick={handleLockNFT}
