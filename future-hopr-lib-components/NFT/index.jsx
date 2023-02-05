@@ -15,6 +15,7 @@ const Container = styled.div`
     align-content: space-evenly;
     border: 1px solid rgb(204, 204, 204);
     padding: 4px;
+    gap: 2px;
     border-radius: 8px;
     img {
         width: 230px;
