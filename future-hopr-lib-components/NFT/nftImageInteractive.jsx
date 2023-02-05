@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from "@emotion/styled";
 import { onNotSelectingClick } from '../../utils/functions-react'
 import { Table } from '../Table/columed-data'
@@ -62,7 +62,6 @@ const Container = styled.div`
         width: 230px;
         height: 325px;
         background-color: #e3e5e7;
-   //     background-color: #AB4747;
         position: absolute;
         top: 0;
         left: 0;
@@ -77,12 +76,12 @@ const Container = styled.div`
         .text {
             transform: rotateX(180deg);
             position: absolute;
-            bottom: 30px;
+            bottom: 10px;
             padding: 20px;
             text-align:left;
         }
         .multipleIds {
-            max-height: 165px;
+            max-height: 186px;
             overflow-x: hidden;
             overflow-y: auto;
         }

@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from "@emotion/styled";
 
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 
-import { Table } from '../Table/columed-data'
 import Button from '../Button'
 import NftImageInteractive from './nftImageInteractive'
-//import { Button } from '@mui/material';
 
 const Container = styled.div`
     position: relative;
