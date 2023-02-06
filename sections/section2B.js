@@ -89,14 +89,8 @@ export default function Section2(props) {
         <p>
           You can swap xHOPR tokens via
           {" "}<Link
-            href="https://app.honeyswap.org/#/swap?inputCurrency=0xd057604a14982fe8d88c5fc25aac3267ea142a08&amp;chainId=100"
-            text="HoneySwap"
-            openIcon
-          />{" "}
-          or
-          {" "}<Link
-            href="https://ascendex.com/en/cashtrade-spottrading/usdt/hopr"
-            text="AscendEX"
+            href="https://swapr.eth.limo/#/swap?outputCurrency=0xd057604a14982fe8d88c5fc25aac3267ea142a08&chainId=100"
+            text="Swapr"
             openIcon
           />, and buy xDAI (needed for transactions) via
           {" "}<Link
