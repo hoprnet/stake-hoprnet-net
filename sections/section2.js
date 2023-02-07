@@ -48,6 +48,7 @@ export default function Section2(props) {
 
   const boostAPRPercentage = countAPRPercentage(boostRate);
   const totalAPRPercentage = baseAPRPercentage + boostAPRPercentage;
+  const roundARP = (apr) => {return (Math.round(apr*4)/4).toFixed(2) }
 
   return (
     <Section
@@ -75,7 +76,7 @@ export default function Section2(props) {
             text="xHOPR"
             openIcon
           />{" "}
-          tokens to earn a total APR of <strong>{totalAPRPercentage.toFixed(2)}%</strong> (<strong>{baseAPRPercentage.toFixed(2)}%</strong> base + <strong>{(Math.round(boostAPRPercentage*10)/10).toFixed(2)}%</strong> boosted)</p>
+          tokens to earn a total APR of <strong>{roundARP(totalAPRPercentage)}%</strong> (<strong>{roundARP(baseAPRPercentage)}%</strong> base + <strong>{roundARP(boostAPRPercentage)}%</strong> boosted)</p>
       </div>
       <br></br>
       <TableDataColumed>

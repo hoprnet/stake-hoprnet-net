@@ -1,6 +1,6 @@
 {
   "name": "hopr-staking",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -26,6 +26,7 @@
     "next": "12.2.5",
     "react": "18.2.0",
     "react-apexcharts": "^1.4.0",
+    "react-device-detect": "^2.2.2",
     "react-dom": "18.2.0",
     "react-id-generator": "3.0.2",
     "react-query": "^3.39.2",

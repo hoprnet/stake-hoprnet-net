@@ -29,6 +29,7 @@ export const Table = styled.table`
     border-collapse: collapse; 
     th {
         text-align: left;
+        vertical-align: top;
     }
     tr {
         border-top: 0.1rem solid darkgray;
@@ -45,14 +46,18 @@ export const Table = styled.table`
     th:first-of-type {
         width: ${props => props.width1stColumn ? props.width1stColumn : "160"}px;
     }
-
+    ${props => props.noTopBorder && `tr:first-of-type { border-top: none; }` };
 `;
 
 
 // elemet should accept only <tbody>
 export default function TableDataColumed(props) {
     return (
-        <Tables>
+        <Tables
+            className={[
+                'columned-data',
+            ].join(' ')}
+        >
             {props.children.length > 0 ? props.children?.map((elem, key) => {
                 return (
                     <Table 

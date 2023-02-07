@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import styled from "@emotion/styled";
 
 import Typography from '../future-hopr-lib-components/Typography';
 import Section from '../future-hopr-lib-components/Section'
@@ -7,20 +6,12 @@ import Accordion from '../future-hopr-lib-components/Accordion';
 import AccordionSummary from '../future-hopr-lib-components/Accordion/AccordionSummary';
 import AccordionDetails from '../future-hopr-lib-components/Accordion/AccordionDetails';
 
-
 import Nft from '../future-hopr-lib-components/NFT'
+import NftContainer from '../future-hopr-lib-components/NFT/container'
 
 // Mui
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-
-
-const NftContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  justify-content: space-evenly;
-`
 
 export default function Section4(props) {
   const {
@@ -71,30 +62,45 @@ export default function Section4(props) {
       .filter(nft => !blockedTypeIndexes.includes(nft.boostTypeIndex))
       .filter(nft => !toRemove.includes(nft.id));
   //  console.log('allowed', allowed)
+
+    //Count and group the same NFTs
     let filtered = [];
     for(let a = 0; a < allowed.length; a++) {
       let index = filtered.findIndex(nft => (nft.type === allowed[a].type && nft.rank === allowed[a].rank));
-      let alreadyStaked = checkIfalreadyStaked(allowed[a], NFTsToRemove);
+      let willBeIgnoredInStaking = checkIfWillBeIgnoredOnStake(allowed[a], NFTsToRemove);
+      let id = allowed[a].id;
       if( index === -1 ) {
         filtered.push({
           ...allowed[a],
-          alreadyStaked,
+          willBeIgnoredInStaking,
+          ids: [id],
           count: 1
         })
       } else {
         filtered[index].count++;
+        filtered[index].ids = [...filtered[index].ids, id]
       }
     }
+
+    //Sort NFTs
     const sorted = stableSort(filtered, getComparator('desc', 'boost'));
+    
+    console.log('sorted', sorted)
     return {
       length: allowed.length,
       sorted
     }
   }
 
-  function checkIfalreadyStaked(nft, NFTsToRemove) {
-    if (NFTsToRemove.length === 0) return false;
-    return true;
+  function checkIfWillBeIgnoredOnStake(nft_to_check, NFTsToRemove) {
+    //Mark NFTs that will be ignored in staking
+    if (NFTsToRemove.length > 0) {
+      const check = NFTsToRemove
+      .filter(nft => nft.type === nft_to_check.type)
+      .filter(nft => nft.boostRate >= nft_to_check.boostRate);
+      if(check.length !== 0) return true;
+    }
+    return false;
   }
 
   function descendingComparator(a, b, orderBy) {
@@ -167,6 +173,8 @@ export default function Section4(props) {
                 count={nft.count}
                 handleLockNFT={props.handleLockNFT}
                 locked={props.viewMode}
+                willBeIgnoredInStaking={nft.willBeIgnoredInStaking}
+                nft={nft}
               />)
             }
           </NftContainer>
@@ -192,6 +200,7 @@ export default function Section4(props) {
                   boost={nft.boost}
                   rank={nft.rank}
                   count={nft.count}
+                  nft={nft}
                   locked
                 />)
               }
@@ -204,6 +213,7 @@ export default function Section4(props) {
                   boost={nft.boost}
                   rank={nft.rank}
                   count={nft.count}
+                  nft={nft}
                   locked
                   ignored
                 />)

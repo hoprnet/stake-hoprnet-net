@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from "@emotion/styled";
 
-import { Table } from '../Table/columed-data'
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+
 import Button from '../Button'
+import NftImageInteractive from './nftImageInteractive'
 
 const Container = styled.div`
     position: relative;
@@ -11,14 +13,17 @@ const Container = styled.div`
     align-content: space-evenly;
     border: 1px solid rgb(204, 204, 204);
     padding: 4px;
+    gap: 2px;
     border-radius: 8px;
-    img {
-        width: 240px;
+    img.nft-image {
+        width: 230px;
         margin: auto;
         max-width: 100%;
-        height: auto;
+        height: 325px;
+        object-fit: contain;
         @media (max-width: 820px) {
             width: 200px;
+            height: 282px;
         }
     }
     .btn-hopr--v2{
@@ -52,6 +57,21 @@ const Container = styled.div`
     }
 `
 
+const CustomWidthTooltip = styled(({ className, ...props }) => (
+    <Tooltip 
+        {...props} 
+        classes={{ popper: className }} 
+    />
+  ))({
+    [`
+        color: white;
+        & .${tooltipClasses.tooltip}`
+    ]: {
+        maxWidth: 200,
+    },
+  });
+  
+
 export default function Nft(props) {
     const [disableButton, set_disableButton] = useState(false);
 
@@ -67,38 +87,38 @@ export default function Nft(props) {
                 props.ignored ? 'ignored' : ''
             ].join(' ')}
         >
-            <img src={props.image} className="nft-image" />
+            {/* <img src={props.image} className="nft-image" /> */}
+            <NftImageInteractive 
+                image={props.image} 
+                nft={props.nft}
+            />
             <div className="css-ndd2wf">
                 <div className="css-1gdwl90">
-                    <Table width1stColumn="90">
-                        <tbody>
-                            <tr>
-                                <th>Type</th>
-                                <td>{props.type}</td>
-                            </tr>
-                            <tr>
-                                <th>Rank</th>
-                                <td>{props.rank}</td>
-                            </tr>
-                            <tr>
-                                <th>Boost</th>
-                                {
-                                    props.ignored ? 
-                                    <td>Ignored</td>
-                                    :
-                                    <td>{(props.boost*100).toFixed(2)}%</td>
-                                }
-                            </tr>
-                        </tbody>
-                    </Table>
                     {
                         !props.locked &&
-                        <Button
-                            onClick={handleLockNFT}
-                            disabled={disableButton}
-                        >
-                            Lock NFT
-                        </Button>
+                            (
+                                props.willBeIgnoredInStaking ? 
+                                <CustomWidthTooltip
+                                    title="This NFT will be ignored after locking, becuase you already have NFT of the same type with the same or better APR boost locked."
+                                    placement="top"
+                                //    arrow
+                                >
+                                    <Button
+                                       onClick={handleLockNFT}
+                                       disabled={disableButton}
+                                       fade={props.willBeIgnoredInStaking}
+                                    >
+                                        Lock NFT
+                                    </Button>
+                                </CustomWidthTooltip>
+                                :
+                                <Button
+                                    onClick={handleLockNFT}
+                                    disabled={disableButton}
+                                >
+                                    Lock NFT
+                                </Button>
+                            )
                     }
 
                 </div>
