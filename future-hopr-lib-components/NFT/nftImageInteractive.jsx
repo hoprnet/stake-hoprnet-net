@@ -211,7 +211,6 @@ export default function NftImageInteractive(props) {
                                                 className='multipleIds'
                                             >
                                                 <div>
-                                                16134, 16147, 16148, 16149, 1615016134, 16147, 16148, 16149, 1615016134, 16147, 16148, 16149, 16150
                                                     {props.nft.ids.join(', ')}
                                                 </div>
                                             </div>
