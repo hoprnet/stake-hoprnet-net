@@ -4,6 +4,6 @@ export const onNotSelectingClick = (() => {
   
     return onClick => ({
       onMouseDown: ({nativeEvent: e}) => {clickTime = Date.now(); pos.x = e.x; pos.y = e.y;},
-      onMouseUp: ({nativeEvent: e}) => {Date.now() - clickTime < 350 && pos.x === e.x && pos.y === e.y && onClick()},
+      onMouseUp: ({nativeEvent: e}) => {Date.now() - clickTime < 500 && pos.x === e.x && pos.y === e.y && onClick()},
     });
 })();
