@@ -46,14 +46,18 @@ export const Table = styled.table`
     th:first-of-type {
         width: ${props => props.width1stColumn ? props.width1stColumn : "160"}px;
     }
-
+    ${props => props.noTopBorder && `tr:first-of-type { border-top: none; }` };
 `;
 
 
 // elemet should accept only <tbody>
 export default function TableDataColumed(props) {
     return (
-        <Tables>
+        <Tables
+            className={[
+                'columned-data',
+            ].join(' ')}
+        >
             {props.children.length > 0 ? props.children?.map((elem, key) => {
                 return (
                     <Table 

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from "@emotion/styled";
 import { onNotSelectingClick } from '../../utils/functions-react'
 import { Table } from '../Table/columed-data'
+import { isMobile } from 'react-device-detect';
 
 const Container = styled.div`
 
@@ -26,10 +27,10 @@ const Container = styled.div`
         transform-style:preserve-3d;
         transition: all ease-out 0.4s;
         &.rotate {
-            transform:rotateY(20deg) scale(0.965) translateX(10px);
+            transform: rotateY(20deg) scale(0.965) translateX(10px);
         }
         &.flip {
-            transform:rotateY(180deg);
+            transform: rotateY(180deg);
         }
     }
 
@@ -39,7 +40,10 @@ const Container = styled.div`
         background: no-repeat center center;
         background-size: contain;
         position: absolute;
-        top: 0;left: 0;right: 0;bottom: 0;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
         margin: auto;
         cursor:pointer;
     }
@@ -68,7 +72,7 @@ const Container = styled.div`
         right: 0;
         bottom: 0;
         margin: auto;
-        cursor:pointer;
+        cursor: pointer;
         transform:rotate(180deg) translateZ(-30px) translateX(3px);
         &.fliped{
             transform:rotate(180deg);
@@ -76,16 +80,46 @@ const Container = styled.div`
         .text {
             transform: rotateX(180deg);
             position: absolute;
-            bottom: 10px;
+            bottom: 0;
             padding: 20px;
             text-align:left;
         }
         .multipleIds {
-            max-height: 186px;
+            max-height: 104px;
             overflow-x: hidden;
             overflow-y: auto;
         }
+        .nft-image-in-table{
+            max-height: 75px;
+            max-width: 100px;
+            float: left;
+            object-fit: contain;
+        }
     }
+
+    &.nftMobile {
+        .perspective,
+        .nft-front {
+            transform-style: unset;
+        }
+        .rotate, 
+        .flip,
+        .spine,
+        .nft-back,
+        .text,
+        .fliped {
+            transform: unset!important;
+        }
+        .text {
+            bottom: unset;
+            top: 0;
+        }
+        .spine,
+        .nft-back:not(.fliped) {
+            display: none;
+        }
+    }
+
 `
 
 
@@ -110,7 +144,13 @@ export default function NftImageInteractive(props) {
     }
 
     return (
-        <Container className="wrap">
+        <Container 
+            className={[
+                "nft-wrap",
+                isMobile ? 'nftMobile' : '',
+         //       true ? 'nftMobile' : '',
+            ].join(' ')}
+        >
             <div 
                 className="perspective"
                 onMouseEnter={()=>{set_rotated(true)}}
@@ -142,8 +182,18 @@ export default function NftImageInteractive(props) {
                         <Table 
                             width1stColumn="65"
                             className="text"
+                            noTopBorder
                         >
                             <tbody>
+                                <tr>
+                                    <th>Image</th>
+                                    <td>
+                                        <img 
+                                            src={props.image}
+                                            className="nft-image-in-table"
+                                        />
+                                    </td>
+                                </tr>
                                 <tr>
                                     <th>Type</th>
                                     <td>{props.nft.type}</td>
@@ -161,6 +211,7 @@ export default function NftImageInteractive(props) {
                                                 className='multipleIds'
                                             >
                                                 <div>
+                                                16134, 16147, 16148, 16149, 1615016134, 16147, 16148, 16149, 1615016134, 16147, 16148, 16149, 16150
                                                     {props.nft.ids.join(', ')}
                                                 </div>
                                             </div>
@@ -183,6 +234,7 @@ export default function NftImageInteractive(props) {
                                 </tr>
                             </tbody>
                         </Table>
+                        <span>&nbsp;</span> {/*Hack for mobile*/}
                     </div>
                 </div>
             </div>

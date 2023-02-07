@@ -15,7 +15,7 @@ const Container = styled.div`
     padding: 4px;
     gap: 2px;
     border-radius: 8px;
-    img {
+    img.nft-image {
         width: 230px;
         margin: auto;
         max-width: 100%;
