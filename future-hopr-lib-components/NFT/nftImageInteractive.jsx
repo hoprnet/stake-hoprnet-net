@@ -34,7 +34,18 @@ const Container = styled.div`
         }
     }
 
-    .nft {
+    .nft-image-container {
+        width: 230px;
+        height: 325px;
+        &.ignored {
+            background: var(--section-background);
+            .nft-image {
+                filter: opacity(0.4);
+            }
+        }
+    }
+
+    .nft-image {
         width: 230px;
         height: 325px;
         background: no-repeat center center;
@@ -162,12 +173,22 @@ export default function NftImageInteractive(props) {
                         fliped ? 'flip' : '',
                         rotated ? 'rotate' : '',
                     ].join(' ')}
-                >
-                    <div 
-                        className="nft"
-                        style={{backgroundImage: `url("${props.image}")`}}
+                >   
+                    <div
+                        className={[
+                            "nft-image-container",
+                            props.ignored ? 'ignored' : '',
+                        ].join(' ')}
                         onClick={()=>{set_fliped(true)}}
-                    />
+                    >
+                        <div 
+                            className={[
+                                "nft-image",
+                            ].join(' ')}
+                            style={{backgroundImage: `url("${props.image}")`}}
+                            
+                        />
+                    </div>
                     <div 
                         className="spine"
                         style={{background: spineColor(props.nft.rank)}}

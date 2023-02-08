@@ -3,34 +3,36 @@ import styled from "@emotion/styled";
 const SSection = styled.section`
   overflow: hidden;
   &.section--gradient {
-    background: linear-gradient(180deg, #0000b4 -110.52%, hsla(0, 0%, 85%, 0) 60.89%);
+    --section-background: linear-gradient(180deg, #0000b4 -110.52%, hsla(0, 0%, 85%, 0) 60.89%);
   }
   &.section--yellow {
-    background: #ffffa0;
+    --section-background: #ffffa0;
   }
   &.section--dark-gray {
-    background: #414141;
+    --section-background: #414141;
     color: #fff;
   }
   &.section--light-blue-gradient {
-    background: linear-gradient(180deg, #1ad1ff -110.52%, hsla(0, 0%, 85%, 0) 105%);
+    --section-background: linear-gradient(180deg, #1ad1ff -110.52%, hsla(0, 0%, 85%, 0) 105%);
   }
   &.section--light-blue {
-    background: #7ee5ff;
+    --section-background: #7ee5ff;
   }
   &.section--dark-gradient {
-    background: linear-gradient(180deg, #000050 0.5%, #0000b4 100%);
+    --section-background: linear-gradient(180deg, #000050 0.5%, #0000b4 100%);
   }
   &.section--gray {
-    background: #eeeeee;
+    --section-background: #eeeeee;
   }
   &.section--light-gray {
-    background: #e3e5e7;
+    --section-background: #e3e5e7;
   }
   &.section--disabled {
     filter: opacity(0.35);
     pointer-events: none;
   }
+
+  background: var(--section-background);
 
   &.full-height-min {
     min-height: calc(100vh - 68px - 170px);
@@ -50,6 +52,7 @@ const SSection = styled.section`
   }
   padding-bottom: 40px;
   padding-top: 40px;
+
 `
 
 const Content = styled.div`
