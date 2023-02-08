@@ -37,6 +37,7 @@ const Container = styled.div`
     .nft-image-container {
         width: 230px;
         height: 325px;
+        cursor:pointer;
         &.ignored {
             background: var(--section-background);
             .nft-image {
@@ -56,7 +57,6 @@ const Container = styled.div`
         right: 0;
         bottom: 0;
         margin: auto;
-        cursor:pointer;
     }
 
     .spine {
