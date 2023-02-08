@@ -91,6 +91,7 @@ export default function Nft(props) {
             <NftImageInteractive 
                 image={props.image} 
                 nft={props.nft}
+                ignored={props.ignored}
             />
             <div className="css-ndd2wf">
                 <div className="css-1gdwl90">
