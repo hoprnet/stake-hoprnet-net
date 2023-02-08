@@ -246,7 +246,7 @@ export default function NftImageInteractive(props) {
                                 <tr>
                                     <th>Boost</th>
                                     {
-                                        props.nft.ignored ? 
+                                        props.ignored ? 
                                         <td>Ignored</td>
                                         :
                                         <td>{(props.nft.boost*100).toFixed(2)}%</td>
