@@ -97,8 +97,8 @@ const SearchPeerId = styled(TextField)`
       display: none;
     }
   }
-}
 `
+
 TimeAgo.addDefaultLocale(en);
 const customLabels = {
   second: {

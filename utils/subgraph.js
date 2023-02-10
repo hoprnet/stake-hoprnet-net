@@ -175,12 +175,13 @@ function parseNFTs(ntfsFromGraph){
   return parsed;
 }
 
-export async function getSubGraphTimeStamp() {
+export async function getSubGraphMeta() {
   const GET_THEGRAPH = gql`
         query getSubGraphTimeStamp {
             _meta {
               block {
                 timestamp
+                number
               }
             }
         }
@@ -191,5 +192,8 @@ export async function getSubGraphTimeStamp() {
   } catch (e) {
     console.error(e);
   }
-  return data._meta.block.timestamp;
+  return {
+    lastSyncTimestamp: data._meta.block.timestamp,
+    lastSyncBlockNumber: data._meta.block.number
+  };
 };
