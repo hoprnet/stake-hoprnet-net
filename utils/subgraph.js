@@ -174,3 +174,22 @@ function parseNFTs(ntfsFromGraph){
   })
   return parsed;
 }
+
+export async function getSubGraphTimeStamp() {
+  const GET_THEGRAPH = gql`
+        query getSubGraphTimeStamp {
+            _meta {
+              block {
+                timestamp
+              }
+            }
+        }
+    `;
+  let data;
+  try {
+    data = await request(theGraphStakingUrl, GET_THEGRAPH);
+  } catch (e) {
+    console.error(e);
+  }
+  return data._meta.block.timestamp;
+};
