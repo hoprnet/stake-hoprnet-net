@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     } = await getSubGraphMeta();
     const serverTimestamp = Date.now();
     const difference = Math.abs(serverTimestamp/1000-lastSyncTimestamp);
-    const text = `Difference between current AWS servers time and TheGraph last synced block time: ${difference.toFixed(2)}s (${timeAgo.format(lastSyncTimestamp*1000)})`;
+    const text = `Difference between current AWS server timestamp and TheGraph last synced block timestamp is: ${difference.toFixed(2)}s (${timeAgo.format(lastSyncTimestamp*1000)})`;
 
     if(difference < 180) {
         res.status(200).json({ lastSyncTimestamp, serverTimestamp, text, lastSyncBlockNumber })

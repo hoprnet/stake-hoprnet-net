@@ -72,6 +72,7 @@ export default function Home() {
   const [appliedBoosts_NFTs, set_appliedBoosts_NFTs] = useState([]);
   const [ignoredBoosts_NFTs, set_ignoredBoosts_NFTs] = useState([]);
   const [ownBoosts_NFTs, set_ownBoosts_NFTs] = useState([]);
+  const [ownBoosts_NFTs_error, set_ownBoosts_NFTs_error] = useState(false);
   const [counter, set_counter] = useState(false);
   const [theGraphIssue, set_theGraphIssue] = useState(null);
 
@@ -155,8 +156,9 @@ export default function Home() {
   };
 
   const getSubGraphData = async (address) => {
+    let subGraphStakingUserData;
     try {
-      let subGraphStakingUserData = await getSubGraphStakingUserData(address);
+      subGraphStakingUserData = await getSubGraphStakingUserData(address);
       console.log('TheGraph UserData:', subGraphStakingUserData);
       const { 
         appliedBoosts,
@@ -167,13 +169,25 @@ export default function Home() {
       set_appliedBoosts_NFTs(appliedBoosts);
       set_ignoredBoosts_NFTs(ignoredBoosts);
 
-      let data = await getSubGraphNFTsUserData(address);
-      set_ownBoosts_NFTs(data);
-      return subGraphStakingUserData;
+      // let data = await getSubGraphNFTsUserData(address);
+      // set_ownBoosts_NFTs(data);
+   //   return subGraphStakingUserData;
     } catch (err) {
       console.error(err);
       setErrorMessage("There was a problem connecting to TheGraph");
     }
+
+    try {
+      let data = await getSubGraphNFTsUserData(address);
+      set_ownBoosts_NFTs(data);
+    } catch (err) {
+      console.error(err);
+      set_ownBoosts_NFTs([]);
+      set_ownBoosts_NFTs_error(true);
+      setErrorMessage("Unable to load your unstaked NFTs.");
+    }
+
+    return subGraphStakingUserData;
   };
 
   async function getBalances () {
@@ -577,6 +591,7 @@ export default function Home() {
         ignoredBoosts_NFTs={ignoredBoosts_NFTs}
         blockedTypeIndexes={blockedTypeIndexes}
         handleLockNFT={handleLockNFT}
+        ownBoosts_NFTs_error={ownBoosts_NFTs_error}
       />
       <Section2B
         balance_xDAI={balance_xDAI}

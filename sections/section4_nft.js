@@ -19,6 +19,7 @@ export default function Section4(props) {
     ignoredBoosts_NFTs,
     ownBoosts_NFTs,
     blockedTypeIndexes,
+    ownBoosts_NFTs_error,
   } = props;
 
   const [ownBoosts_NFTs_toShow, set_ownBoosts_NFTs_toShow] = useState([]);
@@ -160,7 +161,7 @@ export default function Section4(props) {
           <Typography type="h6">HOPR NFTs {ownBoosts_NFTs_toShow_length ? `(${ownBoosts_NFTs_toShow_length})` : '' }</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          {ownBoosts_NFTs_toShow.length === 0 ? 'No NFTs.' : '' }
+          {ownBoosts_NFTs_toShow.length === 0 && !ownBoosts_NFTs_error ? 'No NFTs.' : ownBoosts_NFTs_error ? 'Sorry, we are unable to display your NFTs' : '' }
           <NftContainer>
             {ownBoosts_NFTs_toShow.map((nft) => 
               <Nft

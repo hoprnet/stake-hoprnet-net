@@ -55,12 +55,11 @@ export async function getSubGraphStakingUserData(address) {
   const GET_THEGRAPH = gql`
     query getSubGraphStakingUserData {
         account(id: "${address}") {
-          actualLockedTokenAmount
+          actualStake
           appliedBoosts {
             boostNumerator
             boostTypeIndex
             id
-            owner
             redeemDeadline
             uri
           }
@@ -74,7 +73,6 @@ export async function getSubGraphStakingUserData(address) {
             boostNumerator
             boostTypeIndex
             id
-            owner
             redeemDeadline
             uri
           }
@@ -102,8 +100,8 @@ export async function getSubGraphStakingUserData(address) {
   }
 
   data = data.account;
-  if(data.actualLockedTokenAmount) {
-    data.actualLockedTokenAmount = data.actualLockedTokenAmount / 10e17;
+  if(data.actualStake) {
+    data.actualLockedTokenAmount = data.actualStake / 10e17;
     data.unclaimedRewards = data.unclaimedRewards / 10e17;
     data.claimedRewards = data.claimedRewards / 10e17;
     data.lastSyncTimestamp = parseInt(data.lastSyncTimestamp);
