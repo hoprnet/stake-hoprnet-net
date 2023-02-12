@@ -139,7 +139,7 @@ export async function getSubGraphNFTsUserData(address) {
   let data;
 
   try {
-    data = await request(theGraphStakingUrl, GET_THEGRAPH);
+    data = await request('https://api.studio.thegraph.com/query/40439/stake-season5/v0.0.5', GET_THEGRAPH);
   } catch (e) {
     console.error(e);
   }
