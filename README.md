@@ -1,14 +1,8 @@
-## Network Registry
+## stake.hoprnet.org
 
-A network registry back-end and front-end repository for Hopr Network.
+A staking UI front-end repository.
 
 ## Development
-
-To run the Back-End:
-
-```
-node ./be-scripts/index.js
-```
 
 To run the Front-End development server:
 
@@ -20,97 +14,34 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## Documentation
 
+All configuration is done in `staking-config.js`
 
-### Environment Variables
-
-The both the Back-End and the Front-End need the following variables:
-
-
-.env
-```
-MYSQL_HOST=*
-MYSQL_DATABASE_NAME=*
-MYSQL_USERNAME=*
-MYSQL_PASSWORD=*
-```
-
-Back-End also needs:
-```
-api_url_1=*
-api_key_1=*
-api_url_<number>=*
-api_key_<number>=*
-
-thegraph_url=*
-thegraph_environment=*
-
-element_home_url=*
-element_access_token=*
-```
-
-
-### The Back-End Script
-
-The script creates a list of nodes (`var nodes`) based on the `api_url_<number>` and `api_key_<number>` env variables. If it finds a pair of those, it adds it to a list of nodes that it will use. If you will supply only a key or an url, it will not use it.
-
-After the creation of that list, we go into `main()`:
+Example:
 
 ```
-async function main (){
+export const seasonNumber = 6;
+export const STAKING_SEASON_CONTRACT = "0xa02af160a280957a8881879ee9239a614ab47f0d"; //Season 6
+export const xHOPR_CONTRACT = "0xD057604A14982FE8D88c5fC25Aac3267eA142a08";
+export const GNOSIS_CHAIN_HOPR_BOOST_NFT = "0x43d13d7b83607f14335cf2cb75e87da369d056c7";
 
-    await getPeersFromDB();
-    await checkNodes();
-    await saveEnvironments();
-    await getPeersFromNetwork();
-    prepareData();
-    await pingAndSaveResults();
+export const theGraphStakingUrl = 'https://api.thegraph.com/subgraphs/name/hoprnet/stake-season6' //Season 6
 
-    process.exit()
-} 
+export const PROGRAM_START = 1674738000;  //Season 6
+export const PROGRAM_END = 1682510400;  //Season 6
+
+export const PROGRAM_START_MS = PROGRAM_START * 1000; 
+export const PROGRAM_END_MS = PROGRAM_END * 1000; 
+
+const FACTOR_DENOMINATOR = 1e12;
+export const factor = 1 / (365 * 24 * 60 * 60 / FACTOR_DENOMINATOR);
+
+export const baseAPR_chainboost = 396; //Season 6
+
+export const baseAPR = baseAPR_chainboost / factor; // 0.025008047999999998
+export const baseAPRPercentage = baseAPR * 100; // 2.5008047999999998
+
+export const BOOST_CAP = 250000; //Season 6
+
+//IPFS
+export const IPFS_HOSTED_URL = 'https://cloudflare-ipfs.com/ipfs/';
 ```
-
-### `getPeersFromDB()`
-Function gets all the already known peerIs from the database.
-
-
-### `checkNodes()`
-Function checks if the nodes provided in the environment variables are online. If they are not, another check is run just in case.
-When 2 checks fail, the node is removed from current run on the script and a message to Element channel 'Automated' is being sent with info how many nodes are offline. Maxiumum of 1 message per 24h is being sent on Element if the number of offline node is not changing.
-
-### `saveEnvironments()`
-First, this function lists all the environment that the provided nodes are running, then adds the environment of the graph provided in the environment variables.
-If a new environment is detected, its name is added to the databse.
-
-### `getPeersFromNetwork()`
-First, the function requests from all the working nodes the peerId that the nodes have seen on the network.
-Secondly, the function requests peerIds from the graph url provided in the environment variables.
-
-If a new peerId is detected, it is begin added to the databse.
-
-### `prepareData()`
-The nodes and peerId are being grouped by their environments.
-
-```
-var nodes = {
-    'monte_rosa': [{peerId: xxx, ...}, ...],
-    'paleochora': [{peerId: xxx, ...}, ...]
-}
-```
-
-
-### `pingAndSaveResults()`
-This function loops over all the nodes to ping and saves the results.
-
-1st degree loop: loop over the environments (e.g.  'monte_rosa', 'paleochora')
-
-2nd degree loop: loop over the peers in each environment 
-
-3rd degree loop: loop over the nodes used to ping (in the same environment as the peerId). 
- - If a ping comes back positive, the loop finishes and we go to the next peerId.
- - If the ping comes back negative, the loop continues until either we get a positive ping, or the avalible nodes run out.
-
- Each ping has a timeout of 10s. 
- After the 2nd degree loop is finished, it means that we checked all the peerId on the environment and we save to the database: 
-  - pings 
-  - the runtime
-
