@@ -1,0 +1,27 @@
+{
+    "type": "Patient_supporter",
+    "name": "Patient Supporter",
+    "rank": "gold",
+    "image": "ipfs://QmbtMdweSerxp71TKrn5L6HEpHE31WrPFgU8HZwUE1kJm5/gold.jpg",
+    "deadline": 1674738000,
+    "boost": 0.04,
+    "attributes": [
+        {
+            "trait_type": "NFT type",
+            "value": "Patient Supporter"
+        },
+        {
+            "trait_type": "NFT rank",
+            "value": "Gold"
+        },
+        {
+            "display_type": "boost_percentage",
+            "trait_type": "NFT Boost APR",
+            "value": "4"
+        },
+        {
+            "trait_type": "Staking Season eligibility",
+            "value": "Staking Season 6"
+        }
+    ]
+}
