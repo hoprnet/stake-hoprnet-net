@@ -1,7 +1,7 @@
 {
     "type": "DAO_v6",
     "name": "DAO v6",
-    "rank": "diamond",
+    "rank": "bronze",
     "image": "ipfs://QmYgSxSSLXY2L2MbCttTPA9S25WmVHYoYQHJz19ysUBYMU/bronze.jpg",
     "deadline": 1674738000,
     "boost": 0.015,
@@ -12,7 +12,7 @@
         },
         {
             "trait_type": "NFT rank",
-            "value": "Diamond"
+            "value": "Bronze"
         },
         {
             "display_type": "boost_percentage",
