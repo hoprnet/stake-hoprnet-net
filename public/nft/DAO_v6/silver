@@ -1,0 +1,27 @@
+{
+    "type": "DAO_v6",
+    "name": "DAO v6",
+    "rank": "silver",
+    "image": "ipfs://QmYgSxSSLXY2L2MbCttTPA9S25WmVHYoYQHJz19ysUBYMU/silver.jpg",
+    "deadline": 1674738000,
+    "boost": 0.02,
+    "attributes": [
+        {
+            "trait_type": "NFT type",
+            "value": "DAO v6"
+        },
+        {
+            "trait_type": "NFT rank",
+            "value": "Diamond"
+        },
+        {
+            "display_type": "boost_percentage",
+            "trait_type": "NFT Boost APR",
+            "value": "2"
+        },
+        {
+            "trait_type": "Staking Season eligibility",
+            "value": "Staking Season 6"
+        }
+    ]
+}
