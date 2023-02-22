@@ -14,7 +14,7 @@ import {
   STAKING_SEASON_CONTRACT,
   PROGRAM_START_MS,
   PROGRAM_END_MS
-} from '../staking-config'
+} from '../config'
 import {
   countAPRPercentage,
   formatDateToCET

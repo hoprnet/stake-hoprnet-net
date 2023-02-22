@@ -24,7 +24,7 @@ import {
   PROGRAM_END_MS,
   BOOST_CAP,
   baseAPR_chainboost
-} from '../staking-config'
+} from '../config'
 
 export const Tables = styled.div`
   display: flex;
@@ -301,7 +301,7 @@ export default function Section3(props) {
             </tr>
             <tr>
               <th>Next est. Network Rewards</th>
-              <td>{}- xHOPR</td>
+              <td>{props.balance_nextEstRewards ? props.balance_nextEstRewards : '-'} xHOPR</td>
             </tr>
             <tr>
               <th>Claimable</th>

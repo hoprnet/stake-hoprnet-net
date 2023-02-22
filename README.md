@@ -14,7 +14,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## Documentation
 
-All configuration is done in `staking-config.js`
+All configuration is done in `config.js`
 
 Example:
 

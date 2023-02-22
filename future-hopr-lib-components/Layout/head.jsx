@@ -1,6 +1,6 @@
 import React from 'react';
 import NextHead from 'next/head'
-import { seasonNumber } from '../../staking-config';
+import { seasonNumber } from '../../config';
 
 const Head = () => {
   return (

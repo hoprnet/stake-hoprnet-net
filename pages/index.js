@@ -14,7 +14,7 @@ import {
   STAKING_SEASON_CONTRACT, 
   xHOPR_CONTRACT,
   GNOSIS_CHAIN_HOPR_BOOST_NFT
-} from '../staking-config'
+} from '../config'
 
 import Banner from '../future-hopr-lib-components/Banner'
 import HeroSection from '../future-hopr-lib-components/Section/hero'
@@ -62,6 +62,7 @@ export default function Home() {
   const [balance_totalClaimedRewards, set_balance_totalClaimedRewards] = useState(null);
   const [balance_unclaimedRewards, set_balance_unclaimedRewards] = useState(null);
   const [balance_availableReward, set_balance_availableReward] = useState(null);
+  const [balance_nextEstRewards, set_balance_nextEstRewards] = useState(null);
   const [blockedTypeIndexes, set_blockedTypeIndexes] = useState([]);
   const [lastSyncTimestamp_cumulatedRewards, set_lastSyncTimestamp_cumulatedRewards] = useState(null);
   const [chooseWalletModal, set_chooseWalletModal] = useState(false);
@@ -119,13 +120,17 @@ export default function Home() {
         console.error(err);
         setErrorMessage(`There was a problem connecting to MetaMask (1). `,);
       }
+
+
     } else if (firstRun===undefined) {
       setErrorMessage("Install MetaMask");
     }
   };
 
   const connectViewMode = async (account) => {
+    console.log('connectViewMode')
     const SubGraph = await getSubGraphData(account);
+    getNextEstReward(account);
     set_balance_xdai(null);
     set_balance_xHOPR(null);
     set_balance_wxHOPR(null);
@@ -149,9 +154,24 @@ export default function Home() {
         getBalances();
       }
       await getSubGraphData(newAccount);
+      await getNextEstReward(newAccount);
     } catch (err) {
       console.error(err);
       setErrorMessage("There was a problem connecting to MetaMask (2).");
+    }
+  };
+
+  const getNextEstReward = async (address) => {
+    try{
+      const response = await fetch(`./api/getRewards?peerId=${address}`, {
+        method: "GET",
+      });
+      const nextEstRewards = await response.json();
+      console.log('nextEstRewards', nextEstRewards);
+      if(nextEstRewards && nextEstRewards[0] && nextEstRewards[0].rewards) set_balance_nextEstRewards(nextEstRewards[0].rewards);
+      else set_balance_nextEstRewards(null);
+    } catch (e) {
+      console.log('Problem while getting Next Est Reward', e);
     }
   };
 
@@ -573,6 +593,7 @@ export default function Home() {
         balance_stakedxHOPR={balance_stakedxHOPR}
         balance_claimedRewards={balance_claimedRewards}
         unclaimedRewards={subgraphUserData?.unclaimedRewards}
+        balance_nextEstRewards={balance_nextEstRewards}
         lastSyncTimestamp={subgraphUserData?.lastSyncTimestamp}
         boostRate={subgraphUserData?.boostRate}
         balance_unclaimedRewards={balance_unclaimedRewards}

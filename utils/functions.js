@@ -1,4 +1,4 @@
-import { factor, baseAPR_chainboost } from '../staking-config'
+import { factor, baseAPR_chainboost } from '../config'
 
 export function shorten0xAddress (address, lastChars = -4) {
     return address.substr(0,6)+'...'+address.substr(lastChars);

@@ -1,5 +1,5 @@
 import { request, gql } from 'graphql-request'
-import { theGraphStakingUrl, IPFS_HOSTED_URL, factor } from '../staking-config'
+import { theGraphStakingUrl, IPFS_HOSTED_URL, factor } from '../config'
 import { getNFTImageUrl } from './functions'
 import nfts from '../nft/nfts.json'
 
