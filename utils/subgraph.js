@@ -100,8 +100,8 @@ export async function getSubGraphStakingUserData(address) {
   }
 
   data = data.account;
-  if(data.actualStake) {
-    data.actualLockedTokenAmount = data.actualStake / 10e17;
+  if(data.actualLockedTokenAmount) {
+    data.actualLockedTokenAmount = data.actualLockedTokenAmount / 10e17;
     data.unclaimedRewards = data.unclaimedRewards / 10e17;
     data.claimedRewards = data.claimedRewards / 10e17;
     data.lastSyncTimestamp = parseInt(data.lastSyncTimestamp);
@@ -139,7 +139,7 @@ export async function getSubGraphNFTsUserData(address) {
   let data;
 
   try {
-    data = await request('https://api.studio.thegraph.com/query/40439/stake-season5/v0.0.5', GET_THEGRAPH);
+    data = await request('./api/subgraph', GET_THEGRAPH);
   } catch (e) {
     console.error(e);
   }
