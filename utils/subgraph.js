@@ -23,7 +23,7 @@ export async function getSubGraphStakingSeasonData() {
     `;
   let data;
   try {
-    data = await request(theGraphStakingUrl, GET_THEGRAPH);
+    data = await request('./api/subgraph', GET_THEGRAPH);
   } catch (e) {
     console.error(e);
   }
@@ -83,7 +83,7 @@ export async function getSubGraphStakingUserData(address) {
   let data;
 
   try {
-    data = await request(theGraphStakingUrl, GET_THEGRAPH);
+    data = await request('./api/subgraph', GET_THEGRAPH);
   } catch (e) {
     console.error(e);
   }
@@ -186,7 +186,7 @@ export async function getSubGraphMeta() {
     `;
   let data;
   try {
-    data = await request(theGraphStakingUrl, GET_THEGRAPH);
+    data = await request('./api/subgraph', GET_THEGRAPH);
   } catch (e) {
     console.error(e);
   }
