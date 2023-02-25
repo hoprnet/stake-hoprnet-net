@@ -1,0 +1,27 @@
+{
+    "type": "Even_more_patient",
+    "name": "Even more patient",
+    "rank": "gold",
+    "image": "ipfs://QmcxRVdFvZM6PXRYQgWeV6Zcj3DTMd6owg8HZq4Ejnpajq/gold.jpg",
+    "deadline": 1674738000,
+    "boost": 0.01,
+    "attributes": [
+        {
+            "trait_type": "NFT type",
+            "value": "Patient Supporter"
+        },
+        {
+            "trait_type": "NFT rank",
+            "value": "Gold"
+        },
+        {
+            "display_type": "boost_percentage",
+            "trait_type": "NFT Boost APR",
+            "value": "1"
+        },
+        {
+            "trait_type": "Staking Season eligibility",
+            "value": "Staking Season 6"
+        }
+    ]
+}
