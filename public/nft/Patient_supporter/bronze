@@ -2,9 +2,9 @@
     "type": "Patient_supporter",
     "name": "Patient Supporter",
     "rank": "bronze",
-    "image": "ipfs://QmbtMdweSerxp71TKrn5L6HEpHE31WrPFgU8HZwUE1kJm5/bronze.jpg",
+    "image": "ipfs://QmdddmWmhrfhbVP3DhR2ECFnuFTjoK6M1wBEHxQrfMf3yJ/bronze.jpg",
     "deadline": 1674738000,
-    "boost": 0.01,
+    "boost": 0.015,
     "attributes": [
         {
             "trait_type": "NFT type",
@@ -17,7 +17,7 @@
         {
             "display_type": "boost_percentage",
             "trait_type": "NFT Boost APR",
-            "value": "1"
+            "value": "1.5"
         },
         {
             "trait_type": "Staking Season eligibility",
