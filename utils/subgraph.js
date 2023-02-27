@@ -24,7 +24,11 @@ export async function getSubGraphStakingSeasonData() {
     `;
   let data;
   try {
-    data = await request(subgraphUrl, GET_THEGRAPH_QUERY);
+    const response = await fetch(subgraphUrl, {
+        method: "POST",
+        body: GET_THEGRAPH_QUERY
+    });
+    data = await response.json();
   } catch (e) {
     console.error(e);
   }
@@ -56,7 +60,7 @@ export async function getSubGraphStakingUserData(address) {
   const GET_THEGRAPH_QUERY = gql`
     query getSubGraphStakingUserData {
         account(id: "${address}") {
-          actualStake
+          actualLockedTokenAmount
           appliedBoosts {
             boostNumerator
             boostTypeIndex
@@ -84,7 +88,11 @@ export async function getSubGraphStakingUserData(address) {
   let data;
 
   try {
-    data = await request(subgraphUrl, GET_THEGRAPH_QUERY);
+    const response = await fetch(subgraphUrl, {
+      method: "POST",
+      body: GET_THEGRAPH_QUERY
+    });
+    data = await response.json();
   } catch (e) {
     console.error(e);
   }
@@ -101,8 +109,8 @@ export async function getSubGraphStakingUserData(address) {
   }
 
   data = data.account;
-  if(data.actualStake) {
-    data.actualLockedTokenAmount = data.actualStake / 10e17;
+  if(data.actualLockedTokenAmount) {
+    data.actualLockedTokenAmount = data.actualLockedTokenAmount / 10e17;
     data.unclaimedRewards = data.unclaimedRewards / 10e17;
     data.claimedRewards = data.claimedRewards / 10e17;
     data.lastSyncTimestamp = parseInt(data.lastSyncTimestamp);
@@ -140,7 +148,11 @@ export async function getSubGraphNFTsUserData(address) {
   let data;
 
   try {
-    data = await request('https://api.studio.thegraph.com/query/40439/stake-season5/v0.0.5', GET_THEGRAPH_QUERY);
+    const response = await fetch(subgraphUrl, {
+      method: "POST",
+      body: GET_THEGRAPH_QUERY
+    });
+    data = await response.json();
   } catch (e) {
     console.error(e);
   }
@@ -187,7 +199,11 @@ export async function getSubGraphMeta() {
     `;
   let data;
   try {
-    data = await request(subgraphUrl, GET_THEGRAPH_QUERY);
+    const response = await fetch(subgraphUrl, {
+      method: "POST",
+      body: GET_THEGRAPH_QUERY
+    });
+    data = await response.json();
   } catch (e) {
     console.error(e);
   }
