@@ -3,9 +3,10 @@ import { theGraphStakingUrl, IPFS_HOSTED_URL, factor } from '../config'
 import { getNFTImageUrl } from './functions'
 import nfts from '../nft/nfts.json'
 
+const subgraphUrl = './api/subgraph';
 
 export async function getSubGraphStakingSeasonData() {
-  const GET_THEGRAPH = gql`
+  const GET_THEGRAPH_QUERY = gql`
         query getSubGraphStakingSeasonData {
             programs {
               totalLocked
@@ -23,7 +24,7 @@ export async function getSubGraphStakingSeasonData() {
     `;
   let data;
   try {
-    data = await request('./api/subgraph', GET_THEGRAPH);
+    data = await request(subgraphUrl, GET_THEGRAPH_QUERY);
   } catch (e) {
     console.error(e);
   }
@@ -52,7 +53,7 @@ export async function getSubGraphStakingSeasonData() {
 
 export async function getSubGraphStakingUserData(address) {
  // NEW
-  const GET_THEGRAPH = gql`
+  const GET_THEGRAPH_QUERY = gql`
     query getSubGraphStakingUserData {
         account(id: "${address}") {
           actualStake
@@ -83,7 +84,7 @@ export async function getSubGraphStakingUserData(address) {
   let data;
 
   try {
-    data = await request('./api/subgraph', GET_THEGRAPH);
+    data = await request(subgraphUrl, GET_THEGRAPH_QUERY);
   } catch (e) {
     console.error(e);
   }
@@ -126,7 +127,7 @@ export async function getSubGraphStakingUserData(address) {
 
 export async function getSubGraphNFTsUserData(address) {
 
-  const GET_THEGRAPH = gql`
+  const GET_THEGRAPH_QUERY = gql`
     query getSubGraphNFTsUserData {
       boosts(first: 1000, where: {owner: "${address}"}) {
         id
@@ -139,7 +140,7 @@ export async function getSubGraphNFTsUserData(address) {
   let data;
 
   try {
-    data = await request('https://api.studio.thegraph.com/query/40439/stake-season5/v0.0.5', GET_THEGRAPH);
+    data = await request('https://api.studio.thegraph.com/query/40439/stake-season5/v0.0.5', GET_THEGRAPH_QUERY);
   } catch (e) {
     console.error(e);
   }
@@ -174,7 +175,7 @@ function parseNFTs(ntfsFromGraph){
 }
 
 export async function getSubGraphMeta() {
-  const GET_THEGRAPH = gql`
+  const GET_THEGRAPH_QUERY = gql`
         query getSubGraphTimeStamp {
             _meta {
               block {
@@ -186,7 +187,7 @@ export async function getSubGraphMeta() {
     `;
   let data;
   try {
-    data = await request('./api/subgraph', GET_THEGRAPH);
+    data = await request(subgraphUrl, GET_THEGRAPH_QUERY);
   } catch (e) {
     console.error(e);
   }
