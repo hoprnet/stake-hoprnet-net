@@ -1,11 +1,8 @@
-import { theGraphStakingUrl } from '../../config'
+import { theGraphStakingUrl } from '../../config';
+import { request, gql } from 'graphql-request';
 
 export default async function handler(req, res) {
     console.log("API: subgraph (proxy)");
-    const response = await fetch(theGraphStakingUrl, {
-        method: "POST",
-        body: JSON.stringify(req.body)
-    });
-    const json = await response.json();
+    const json = await request(theGraphStakingUrl, gql`${req.body}`);
     res.status(200).json(json);
 }
