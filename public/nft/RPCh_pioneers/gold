@@ -1,0 +1,27 @@
+{
+    "type": "RPCh_pioneers",
+    "name": "RPCh Pioneers",
+    "rank": "gold",
+    "image": "ipfs://QmYgSxSSLXY2L2MbCttTPA9S25WmVHYoYQHJz19ysUBYMU/gold.jpg",
+    "deadline": 1674738000,
+    "boost": 0.005,
+    "attributes": [
+        {
+            "trait_type": "NFT type",
+            "value": "RPCh Pioneers"
+        },
+        {
+            "trait_type": "NFT rank",
+            "value": "Gold"
+        },
+        {
+            "display_type": "boost_percentage",
+            "trait_type": "NFT Boost APR",
+            "value": "0.5"
+        },
+        {
+            "trait_type": "Staking Season eligibility",
+            "value": "Staking Season 6"
+        }
+    ]
+}
