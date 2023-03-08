@@ -186,7 +186,7 @@ function parseNFTs(ntfsFromGraph){
   return parsed;
 }
 
-export async function getSubGraphMeta() {
+export async function getSubGraphMeta(url) {
   const GET_THEGRAPH_QUERY = gql`
         query getSubGraphTimeStamp {
             _meta {
@@ -199,11 +199,7 @@ export async function getSubGraphMeta() {
     `;
   let data;
   try {
-    const response = await fetch(subgraphUrl, {
-      method: "POST",
-      body: GET_THEGRAPH_QUERY
-    });
-    data = await response.json();
+    data = await request(theDecentralisedGraphStakingUrl, GET_THEGRAPH_QUERY);
   } catch (e) {
     console.error(e);
   }
