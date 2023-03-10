@@ -43,7 +43,11 @@ export async function getRewards(address) {
   transaction.query(escape`
     SELECT count(*)/@totalCommunityPings*@rewardsToDistribute as rewards FROM pings WHERE pings.timestamp > from_unixtime(${lastCountResetEpoch}) AND peerId = @peerId GROUP BY pings.peerId;
   `);
+  transaction.query(escape`
+    SELECT reward as rewardsReceived FROM rewards WHERE peerId = @peerId;
+  `);
   const query = await transaction.commit();
   await db.end();
-  return query[3];
+  console.log(query)
+  return [query[3], query[4]];
 }

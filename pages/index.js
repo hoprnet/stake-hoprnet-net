@@ -63,6 +63,7 @@ export default function Home() {
   const [balance_unclaimedRewards, set_balance_unclaimedRewards] = useState(null);
   const [balance_availableReward, set_balance_availableReward] = useState(null);
   const [balance_nextEstRewards, set_balance_nextEstRewards] = useState(null);
+  const [balance_rewardsReceived, set_balance_rewardsReceived] = useState(null);
   const [blockedTypeIndexes, set_blockedTypeIndexes] = useState([]);
   const [lastSyncTimestamp_cumulatedRewards, set_lastSyncTimestamp_cumulatedRewards] = useState(null);
   const [chooseWalletModal, set_chooseWalletModal] = useState(false);
@@ -166,10 +167,15 @@ export default function Home() {
       const response = await fetch(`./api/getRewards?peerId=${address}`, {
         method: "GET",
       });
-      const nextEstRewards = await response.json();
+      const rewards = await response.json();
+      const nextEstRewards = rewards[0];
+      const rewardsReceiced = rewards[1];
       console.log('nextEstRewards', nextEstRewards);
+      console.log('rewardsReceiced', rewardsReceiced);
       if(nextEstRewards && nextEstRewards[0] && nextEstRewards[0].rewards) set_balance_nextEstRewards(nextEstRewards[0].rewards);
       else set_balance_nextEstRewards(null);
+      if(rewardsReceiced && rewardsReceiced[0] && rewardsReceiced[0].rewardsReceived) set_balance_rewardsReceived(rewardsReceiced[0].rewardsReceived);
+      else set_balance_rewardsReceived(null);
     } catch (e) {
       console.log('Problem while getting Next Est Reward', e);
     }
@@ -594,6 +600,7 @@ export default function Home() {
         balance_claimedRewards={balance_claimedRewards}
         unclaimedRewards={subgraphUserData?.unclaimedRewards}
         balance_nextEstRewards={balance_nextEstRewards}
+        balance_rewardsReceived={balance_rewardsReceived}
         lastSyncTimestamp={subgraphUserData?.lastSyncTimestamp}
         boostRate={subgraphUserData?.boostRate}
         balance_unclaimedRewards={balance_unclaimedRewards}

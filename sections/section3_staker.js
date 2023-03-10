@@ -147,7 +147,8 @@ export default function Section3(props) {
     boostRate,
     lastSyncTimestamp_cumulatedRewards,
     viewMode,
-    counter
+    counter,
+    balance_rewardsReceived
   } = props;
   const [claimable, set_claimable] = useState(null);
   const [toStake, set_toStake] = useState('');
@@ -283,7 +284,7 @@ export default function Section3(props) {
           </tr>
           <tr>
             <th>Received Network Rewards </th>
-            <td>{}- xHOPR</td>
+            <td>{balance_rewardsReceived ? balance_rewardsReceived : '-'} xHOPR</td>
           </tr>
           <tr>
             <th>Claimed</th>
