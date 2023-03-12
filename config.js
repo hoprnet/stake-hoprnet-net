@@ -26,8 +26,3 @@ export const BOOST_CAP = 250000; //Season 6
 
 //IPFS
 export const IPFS_HOSTED_URL = 'https://cloudflare-ipfs.com/ipfs/';
-
-//Rewards
-export const lastCountResetEpoch = 1677070800;
-export const environment = 'monte_rosa';
-export const totalRewards = 120000;

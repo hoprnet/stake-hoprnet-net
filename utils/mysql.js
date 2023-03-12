@@ -1,6 +1,5 @@
 import mysql from "serverless-mysql";
 import escape from "sql-template-strings";
-import { lastCountResetEpoch, environment, totalRewards } from '../config'
 
 const db = mysql({
   config: {
@@ -21,7 +20,16 @@ export async function getRewards(address) {
   console.log("MySQL: getRewards", address);
   let transaction = db.transaction();
   transaction.query(escape`
-    SET @peerId = (SELECT id from \`node-registry\` WHERE address = ${address} and environmentId = (SELECT id FROM environments WHERE environment = ${environment}));
+    SET @environment = (SELECT value from \`config\` WHERE \`key\` = 'environment');
+  `);
+  transaction.query(escape`
+    SET @lastCountResetEpoch = (SELECT value from \`config\` WHERE \`key\` = 'lastCountResetEpoch');
+  `);
+  transaction.query(escape`
+    SET @totalRewards = (SELECT value from \`config\` WHERE \`key\` = 'totalRewards');
+  `);
+  transaction.query(escape`
+    SET @peerId = (SELECT id from \`node-registry\` WHERE address = ${address} and environmentId = (SELECT id FROM environments WHERE environment = @environment));
   `);
   transaction.query(escape`
     SET @totalCommunityPings = (SELECT 
@@ -32,22 +40,25 @@ export async function getRewards(address) {
       COALESCE(sinceLastReset.count, 0) AS count
     FROM \`node-registry\` AS nr
     LEFT JOIN (
-        SELECT count(*) as count, peerId FROM pings WHERE pings.timestamp > from_unixtime(${lastCountResetEpoch}) GROUP BY pings.peerId
+        SELECT count(*) as count, peerId FROM pings WHERE pings.timestamp > from_unixtime(@lastCountResetEpoch) GROUP BY pings.peerId
     ) AS sinceLastReset ON nr.id = sinceLastReset.peerId
     WHERE communityId = 1
     ) as onlyCommunityCountSinceLastReset);
   `);
   transaction.query(escape`
-    SET @rewardsToDistribute = ${totalRewards};
+    SELECT 
+      count(*)/@totalCommunityPings*@totalRewards as rewards,
+      count(*), 
+      @totalCommunityPings, 
+      @environment,
+      @lastCountResetEpoch,
+      @totalRewards      
+    FROM pings WHERE pings.timestamp > from_unixtime(@lastCountResetEpoch) AND peerId = @peerId GROUP BY pings.peerId;
   `);
   transaction.query(escape`
-    SELECT count(*)/@totalCommunityPings*@rewardsToDistribute as rewards FROM pings WHERE pings.timestamp > from_unixtime(${lastCountResetEpoch}) AND peerId = @peerId GROUP BY pings.peerId;
-  `);
-  transaction.query(escape`
-    SELECT reward as rewardsReceived FROM rewards WHERE peerId = @peerId;
+    SELECT sum(reward) as rewardsReceived FROM rewards WHERE peerId = @peerId;
   `);
   const query = await transaction.commit();
   await db.end();
-  console.log(query)
-  return [query[3], query[4]];
+  return [query[5], query[6]];
 }
