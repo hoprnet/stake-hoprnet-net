@@ -1,5 +1,5 @@
 import { request, gql } from 'graphql-request'
-import { theGraphStakingUrl, IPFS_HOSTED_URL, factor } from '../config'
+import { factor, seasonNumber } from '../config'
 import { getNFTImageUrl } from './functions'
 import nfts from '../nft/nfts.json'
 
@@ -8,12 +8,12 @@ const subgraphUrl = './api/subgraph';
 export async function getSubGraphStakingSeasonData() {
   const GET_THEGRAPH_QUERY = gql`
         query getSubGraphStakingSeasonData {
-            programs {
+            stakeSeasons(where: {seasonNumber: "${seasonNumber}"}) {
               totalLocked
               totalClaimedRewards
               lastSyncTimestamp
-              availableReward
               blockedTypeIndexes
+              availableReward
             }
             _meta {
               block {
@@ -32,7 +32,7 @@ export async function getSubGraphStakingSeasonData() {
   } catch (e) {
     console.error(e);
   }
-  if (!data?.programs[0]) {
+  if (!data?.stakeSeasons[0]) {
     return {
       totalLocked: 'Connection error',
       totalClaimedRewards: 'Connection error',
@@ -40,50 +40,50 @@ export async function getSubGraphStakingSeasonData() {
     }
   }
   data = {
-    ...data.programs[0],
-    totalLocked: data.programs[0].totalLocked / 10e17,
-    totalClaimedRewards: data.programs[0].totalClaimedRewards / 10e17,
-    availableReward: data.programs[0].availableReward / 10e17,
+    ...data.stakeSeasons[0],
+    totalLocked: data.stakeSeasons[0].totalLocked / 10e17,
+    totalClaimedRewards: data.stakeSeasons[0].totalClaimedRewards / 10e17,
+    availableReward: data.stakeSeasons[0].availableReward / 10e17,
     blockChainTimestamp: data._meta.block.timestamp
   }
   return data
 };
 
-
-// currentRewardPool: data.programs[0].currentRewardPool / 10e18,
-// lastSyncTimestamp: parseInt(data.programs[0].lastSyncTimestamp),
-// totalActualStake: data.programs[0].totalActualStake / 10e18,
-// totalUnclaimedRewards: data.programs[0].totalUnclaimedRewards / 10e18,
-
 export async function getSubGraphStakingUserData(address) {
- // NEW
-  const GET_THEGRAPH_QUERY = gql`
-    query getSubGraphStakingUserData {
-        account(id: "${address}") {
-          actualLockedTokenAmount
-          appliedBoosts {
-            boostNumerator
-            boostTypeIndex
-            id
-            redeemDeadline
-            uri
-          }
-          boostRate
-          claimedRewards
-          cumulatedRewards
-          id
-          unclaimedRewards
-          lastSyncTimestamp
-          ignoredBoosts {
-            boostNumerator
-            boostTypeIndex
-            id
-            redeemDeadline
-            uri
-          }
-        }
+ const GET_THEGRAPH_QUERY = gql`
+ query getSubGraphStakingUserData {
+  accounts(where: {id: "${address.toLowerCase()}"}) {
+    stakingParticipation(where: {stakingSeason_: {seasonNumber: "${seasonNumber}"}}) {
+      stakingSeason {
+        seasonNumber
+      }
+      unclaimedRewards
+      virtualLockedTokenAmount
+      boostRate
+      claimedRewards
+      cumulatedRewards
+      ignoredBoosts {
+        boostNumerator
+        boostTypeIndex
+        id
+        redeemDeadline
+        uri
+      }
+      lastSyncTimestamp
+      airdropLockedTokenAmount
+      actualLockedTokenAmount
+      appliedBoosts {
+        boostNumerator
+        boostTypeIndex
+        id
+        redeemDeadline
+        uri
+      }
     }
-  `;
+    id
+  }
+ }
+`;
 
   let data;
 
@@ -97,8 +97,7 @@ export async function getSubGraphStakingUserData(address) {
     console.error(e);
   }
 
-
-  if(!data.account) {
+  if(!data.accounts.length === 0) {
     return {
       actualLockedTokenAmount: 0,
       unclaimedRewards: 0,
@@ -108,7 +107,7 @@ export async function getSubGraphStakingUserData(address) {
     }
   }
 
-  data = data.account;
+  data = data.accounts[0].stakingParticipation[0];
   if(data.actualLockedTokenAmount) {
     data.actualLockedTokenAmount = data.actualLockedTokenAmount / 10e17;
     data.unclaimedRewards = data.unclaimedRewards / 10e17;
@@ -116,10 +115,6 @@ export async function getSubGraphStakingUserData(address) {
     data.lastSyncTimestamp = parseInt(data.lastSyncTimestamp);
     data.boostRate = parseInt(data.boostRate);
   }
-
-  //0x226d833075C26dbF9aA377De0363e435808953a4
-  //0x226d833075c26dbf9aa377de0363e435808953a4
-  //0x226d833075c26dbf9aa377de0363e435808953a4
 
   if(data.appliedBoosts.length > 0) {
     data.appliedBoosts = parseNFTs(data.appliedBoosts);
@@ -129,7 +124,7 @@ export async function getSubGraphStakingUserData(address) {
     data.ignoredBoosts = parseNFTs(data.ignoredBoosts);
   }
 
-  return data
+  return data;
 };
 
 
@@ -137,7 +132,7 @@ export async function getSubGraphNFTsUserData(address) {
 
   const GET_THEGRAPH_QUERY = gql`
     query getSubGraphNFTsUserData {
-      boosts(first: 1000, where: {owner: "${address}"}) {
+      boosts(first: 1000, where: {owner: "${address.toLowerCase()}"}) {
         id
         boostTypeIndex
         uri
