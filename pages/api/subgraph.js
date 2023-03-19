@@ -7,6 +7,15 @@ export default async function handler(req, res) {
     let connectionType = 'decentralised';
     try {
         json = await request(theDecentralisedGraphStakingUrl, gql`${req.body}`);
+        
+        const _meta_decentralised = JSON.parse(JSON.stringify(json._meta));
+        const lastSyncTimestamp = json._meta.block.timestamp;
+        const serverTimestamp = Date.now();
+        const difference = Math.abs(serverTimestamp/1000-lastSyncTimestamp);
+        if(difference > 120) {
+            json = await request(theCentralisedGraphStakingUrl, gql`${req.body}`);
+            json._meta_decentralised = {block : {..._meta_decentralised.block, difference}};
+        }
     } catch (e) {
         console.log('[Error: TheGraph]', e);
         json = await request(theCentralisedGraphStakingUrl, gql`${req.body}`);
