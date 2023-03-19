@@ -7,20 +7,21 @@ const subgraphUrl = './api/subgraph';
 
 export async function getSubGraphStakingSeasonData() {
   const GET_THEGRAPH_QUERY = gql`
-        query getSubGraphStakingSeasonData {
-            stakeSeasons(where: {seasonNumber: "${seasonNumber}"}) {
-              totalLocked
-              totalClaimedRewards
-              lastSyncTimestamp
-              blockedTypeIndexes
-              availableReward
-            }
-            _meta {
-              block {
-                timestamp
-              }
-            }
+      query getSubGraphStakingSeasonData {
+        _meta {
+          block {
+            timestamp
+            number
+          }
         }
+        stakeSeasons(where: {seasonNumber: "${seasonNumber}"}) {
+          totalLocked
+          totalClaimedRewards
+          lastSyncTimestamp
+          blockedTypeIndexes
+          availableReward
+        }
+      }
     `;
   let data;
   try {
@@ -52,6 +53,12 @@ export async function getSubGraphStakingSeasonData() {
 export async function getSubGraphStakingUserData(address) {
  const GET_THEGRAPH_QUERY = gql`
  query getSubGraphStakingUserData {
+  _meta {
+    block {
+      timestamp
+      number
+    }
+  }
   accounts(where: {id: "${address.toLowerCase()}"}) {
     stakingParticipation(where: {stakingSeason_: {seasonNumber: "${seasonNumber}"}}) {
       stakingSeason {
@@ -132,6 +139,12 @@ export async function getSubGraphNFTsUserData(address) {
 
   const GET_THEGRAPH_QUERY = gql`
     query getSubGraphNFTsUserData {
+      _meta {
+        block {
+          timestamp
+          number
+        }
+      }
       boosts(first: 1000, where: {owner: "${address.toLowerCase()}"}) {
         id
         boostTypeIndex
@@ -194,7 +207,7 @@ export async function getSubGraphMeta(url) {
     `;
   let data;
   try {
-    data = await request(theDecentralisedGraphStakingUrl, GET_THEGRAPH_QUERY);
+    data = await request(url, GET_THEGRAPH_QUERY);
   } catch (e) {
     console.error(e);
   }

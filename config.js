@@ -5,8 +5,8 @@ export const xHOPR_CONTRACT = "0xD057604A14982FE8D88c5fC25Aac3267eA142a08";
 export const GNOSIS_CHAIN_HOPR_BOOST_NFT = "0x43d13d7b83607f14335cf2cb75e87da369d056c7";
 
 
-export const theDecentralisedGraphStakingUrl = `https://gateway.thegraph.com/api/${process.env.DECENTRALIZED_SUBGRAPH_KEY}/subgraphs/id/DrkbaCvNGVcNH1RghepLRy6NSHFi8Dmwp4T2LN3LqcjY` //Season 6
-export const theCentralisedGraphStakingUrl = `https://api.thegraph.com/subgraphs/name/hoprnet/stake-season6` //Season 6
+export const theDecentralisedGraphStakingUrl = `https://gateway.thegraph.com/api/${process.env.DECENTRALIZED_SUBGRAPH_KEY}/subgraphs/id/DrkbaCvNGVcNH1RghepLRy6NSHFi8Dmwp4T2LN3LqcjY`
+export const theCentralisedGraphStakingUrl = `https://api.studio.thegraph.com/query/40439/hopr-stake-all-seasons/v0.0.5`
 
 export const PROGRAM_START = 1674738000;  //Season 6
 export const PROGRAM_END = 1682510400;  //Season 6
