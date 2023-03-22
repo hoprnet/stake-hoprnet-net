@@ -104,7 +104,7 @@ export async function getSubGraphStakingUserData(address) {
     console.error(e);
   }
 
-  if(!data.accounts[0].stakingParticipation.length === 0) {
+  if(data.accounts[0].stakingParticipation.length === 0) {
     return {
       actualLockedTokenAmount: 0,
       unclaimedRewards: 0,
