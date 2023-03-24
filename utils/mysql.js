@@ -29,7 +29,7 @@ export async function getRewards(address) {
     SET @totalRewards = (SELECT value from \`config\` WHERE \`key\` = 'totalRewards');
   `);
   transaction.query(escape`
-    SET @peerId = (SELECT id from \`node-registry\` WHERE address = ${address} and environmentId = (SELECT id FROM environments WHERE environment = @environment));
+    SET @peerId = (SELECT id from \`node-registry\` WHERE address = ${address} AND registered = 1 AND communityId = 1 AND environmentId = (SELECT id FROM environments WHERE environment = @environment));
   `);
   transaction.query(escape`
     SET @totalCommunityPings = (SELECT 
