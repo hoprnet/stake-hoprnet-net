@@ -57,6 +57,7 @@ export default function Section4(props) {
   }, [appliedBoosts_NFTs, ignoredBoosts_NFTs]);
 
   function NFTs_filter(NFTs, NFTsToRemove = []) {
+    console.log('NFTs_filter: NFTs, NFTsToRemove', NFTs, NFTsToRemove)
     const toRemove = NFTsToRemove.map(elem => elem.id);
  //   console.log('toRemove', toRemove)
     const allowed = NFTs

@@ -104,7 +104,7 @@ export async function getSubGraphStakingUserData(address) {
     console.error(e);
   }
 
-  if(data.accounts[0].stakingParticipation.length === 0) {
+  if(data.accounts.length === 0 || data.accounts[0].stakingParticipation.length === 0) {
     return {
       actualLockedTokenAmount: 0,
       unclaimedRewards: 0,
@@ -136,7 +136,6 @@ export async function getSubGraphStakingUserData(address) {
 
 
 export async function getSubGraphNFTsUserData(address) {
-
   const GET_THEGRAPH_QUERY = gql`
     query getSubGraphNFTsUserData {
       _meta {
@@ -176,21 +175,27 @@ export async function getSubGraphNFTsUserData(address) {
 
 
 function parseNFTs(ntfsFromGraph){
+  console.log('parseNFTs', ntfsFromGraph)
   let parsed = ntfsFromGraph.map(elem=>{
     const uri2 = elem.uri.replace("https://stake.hoprnet.org/", "").split('/');
     const type = uri2[0];
     const rank = uri2[1];
-    const imageHosted = getNFTImageUrl(elem);
-    const boostRate = nfts[type][rank]?.boost ? nfts[type][rank].boost * factor : 0;
-    return {
-      type,
-      rank,
-      boostRate,
-      imageHosted,
-      ...nfts[type][rank],
-      ...elem
+    try {
+      const imageHosted = getNFTImageUrl(elem);
+      const boostRate = nfts[type][rank]?.boost ? nfts[type][rank].boost * factor : 0;
+      return {
+        type,
+        rank,
+        boostRate,
+        imageHosted,
+        ...nfts[type][rank],
+        ...elem
+      }
+    } catch (e) {
+      console.error(`Error while paring NFTs\ntype=${type}\nrank=${rank}\n`, e)
     }
   })
+  parsed = parsed.filter(x => x !== undefined);
   return parsed;
 }
 
