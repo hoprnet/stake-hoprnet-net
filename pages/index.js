@@ -580,6 +580,7 @@ export default function Home() {
         yellowBallBackground
         animation={animation}
         animationCss={animationCss}
+        theGraphBadge
       />
       <Section2
         balance_xDAI={balance_xDAI}

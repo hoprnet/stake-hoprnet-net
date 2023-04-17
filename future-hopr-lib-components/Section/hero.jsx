@@ -15,6 +15,9 @@ const SSection = styled(Section)`
     //         margin-top: 100px;
     //     }
     // }
+    .Content {
+        position: relative;
+    }
     .content--center{
         width: 100%;
     }
@@ -39,6 +42,18 @@ const Animation = styled.div`
 
 const Subtext = styled(Typography)`
     max-width: 640px;
+`
+
+const Badge = styled.img`
+  height: auto;
+  max-width: 100%;
+  width: 220px;
+  position: initial;
+  margin-top: 6px;
+  @media (min-width: 750px) {
+    right: 6px;
+    position: absolute;
+  }
 `
 
 function Section1(props) {
@@ -90,6 +105,13 @@ function Section1(props) {
                 {props.title}
             </Typography>
             </div>
+            {
+                props.theGraphBadge &&
+                <Badge
+                    src='../assets/icons/Badge_PoweredByTheGraph_white.svg'
+                />
+            }
+
             {/* 
             <Subtext center>
                 Add the DERP RPC endpoint to your crypto wallet to see exactly what information is being leaked about you every time you connect to a crypto service.
