@@ -6,7 +6,7 @@ export const GNOSIS_CHAIN_HOPR_BOOST_NFT = "0x43d13d7b83607f14335cf2cb75e87da369
 
 
 export const theDecentralisedGraphStakingUrl = `https://gateway.thegraph.com/api/${process.env.DECENTRALIZED_SUBGRAPH_KEY}/subgraphs/id/DrkbaCvNGVcNH1RghepLRy6NSHFi8Dmwp4T2LN3LqcjY`
-export const theCentralisedGraphStakingUrl = `https://api.studio.thegraph.com/query/40439/hopr-stake-all-seasons/v0.0.7`
+export const theCentralisedGraphStakingUrl = `https://api.studio.thegraph.com/query/40439/hopr-stake-all-seasons/v0.0.9`
 
 export const PROGRAM_START = 1682510400;  //Season 7
 export const PROGRAM_END = 1690372800;  //Season 7
@@ -17,7 +17,7 @@ export const PROGRAM_END_MS = PROGRAM_END * 1000;
 const FACTOR_DENOMINATOR = 1e12;
 export const factor = 1 / (365 * 24 * 60 * 60 / FACTOR_DENOMINATOR);
 
-export const baseAPR_chainboost = 396; //Season 6
+export const baseAPR_chainboost = 396; //Season 7 (BASIC_FACTOR_NUMERATOR)
 
 export const baseAPR = baseAPR_chainboost / factor; // 0.025008047999999998
 export const baseAPRPercentage = baseAPR * 100; // 2.5008047999999998
