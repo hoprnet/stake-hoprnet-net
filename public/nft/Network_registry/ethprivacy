@@ -1,0 +1,27 @@
+{
+    "type": "Network_registry",
+    "name": "Network Registry",
+    "rank": "ethprivacy",
+    "image": "ipfs://QmTgqV9NhjD3hPaYrHkWipx5GGpZ7BbVXmgLGDHjfaexCP/ethprivacy.jpg",
+    "deadline": 1658840400,
+    "boost": 0,
+    "attributes": [
+        {
+            "trait_type": "NFT type",
+            "value": "Network Registry"
+        },
+        {
+            "trait_type": "NFT rank",
+            "value": "Ethprivacy"
+        },
+        {
+            "display_type": "boost_percentage",
+            "trait_type": "NFT Boost APR",
+            "value": "0"
+        },
+        {
+            "trait_type": "Staking Season eligibility",
+            "value": "Staking Season 6"
+        }
+    ]
+}
