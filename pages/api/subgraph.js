@@ -23,6 +23,14 @@ export default async function handler(req, res) {
             json = await request(theCentralisedGraphStakingUrl, gql`${req.body}`);
             error = 'decentralised: json?.stakeSeasons === []';
             connectionType = 'centralised';
+        } else if(  json.accounts && 
+                    json.accounts.length === 1 &&
+                    json.accounts[0].stakingParticipation &&
+                    json.accounts[0].stakingParticipation.length === 0
+                ) {
+            json = await request(theCentralisedGraphStakingUrl, gql`${req.body}`);
+            error = 'decentralised: json.accounts[0].stakingParticipation.length = []';
+            connectionType = 'centralised';
         } 
     } catch (e) {
         console.log('[Error: TheGraph]', e);
