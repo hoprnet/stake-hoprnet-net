@@ -45,7 +45,7 @@ export function formatDateToCET(epoch_ms) {
   const year = d.getFullYear();
   const month = d.getMonth()+1 < 10 ? `0${d.getMonth()+1}` : d.getMonth()+1;
   const day = d.getDate() < 10 ? `0${d.getDate()}` : d.getDate();
-  const hours = d.getUTCHours() < 10 ? `0${d.getUTCHours()}` : d.getUTCHours();
+  const hours = d.getUTCHours() < 10 ? `0${d.getUTCHours()}` : d.getUTCHours()+1; //Tempolary hotfix
   const minutes = d.getUTCMinutes() < 10 ? `0${d.getUTCMinutes()}` : d.getUTCMinutes();
   const formatted = `${year}-${month}-${day} ${hours}:${minutes} CET`
   return formatted;
