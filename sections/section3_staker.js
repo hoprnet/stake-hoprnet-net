@@ -365,7 +365,7 @@ export default function Section3(props) {
         >
           Unlock 
           {
-            (counter && !seasonFinised) &&
+            (counter) &&
             <span>
               ({timeTo})
             </span>
