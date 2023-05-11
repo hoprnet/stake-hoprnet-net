@@ -68,7 +68,7 @@ export default function Section2(props) {
             href="https://blockscout.com/poa/xdai/address/0xD4fdec44DB9D44B8f2b6d529620f9C0C7066A2c1/transactions"
             text="wxHOPR"
             openIcon
-          /> tokens. xHOPR staked today will be locked untill <strong>{formatDateToCET(PROGRAM_END_MS)}</strong>.<br/>
+          /> tokens. xHOPR staked today will be locked until <strong>{formatDateToCET(PROGRAM_END_MS)}</strong>.<br/>
           
         </p>
         <br></br>
