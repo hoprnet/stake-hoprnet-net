@@ -1,10 +1,10 @@
 {
     "type": "DAO_v7",
     "name": "DAO v7",
-    "rank": "bronze",
-    "image": "ipfs://QmYgSxSSLXY2L2MbCttTPA9S25WmVHYoYQHJz19ysUBYMU/bronze.jpg",
+    "rank": "gold",
+    "image": "ipfs://QmXvcwFwK3QGgwTqhGTHkwyLj9XTyLqHUwsvgZmzdwBeVQ/gold.jpg",
     "deadline": 1674738000,
-    "boost": 0.01,
+    "boost": 0.03,
     "attributes": [
         {
             "trait_type": "NFT type",
@@ -12,12 +12,12 @@
         },
         {
             "trait_type": "NFT rank",
-            "value": "Bronze"
+            "value": "Gold"
         },
         {
             "display_type": "boost_percentage",
             "trait_type": "NFT Boost APR",
-            "value": "1"
+            "value": "3"
         },
         {
             "trait_type": "Staking Season eligibility",

@@ -1,14 +1,14 @@
 {
-    "type": "DAO_v7",
-    "name": "DAO v7",
+    "type": "DAO_v6",
+    "name": "DAO v6",
     "rank": "bronze",
-    "image": "ipfs://QmYgSxSSLXY2L2MbCttTPA9S25WmVHYoYQHJz19ysUBYMU/bronze.jpg",
+    "image": "ipfs://QmXvcwFwK3QGgwTqhGTHkwyLj9XTyLqHUwsvgZmzdwBeVQ/bronze.jpg",
     "deadline": 1674738000,
     "boost": 0.01,
     "attributes": [
         {
             "trait_type": "NFT type",
-            "value": "DAO v7"
+            "value": "DAO v6"
         },
         {
             "trait_type": "NFT rank",
@@ -21,7 +21,7 @@
         },
         {
             "trait_type": "Staking Season eligibility",
-            "value": "Staking Season 7"
+            "value": "Staking Season 6"
         }
     ]
 }
