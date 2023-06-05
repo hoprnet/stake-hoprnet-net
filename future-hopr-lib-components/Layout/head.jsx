@@ -20,7 +20,6 @@ const Head = () => {
       {/*<meta name="robots" content="index,nofollow" />*/}
       <meta httpEquiv="cache-control" content="no-cache" />
       <meta httpEquiv="expires" content="43200" />
-      {/* <script src="https://cdn.usefathom.com/script.js" data-site="" defer></script> */}
     </NextHead>
   );
 };
