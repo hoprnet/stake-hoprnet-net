@@ -62,7 +62,7 @@ export default function Section2(props) {
           openIcon
         />{" "}
         <Link
-          href={`https://blockscout.com/poa/xdai/address/${STAKING_SEASON_CONTRACT}/transactions`}
+          href={`https://gnosisscan.io/address/${STAKING_SEASON_CONTRACT}`}
           text="Contract Address"
           openIcon
         />
@@ -72,7 +72,7 @@ export default function Section2(props) {
         <p className=" css-9tmdd2">
           Stake
           {" "}<Link
-            href="https://blockscout.com/poa/xdai/address/0xD057604A14982FE8D88c5fC25Aac3267eA142a08/transactions"
+            href="https://gnosisscan.io/address/0xD057604A14982FE8D88c5fC25Aac3267eA142a08"
             text="xHOPR"
             openIcon
           />{" "}
