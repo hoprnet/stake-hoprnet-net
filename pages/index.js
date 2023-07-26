@@ -701,7 +701,7 @@ export default function Home() {
             <Alert severity="error">
               The Graph was last updated over <strong>{timeAgo.format(theGraphIssue)}</strong>.<br/>
               This might result in old data being displayed on this website.<br/><br/>
-              Staking is functional. You can check blockscout for up to date information.
+              Staking is functional. You can check gnosisscan for up to date information.
             </Alert>
           </Snackbar>
       }
