@@ -372,16 +372,9 @@ export default function Section3(props) {
             set_unlockDisabled(false);
             setTimeout(()=>{set_reloading(false)}, 1500);
           }}
-          disabled={unlockDisabled || dateNow < PROGRAM_END_MS || viewMode}
           loading={unlockDisabled}
         >
           Unlock 
-          {
-            (counter && !seasonFinised) &&
-            <span>
-              ({timeTo})
-            </span>
-          }
         </Button>
         <Button
           onClick={async ()=>{
