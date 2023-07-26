@@ -65,7 +65,7 @@ export default function Section2(props) {
         <br />
         <p className=" css-9tmdd2">Starting <strong>{formatDateToCET(PROGRAM_START_MS)}</strong>, rewards can be claimed on each block. All rewards will be returned as
           {" "}<Link
-            href="https://blockscout.com/poa/xdai/address/0xD4fdec44DB9D44B8f2b6d529620f9C0C7066A2c1/transactions"
+            href="https://gnosisscan.io/address/0xD4fdec44DB9D44B8f2b6d529620f9C0C7066A2c1"
             text="wxHOPR"
             openIcon
           /> tokens. xHOPR staked today will be locked until <strong>{formatDateToCET(PROGRAM_END_MS)}</strong>.<br/>
