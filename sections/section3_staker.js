@@ -158,8 +158,10 @@ export default function Section3(props) {
   const [unlockDisabled, set_unlockDisabled] = useState(false);
   const [timeTo, set_timeTo] = useState(null);
   const [seasonFinised, set_seasonFinised] = useState(false);
+  const [dateNow, set_dateNow] = useState(Date.now());
 
   useEffect(() => {
+    console.log('useEffect', {counter, seasonFinised, if: (!counter || seasonFinised)});
     if(!counter || seasonFinised) return;
     set_timeTo(timeAgo.format(PROGRAM_END_MS, customStyle));
     const interval = setInterval(() => {
@@ -210,6 +212,16 @@ export default function Section3(props) {
     balance_stakedxHOPR,
     boostRate
   ]);
+
+  useEffect(() => {
+    set_dateNow(Date.now());
+    const interval = setInterval(() => {
+      set_dateNow(Date.now());
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
 
   const rewardsPerSecond = () => {
     if(balance_stakedxHOPR > BOOST_CAP) return countRewardsPerSecond(balance_stakedxHOPR, baseAPR_chainboost) +  countRewardsPerSecond(BOOST_CAP, boostRate);
@@ -360,7 +372,7 @@ export default function Section3(props) {
             set_unlockDisabled(false);
             setTimeout(()=>{set_reloading(false)}, 1500);
           }}
-          disabled={unlockDisabled || Date.now() < PROGRAM_END_MS || viewMode}
+          disabled={unlockDisabled || dateNow < PROGRAM_END_MS || viewMode}
           loading={unlockDisabled}
         >
           Unlock 

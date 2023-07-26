@@ -606,7 +606,7 @@ export default function Home() {
         boostRate={subgraphUserData?.boostRate}
         balance_unclaimedRewards={balance_unclaimedRewards}
         lastSyncTimestamp_cumulatedRewards={lastSyncTimestamp_cumulatedRewards}
-        counter={counter}
+        counter={true}
         claimRewards={claimRewards}
         handleStake={handleStake}
         getBalances={getBalances}
