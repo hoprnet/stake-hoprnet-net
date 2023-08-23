@@ -1,5 +1,5 @@
-const { Client } = require('pg')
-const format = require('pg-format');
+import { Client } from 'pg'
+import format from 'pg-format';
 
 export default async function handler(req, res) {
   console.log("API: Hub: generatedSafe");
