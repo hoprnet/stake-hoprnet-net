@@ -26,6 +26,8 @@ import {
   baseAPR_chainboost
 } from '../config'
 
+//const PROGRAM_END_MS = 1693997600000;
+
 export const Tables = styled.div`
   display: flex;
   justify-content: space-between;
@@ -157,7 +159,19 @@ export default function Section3(props) {
   const [claimDisabled, set_claimDisabled] = useState(false);
   const [unlockDisabled, set_unlockDisabled] = useState(false);
   const [timeTo, set_timeTo] = useState(null);
+  const [disableAsProgramAintFinished, set_disableAsProgramAintFinished] = useState(true);
   const [seasonFinised, set_seasonFinised] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if(Date.now() < PROGRAM_END_MS) {
+        set_disableAsProgramAintFinished(true);
+      } else {
+        set_disableAsProgramAintFinished(false);
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     if(!counter || seasonFinised) return;
@@ -360,7 +374,7 @@ export default function Section3(props) {
             set_unlockDisabled(false);
             setTimeout(()=>{set_reloading(false)}, 1500);
           }}
-          disabled={unlockDisabled || Date.now() < PROGRAM_END_MS || viewMode}
+          disabled={unlockDisabled || disableAsProgramAintFinished || viewMode}
           loading={unlockDisabled}
         >
           Unlock 
