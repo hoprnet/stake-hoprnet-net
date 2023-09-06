@@ -10,13 +10,18 @@ export default async function handler(req, res) {
       'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
     )
 
+
     console.log("API: hub: subgraph (proxy)");
+    console.log('req', req)
     let json = {};
     let connectionType = 'decentralised';
     let error = null;
     try {
+        console.log('req.body', req.body)
+        console.log('gql`${req.body}`', gql`${req.body}`)
+
         json = await request(theDecentralisedGraphStakingUrl, gql`${req.body}`);
-        console.log(json?.stakeSeasons)
+        console.log('request', json?.stakeSeasons)
         const _meta_decentralised = JSON.parse(JSON.stringify(json._meta));
         const lastSyncTimestamp = json._meta.block.timestamp;
         const serverTimestamp = Date.now();
@@ -40,7 +45,7 @@ export default async function handler(req, res) {
             error = 'decentralised: json.accounts[0].stakingParticipation.length = []';
             connectionType = 'centralised';
         } 
-    } catch (e) {
+     } catch (e) {
         console.log('[Error: TheGraph]', e);
         error = e;
         json = await request(theCentralisedGraphStakingUrl, gql`${req.body}`);

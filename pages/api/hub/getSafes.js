@@ -26,7 +26,8 @@ export default async function handler(req, res) {
     const formattedQuery = format(`
       SELECT moduleAddress, safeAddress
       FROM staking_hub_safes 
-      WHERE ownerAddress = '${ownerAddress}';
+      WHERE ownerAddress = '${ownerAddress}'
+      ORDER BY id ASC;
     `)
     const result = await client.query(formattedQuery);
     await client.end();
