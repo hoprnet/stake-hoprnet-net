@@ -302,7 +302,7 @@ export default function Section3(props) {
             </tr>
             <tr>
               <th>Next est. Network Rewards</th>
-              <td>{props.balance_nextEstRewards ? props.balance_nextEstRewards : '-'} xHOPR</td>
+              <td>-</td>
             </tr>
             <tr>
               <th>Claimable</th>
