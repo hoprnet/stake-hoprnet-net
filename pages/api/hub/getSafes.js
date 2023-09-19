@@ -24,11 +24,10 @@ export default async function handler(req, res) {
     const client = new Client(DBLoginInfoPostgres);
     await client.connect()
     const formattedQuery = format(`
-      SELECT moduleAddress, safeAddress
+      SELECT id, moduleAddress, safeAddress
       FROM staking_hub_safes 
       WHERE ownerAddress = '${ownerAddress}'
-      ORDER BY id ASC;
-    `)
+      ORDER BY id ASC;`)
     const result = await client.query(formattedQuery);
     await client.end();
     res.status(200).json(result.rows ? result.rows : []);
