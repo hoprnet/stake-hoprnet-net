@@ -7,14 +7,18 @@ export const GNOSIS_CHAIN_HOPR_BOOST_NFT = "0x43d13d7b83607f14335cf2cb75e87da369
 
 export const theDecentralisedGraphStakingUrl = `https://gateway.thegraph.com/api/${process.env.DECENTRALIZED_SUBGRAPH_KEY}/subgraphs/id/DrkbaCvNGVcNH1RghepLRy6NSHFi8Dmwp4T2LN3LqcjY`
 export const theCentralisedGraphStakingUrl = `https://api.studio.thegraph.com/query/40439/hopr-stake-all-seasons/v0.0.10`
+
 export const theDecentralisedGraphStakingUrlNewStaking = `https://gateway.thegraph.com/api/${process.env.DECENTRALIZED_SUBGRAPH_KEY}/subgraphs/id/FEQcaX9qfh31YL2K7rxRN5a3sr9rjMWkguJnby7StNRo`
 export const theCentralisedGraphStakingUrlNewStaking = `https://api.studio.thegraph.com/query/40439/hopr-nodes-dufour/version/latest`
 
-export const PROGRAM_START = 1690372800; 
+export const theDecentralisedGraphStakingUrlNewStakingTesting = `https://gateway.thegraph.com/api/${process.env.DECENTRALIZED_SUBGRAPH_KEY}/subgraphs/id/FEQcaX9qfh31YL2K7rxRN5a3sr9rjMWkguJnby7StNRo`
+export const theCentralisedGraphStakingUrlNewStakingTesting = `https://api.studio.thegraph.com/query/40439/hopr-nodes-dufour-l2/version/latest`
+
+export const PROGRAM_START = 1690372800;
 export const PROGRAM_END = 1694260800;
 
-export const PROGRAM_START_MS = PROGRAM_START * 1000; 
-export const PROGRAM_END_MS = PROGRAM_END * 1000; 
+export const PROGRAM_START_MS = PROGRAM_START * 1000;
+export const PROGRAM_END_MS = PROGRAM_END * 1000;
 
 const FACTOR_DENOMINATOR = 1e12;
 export const factor = 1 / (365 * 24 * 60 * 60 / FACTOR_DENOMINATOR);
