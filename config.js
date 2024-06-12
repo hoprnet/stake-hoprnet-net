@@ -4,15 +4,11 @@ export const STAKING_SEASON_CONTRACT = "0xdc8f03f19986859362d15c3d5ed74f26518870
 export const xHOPR_CONTRACT = "0xD057604A14982FE8D88c5fC25Aac3267eA142a08";
 export const GNOSIS_CHAIN_HOPR_BOOST_NFT = "0x43d13d7b83607f14335cf2cb75e87da369d056c7";
 
-
-export const theDecentralisedGraphStakingUrl = `https://gateway.thegraph.com/api/${process.env.DECENTRALIZED_SUBGRAPH_KEY}/subgraphs/id/DrkbaCvNGVcNH1RghepLRy6NSHFi8Dmwp4T2LN3LqcjY`
-export const theCentralisedGraphStakingUrl = `https://api.studio.thegraph.com/query/40439/hopr-stake-all-seasons/v0.0.10`
+export const theDecentralisedGraphStakingUrl = `https://gateway-arbitrum.network.thegraph.com/api/${process.env.DECENTRALIZED_SUBGRAPH_KEY}/subgraphs/id/F1NZayy7TXRi2szAVXvMFfJuC9uSdNYLUPAb6p6BYRmZ`
+export const theCentralisedGraphStakingUrl = `https://api.studio.thegraph.com/query/78696/hopr-stake-all-seasons/version/latest`
 
 export const theDecentralisedGraphStakingUrlNewStaking = `https://gateway.thegraph.com/api/${process.env.DECENTRALIZED_SUBGRAPH_KEY}/subgraphs/id/FEQcaX9qfh31YL2K7rxRN5a3sr9rjMWkguJnby7StNRo`
 export const theCentralisedGraphStakingUrlNewStaking = `https://api.studio.thegraph.com/query/40439/hopr-nodes-dufour/version/latest`
-
-export const theDecentralisedGraphStakingUrlNewStakingTesting = `https://gateway.thegraph.com/api/${process.env.DECENTRALIZED_SUBGRAPH_KEY}/subgraphs/id/FEQcaX9qfh31YL2K7rxRN5a3sr9rjMWkguJnby7StNRo`
-export const theCentralisedGraphStakingUrlNewStakingTesting = `https://api.studio.thegraph.com/query/40439/hopr-nodes-dufour-l2/version/latest`
 
 export const PROGRAM_START = 1690372800;
 export const PROGRAM_END = 1694260800;
