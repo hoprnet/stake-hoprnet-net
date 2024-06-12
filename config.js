@@ -7,8 +7,8 @@ export const GNOSIS_CHAIN_HOPR_BOOST_NFT = "0x43d13d7b83607f14335cf2cb75e87da369
 export const theDecentralisedGraphStakingUrl = `https://gateway-arbitrum.network.thegraph.com/api/${process.env.DECENTRALIZED_SUBGRAPH_KEY}/subgraphs/id/F1NZayy7TXRi2szAVXvMFfJuC9uSdNYLUPAb6p6BYRmZ`
 export const theCentralisedGraphStakingUrl = `https://api.studio.thegraph.com/query/78696/hopr-stake-all-seasons/version/latest`
 
-export const theDecentralisedGraphStakingUrlNewStaking = `https://gateway.thegraph.com/api/${process.env.DECENTRALIZED_SUBGRAPH_KEY}/subgraphs/id/FEQcaX9qfh31YL2K7rxRN5a3sr9rjMWkguJnby7StNRo`
-export const theCentralisedGraphStakingUrlNewStaking = `https://api.studio.thegraph.com/query/40439/hopr-nodes-dufour/version/latest`
+export const theDecentralisedGraphStakingUrlNewStaking = `https://gateway-arbitrum.network.thegraph.com/api/${process.env.DECENTRALIZED_SUBGRAPH_KEY}/subgraphs/id/GP2abJCarirMJCanuk4SBmnadiobEWH9ME2MNRAHbBTp`
+export const theCentralisedGraphStakingUrlNewStaking = `https://api.studio.thegraph.com/query/78696/hopr-nodes-dufour/version/latest`
 
 export const PROGRAM_START = 1690372800;
 export const PROGRAM_END = 1694260800;
